@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <title> {% block title %} {% endblock %} </title>
+<!-- import materialize.css-->
+<link rel="stylesheet" href="{{ url_for('static', filename='materialize.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <nav>
-    <h1>App</h1>
-    <ul>
+    <div class="nav-wrapper amber accent-4">
+      <a href="#" class="brand-logo">App</a>
+      <ul class="right hide-n black-text text-black">
         {% if g.user %}
             <li><span>{{ g.user['username'] }}</span>
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-            
         {% else %} 
             <li><a href="{{ url_for('auth.register') }}">Register</a>
             <li><a href="{{ url_for('auth.login') }}">Log In</a>
         {% endif %} 
-    </ul>
+      </ul>
+    </div>
 </nav>
-<section class="content">
+
+<section class="content container center-align">
     <header>
         {% block header %}{% endblock %} 
     </header>
