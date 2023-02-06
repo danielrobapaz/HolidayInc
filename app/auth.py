@@ -11,7 +11,7 @@ from app.db import get_db
 
 # creates a blueprint named 'auth'. A blueprint is a way
 # to organize a group of related views.
-bp = Blueprint('auth', __name__, url_prefux='/auth')
+bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 # /auth/register
@@ -34,7 +34,7 @@ def register():
             try:
                 # insert a new user to the user table in the database
                 db.execute(
-                    "INSERT INTO user (username. password) VALUES (?, ?)",
+                    "INSERT INTO user (username, password) VALUES (?, ?)",
                     (username, generate_password_hash(password))
                 )
                 db.commit()
@@ -63,7 +63,7 @@ def login():
 
         user = db.execute(
             "SELECT * FROM user WHERE username = ?", 
-            (username)
+            (username,)
         ).fetchone()
 
         if user is None:
