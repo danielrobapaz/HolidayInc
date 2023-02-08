@@ -95,7 +95,7 @@ def load_logged_in_user():
     else:
         g.user = get_db().execute(
             "SELECT * FROM user WHERE id = ?",
-            (user_id)
+            (user_id,)
         ).fetchone()
 
 
@@ -104,4 +104,14 @@ def logout():
     # to logout wi need to remove the user id from
     # the session.
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('auth.login'))
+
+def login_required(view):
+    @function.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
