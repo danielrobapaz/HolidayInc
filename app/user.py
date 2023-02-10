@@ -11,7 +11,7 @@ from app.db import get_db
 bp = Blueprint('user', __name__)
 
 
-@bp.route('/user', methods=('POST', 'GET'))
+@bp.route('/', methods=('POST', 'GET'))
 @login_required
 def index():
     db = get_db()
