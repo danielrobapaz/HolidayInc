@@ -8,17 +8,17 @@ from app.db import get_db
 
 
 # create the blueprint for the 'user'
-bp = Blueprint('user', __name__, url_prefix='/index')
+bp = Blueprint('user', __name__)
 
 
-@bp.route('/', methods=('POST', 'GET'))
+@bp.route('/user', methods=('POST', 'GET'))
 @login_required
 def index():
     db = get_db()
 
     if request.method == 'POST':
         if 'create' in request.form:
-            pass
+            return redirect(url_for("createUser.createUser"))
         elif 'aprove' in request.form:
             id = request.form['aprove']
             db.execute(

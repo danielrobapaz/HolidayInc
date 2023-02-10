@@ -40,7 +40,7 @@ def register():
                 db.commit()
 
             except db.IntegrityError:
-                error = f"User {username} is already registered."
+                error = f"User \'{username}\' is already registered."
 
             else:
                 # the user was registered, redirect to login view
@@ -116,6 +116,19 @@ def login_required(view):
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+def root_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+
+        elif g.user['role'] != 'admin':
+            return redirect(url_for('user.index'))
 
         return view(**kwargs)
 
