@@ -34,8 +34,8 @@ def register():
             try:
                 # insert a new user to the user table in the database
                 db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password))
+                    "INSERT INTO user (username, password, role, auth) VALUES (?, ?, ?, ?)",
+                    (username, generate_password_hash(password), 'user', 0)
                 )
                 db.commit()
 
@@ -67,14 +67,19 @@ def login():
         ).fetchone()
 
         if user is None:
-            error = 'User doesn\'t exist.'
+            error = f'User doesn\'t exist.'
+        elif user['auth'] == 0:
+            username = user['username']
+            error = f'User \'{username}\' needs autentication from admin.'
+
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            session['role'] = user['role']
+            return redirect(url_for('user.index'))
 
         flash(error)
 
@@ -107,7 +112,7 @@ def logout():
     return redirect(url_for('auth.login'))
 
 def login_required(view):
-    @function.wraps(view)
+    @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))

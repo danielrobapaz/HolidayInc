@@ -1,5 +1,22 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Welcome{% endblock %}</h1>
+  <h1>{% block title %}Welcome, {{ g.user['role'] }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% if g.user['role'] == 'admin' %}
+    <form method="POST">
+      <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Create a new user" name="create" id="create">
+    </form>
+    <div class="left-align">
+      <h5 class="card-panel amber accent-1">Users waiting for authorization: </h5>
+      {% for user in users %}
+        <div class="row">
+          
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
 {% endblock %}

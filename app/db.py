@@ -1,5 +1,5 @@
 import sqlite3
-
+from werkzeug.security import generate_password_hash
 import click
 
 # g is a special objecto that is unique for each request
@@ -43,7 +43,20 @@ def init_db():
 def init_db_command():
     # create the existing data ad create new tables
     init_db()
-    click.echo('Initialized the database.')
+
+    # inserting the admin user, this will happen every time the db is initialized
+    db = get_db()
+    try:
+        db.execute(
+            'INSERT INTO user (username, password, role, auth) VALUES (?, ?, ?, ?)',
+            ("root", generate_password_hash("root"), 'admin', 1)
+        )
+        db.commit()
+    except db.IntegrityError:
+        pass
+
+    else:
+        click.echo('Initialized the database.')
 
 def init_app(app):
     app.teardown_appcontext(close_db)
