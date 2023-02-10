@@ -11,29 +11,34 @@ class LoginTest(BaseTestsClass):
         #self.assertIn(b'Welcome', res.data)'''
 
     def test_loginNonExistentUser(self):
-        ## falta qeury a db
         res = self.client.post('/auth/login', data={
             'username':'joje',
             'password':'123',
         }, follow_redirects=True)
         assert res.status_code == 200
         html = res.get_data(as_text=True)
-        #self.assertIn(b"User doesn&#39;t exist.", res.data)
+
         assert "User doesn&#39;t exist." in html
+        
         with self.app.app_context():
             try:
-                assert get_db().execute("select * from user where username = 'joje'",).fetchone() is None
-            except db.ntegrityError:
-                print("uwu")
+                db = get_db()
+                assert db.execute("select * from user where username = 'joje'",).fetchone() is None
+            except db.IntegrityError:
+                pass
     
     def test_registerUser(self):
         res = self.client.post('/auth/register', data={
             'username':'joje',
             'password':'123'
         }, follow_redirects=True)
+        
         assert res.status_code == 200
+        
         html = res.get_data(as_text=True)
+        
         assert res.request.path == '/auth/login'
+        
         with self.app.app_context():
             assert get_db().execute("select * from user where username = 'joje'",).fetchone() is not None
       
@@ -45,8 +50,11 @@ class LoginTest(BaseTestsClass):
             'password':'123'
         }, follow_redirects=True)
         assert res.status_code == 200
+        
         html = res.get_data(as_text=True)
+        
         assert f'User &#39;{username}&#39; is already registered' in html
+        
         with self.app.app_context():
             assert get_db().execute("select * from user where username = 'joje'",).fetchone() is not None
 
@@ -59,31 +67,31 @@ class LoginTest(BaseTestsClass):
     
     
     def test_loginAuthorizedWrongPassword(self):
-        ## falta qeury a db hasheando la clave
         self.test_registerUserAuthorize()
         res = self.client.post('/auth/login', data={
             'username':'joje',
             'password':'1234',
         }, follow_redirects=True)
         assert res.status_code == 200
+
         html = res.get_data(as_text=True)
-        #self.assertIn(b"User doesn&#39;t exist.", res.data)
+
         assert "Incorrect password." in html
-    
+
     def test_loginNonAuthorizedWrongPassword(self):
-        ## falta qeury a db hasheando la clave
+        
         self.test_registerUser()
         res = self.client.post('/auth/login', data={
             'username':'joje',
             'password':'1234',
         }, follow_redirects=True)
         assert res.status_code == 200
+        
         html = res.get_data(as_text=True)
-        #self.assertIn(b"User doesn&#39;t exist.", res.data)
+
         assert "User &#39;joje&#39; needs autentication from admin" in html
     
     def test_loginAuthorized(self):
-        ## falta qeury a db con el hash (?)
         self.test_registerUserAuthorize()
         with self.app.app_context():
             assert get_db().execute("select auth from user where username = 'joje'").fetchone()[0] == 1
@@ -92,41 +100,46 @@ class LoginTest(BaseTestsClass):
             'password':'123',
         }, follow_redirects=True)
         assert res.status_code == 200
+        
         html = res.get_data(as_text=True)
-        #print(html)
-        #self.assertIn(b"User doesn&#39;t exist.", res.data)
+        
         assert "Welcome, user" in html
     
     def test_loginNonAuthorized(self):
-        ## falta qeury a db con el hash (?)
         self.test_registerUser()
         res = self.client.post('/auth/login', data={
             'username':'joje',
             'password':'123',
         }, follow_redirects=True)
+
         assert res.status_code == 200
+
         html = res.get_data(as_text=True)
-        #print(html)
-        #self.assertIn(b"User doesn&#39;t exist.", res.data)
+
         assert "User &#39;joje&#39; needs autentication from admin." in html
     
     def test_logout(self):
         self.test_loginAuthorized()
         res = self.client.get('/auth/logout',follow_redirects=True)
         html = res.get_data(as_text=True)
+
         assert res.request.path == '/auth/login'
+
         assert 'Log In' in html
 
-        ## ver session vacio user_id -> assert 'user_id' not in session
     def test_registerRoot(self):
         username = 'root'
         res = self.client.post('/auth/register', data={
             'username':username,
             'password':'root'
         }, follow_redirects=True)
+
         assert res.status_code == 200
+
         html = res.get_data(as_text=True)
+
         assert f'User &#39;{username}&#39; is already registered' in html
+
         with self.app.app_context():
             assert get_db().execute("select * from user where username = 'root'",).fetchone() is not None
         
@@ -135,8 +148,11 @@ class LoginTest(BaseTestsClass):
             'username':'root',
             'password':'root',
         }, follow_redirects=True)
+
         assert res.status_code == 200
+
         html = res.get_data(as_text=True)
+
         assert "Welcome, admin" in html
 
     def test_rootCreateUser(self):
@@ -145,7 +161,9 @@ class LoginTest(BaseTestsClass):
             'username':'joje',
             'password':'joje',
         }, follow_redirects=True)
+
         assert res.status_code == 200
+
         assert res.request.path == '/'
      
     def test_rootCreateUserAlreadyRegistered(self):
@@ -159,20 +177,47 @@ class LoginTest(BaseTestsClass):
         html = res.get_data(as_text=True)
         assert f'User &#39;joje&#39; is already registered.' in html
 
-    '''def test_rootApproveUser(self):
+    def test_rootApproveUser(self):
         self.test_registerUser()
         self.test_loginRoot()
+        
         with self.app.app_context():
+            id = get_db().execute("select id from user where auth = 0").fetchone()
             assert get_db().execute("select * from user where auth = 0").fetchone() is not None
         
         res = self.client.post('/', data={
-            'aprove':'aprove',
+            'aprove':id,
         }, follow_redirects=True)
         with self.app.app_context():
             assert get_db().execute("select * from user where auth = 1").fetchone() is not None
         assert res.status_code == 200
         assert res.request.path == '/'
-        '''
+
+    def test_rootRejectUser(self):
+        self.test_registerUser()
+        self.test_loginRoot()
+
+        with self.app.app_context():
+            db = get_db()
+            id = db.execute("select id from user where auth = 0").fetchone()
+            assert db.execute("select * from user where auth = 0").fetchone() is not None
+    
+        res = self.client.post('/', data={
+            'reject': id,
+        }, follow_redirects=True)
+
+        with self.app.app_context():
+            db = get_db()
+            data = db.execute("select * from user where auth = 1")
+            
+            #count how many user has auth = 1;
+            count = 0
+            for row in data:
+                count = count + 1
+            assert count == 1
+
+        assert res.status_code == 200
+        assert res.request.path == '/'
 
     def test_loginEmptyAll(self):
         res = self.client.post('/auth/login', data={
@@ -193,6 +238,7 @@ class LoginTest(BaseTestsClass):
             'username':'joje',
             'password':None,
         },follow_redirects=True)
+        
         assert res.status_code == 400
 
     def test_registerEmptyAll(self):
@@ -200,6 +246,7 @@ class LoginTest(BaseTestsClass):
             'username':None,
             'password':None,
         },follow_redirects=True)
+        
         assert res.status_code == 400
 
     def test_registerEmptyUser(self):
@@ -207,6 +254,7 @@ class LoginTest(BaseTestsClass):
             'username':None,
             'password':'123',
         },follow_redirects=True)
+        
         assert res.status_code == 400
 
     def test_registerEmptyPassword(self):
@@ -214,4 +262,5 @@ class LoginTest(BaseTestsClass):
             'username':'joje',
             'password':None,
         },follow_redirects=True)
+        
         assert res.status_code == 400

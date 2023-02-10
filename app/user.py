@@ -18,8 +18,10 @@ def index():
 
     if request.method == 'POST':
         if 'create' in request.form:
+            # action of crete a new user button
             return redirect(url_for("createUser.createUser"))
         elif 'aprove' in request.form:
+            # action of aprove button
             id = request.form['aprove']
             db.execute(
                 'UPDATE user SET auth = 1 WHERE id = ?',
@@ -27,6 +29,7 @@ def index():
             )
             db.commit()
         elif 'reject' in request.form:
+            # action of reject button
             id = request.form['reject']
             db.execute(
                 'DELETE FROM user WHERE id = ?',
