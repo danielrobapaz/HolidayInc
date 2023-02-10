@@ -7,16 +7,38 @@
 {% block content %}
   {% if g.user['role'] == 'admin' %}
     <form method="POST">
-      <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Create a new user" name="create" id="create">
+      <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="create" name="create">Create a new user</button>
     </form>
+
     <div class="left-align">
       <h5 class="card-panel amber accent-1">Users waiting for authorization: </h5>
-      {% for user in users %}
-        <div class="row">
-          
-        </div>
-      {% endfor %}
     </div>
+
+    <table class="centered">
+      <thead class="card-panel amber accent-1">
+        <tr>
+          <th>User Id</th>
+          <th>Username</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>  
+        {% for user in users %}
+        <tr>          
+          <td>{{ user['id'] }}</td>
+          <td>{{ user['username']}}</td>
+          <td>
+            <form method="POST">
+              <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="aprove" value="{{ user['id'] }}">Aprove</button>
+              <button class="btn waves-effect waves-ligth white black-text" type="submit" name="reject" value="{{ user['id'] }}">Reject</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  
   {% endif %}
 
 {% endblock %}
