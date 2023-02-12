@@ -20,6 +20,12 @@ def index():
         if 'create' in request.form:
             # action of crete a new user button
             return redirect(url_for("createUser.createUser"))
+
+        elif 'modify' in request.form:
+            # action of modify button
+            #return redirect(url_for("modifyUser.modifyUser"))
+            pass
+        
         elif 'aprove' in request.form:
             # action of aprove button
             id = request.form['aprove']
@@ -28,6 +34,7 @@ def index():
                 (id,)
             )
             db.commit()
+
         elif 'reject' in request.form:
             # action of reject button
             id = request.form['reject']
@@ -40,7 +47,8 @@ def index():
     
     db = get_db()
     users = db.execute(
-        'SELECT id, username FROM user WHERE auth = 0'
+        'SELECT id, username, firstname, secondname, role, auth FROM user WHERE role != ?',
+        ('admin',)
     ).fetchall()
     
     return render_template('index/index.html', users=users)

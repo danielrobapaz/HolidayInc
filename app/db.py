@@ -48,8 +48,8 @@ def init_db_command():
     db = get_db()
     try:
         db.execute(
-            'INSERT INTO user (username, password, role, auth) VALUES (?, ?, ?, ?)',
-            ("root", generate_password_hash("root"), 'admin', 1)
+            'INSERT INTO user (username, firstname, secondname, password, role, auth) VALUES (?, ?, ?, ?, ?, ?)',
+            ('root', 'root', 'root', generate_password_hash("root"), 'admin', 1)
         )
         db.commit()
     except db.IntegrityError:

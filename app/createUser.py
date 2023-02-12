@@ -21,6 +21,8 @@ def createUser():
     if request.method == "POST":
         # request for the input 
         username = request.form['username']
+        firstname = request.form['firstname']
+        secondname = request.form['secondname']
         password = request.form['password']
 
         db = get_db()
@@ -28,6 +30,10 @@ def createUser():
 
         if not username:
             error = 'Username is required.'
+        elif not firstname:
+            error = 'First name is required'
+        elif not secondname:
+            error = 'Second name is required'
         elif not password:
             error = 'Password is required.'
 
@@ -35,8 +41,8 @@ def createUser():
             try:
                 # insert a new user to the user table in the database
                 db.execute(
-                    "INSERT INTO user (username, password, role, auth) VALUES (?, ?, ?, ?)",
-                    (username, generate_password_hash(password), 'user', 1)
+                    "INSERT INTO user (username, firstname, secondname, password, role, auth) VALUES (?, ?, ?, ?, ?, ?)",
+                    (username, firstname, secondname, generate_password_hash(password), 'user', 1)
                 )
                 db.commit()
 
