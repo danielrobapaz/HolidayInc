@@ -1,6 +1,4 @@
-import functools
-
-# session is a dictionary that stores data acriss requests.
+# session is a dictionary that stores data across requests.
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
@@ -10,7 +8,7 @@ from werkzeug.security import generate_password_hash
 from app.auth import root_required
 from app.db import get_db
 
-# creates a blueprint named 'auth'. A blueprint is a way
+# creates a blueprint named 'createUser'. A blueprint is a way
 # to organize a group of related views.
 bp = Blueprint('createUser', __name__)
 

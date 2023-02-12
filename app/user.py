@@ -1,8 +1,6 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, redirect, render_template, request, session, url_for
 )
-from werkzeug.exceptions import abort
-
 from app.auth import login_required
 from app.db import get_db
 
@@ -23,9 +21,10 @@ def index():
 
         elif 'modify' in request.form:
             # action of modify button
-            #return redirect(url_for("modifyUser.modifyUser"))
-            pass
-        
+            id = request.form['modify']
+            session['modify user'] = id
+            return redirect(url_for("modifyUser.modifyUser"))
+
         elif 'aprove' in request.form:
             # action of aprove button
             id = request.form['aprove']

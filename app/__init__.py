@@ -39,4 +39,7 @@ def create_app(test_config=None):
     from . import createUser
     app.register_blueprint(createUser.bp)
 
+    from . import modifyUser
+    app.register_blueprint(modifyUser.bp)
+    
     return app
