@@ -22,12 +22,13 @@ def index():
         elif 'modify' in request.form:
             # action of modify button
             id = request.form['modify']
-            session['modify user'] = id
+            session['modify_user'] = id # store the user id to modify in session.
             return redirect(url_for("modifyUser.modifyUser"))
 
         elif 'aprove' in request.form:
             # action of aprove button
             id = request.form['aprove']
+            session['modify_id'] = id
             db.execute(
                 'UPDATE user SET auth = 1 WHERE id = ?',
                 (id,)

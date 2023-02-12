@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Modify user.{% endblock %}</h1>
+  <h1>{% block title %}Modify user. {{ id }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="POST">
+  <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="role" value="role">Change role</button>
+  <button class="btn waves-effect waves-ligth white black-text" type="submit" name="delete" value="delete">Delete user</button>              
+</form>
 {% endblock %}
