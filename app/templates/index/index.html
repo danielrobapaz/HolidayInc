@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Welcome, {{ g.user['role'] }}{% endblock %}</h1>
+  <h1>{% block title %}Welcome, {{ g.user['username'] }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -37,10 +37,10 @@
             <td>
               <form method="POST">
                 {% if user['auth'] == 0 %}
-                  <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="aprove" value="{{ user['id'] }}">Aprove</button>
-                  <button class="btn waves-effect waves-ligth white black-text" type="submit" name="reject" value="{{ user['id'] }}">Reject</button>
+                <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="aprove" value="{{ user['id'] }}">Aprove</button>
+                <button class="btn waves-effect waves-ligth white black-text" type="submit" name="reject" value="{{ user['id'] }}">Reject</button>
                 {% else %}
-                  <button class="btn waves-effect waves-ligth white black-text" type="submit" name="modify" value="{{ user['id'] }}">Modify</button>
+                <button class="btn waves-effect waves-ligth white black-text" type="submit" name="modify" value="{{ user['id'] }}">Modify</button>
                 {% endif %}
                 </form>
             </td>

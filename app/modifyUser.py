@@ -20,7 +20,12 @@ def modifyUser():
     
     if request.method == 'POST':
         if 'delete' in request.form:
-            # se elimina el usuario de la bd
+            # delete the user from db
+            db.execute(
+                "DELETE FROM user WHERE id = ?",
+                (idModify,)
+            )
+            db.commit()
             return redirect(url_for('user.index'))
 
         elif 'role' in request.form:
@@ -32,4 +37,23 @@ def modifyUser():
 @bp.route('/modify', methods=('GET', 'POST'))
 @root_required
 def modify():
+    if request.method == 'POST':
+        error = None
+        if len(request.form) == 0:
+            error = 'Select a role.'
+
+        else:
+            roleModify = request.form['select']
+            id = session['modify_user']
+            db = get_db()
+
+            db.execute(
+                "UPDATE user SET role = ? WHERE id = ?",
+                (roleModify, id)
+            )
+            db.commit()
+
+            return redirect(url_for('user.index'))
+
+        flash(error)
     return render_template('/index/modify.html')

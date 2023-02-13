@@ -41,7 +41,7 @@ def register():
                 # insert a new user to the user table in the database
                 db.execute(
                     "INSERT INTO user (username, firstname, secondname, password, role, auth) VALUES (?, ?, ?, ?, ?, ?)",
-                    (username, firstname, secondname, generate_password_hash(password), 'user', 0)
+                    (username, firstname, secondname, generate_password_hash(password), 'waiting', 0)
                 )
                 db.commit()
 

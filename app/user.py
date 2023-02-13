@@ -50,5 +50,5 @@ def index():
         'SELECT id, username, firstname, secondname, role, auth FROM user WHERE role != ?',
         ('admin',)
     ).fetchall()
-    
+
     return render_template('index/index.html', users=users)

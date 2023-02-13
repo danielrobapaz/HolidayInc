@@ -22,12 +22,13 @@ def createUser():
         firstname = request.form['firstname']
         secondname = request.form['secondname']
         password = request.form['password']
+        role = request.form['select']
 
         db = get_db()
         error = None
 
         if not username:
-            error = 'Username is required.'
+            error = f'Username is required.'
         elif not firstname:
             error = 'First name is required'
         elif not secondname:
@@ -40,12 +41,12 @@ def createUser():
                 # insert a new user to the user table in the database
                 db.execute(
                     "INSERT INTO user (username, firstname, secondname, password, role, auth) VALUES (?, ?, ?, ?, ?, ?)",
-                    (username, firstname, secondname, generate_password_hash(password), 'user', 1)
+                    (username, firstname, secondname, generate_password_hash(password), role, 1)
                 )
                 db.commit()
 
             except db.IntegrityError:
-                error = f"User \'{username}\' is already registered."
+                error = f"User \'{username}\' is already registered {request.form}."
 
             else:
                 # the user was registered, redirect to login view

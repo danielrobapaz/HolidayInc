@@ -18,6 +18,16 @@
 
             <label class="left-align" for="password">Password</label>
             <input placeholder="Enter password" type="password" name="password" id="password" required>
+
+            <label class="left-align" for="role">Role.</label>
+            <select class="browser-default" name="select" required>
+                <option value="" disabled selected>Choose your option</option>
+                <option value="op_manager">Gerente de operaciones</option>
+                <option value="mechanic_sup">Supervisor de area de mecanica general</option>
+                <option value="painting_sup">Supervisor de area de latoneria y pintura</option>
+                <option value="mechanic_spec">Especialista en mecanica</option>
+                <option value="electricity_spec">Especialista en electricidad</option>
+            </select>
             
             <input class="btn waves-effect waves-ligth amber accent-3 black-text " type="submit" value="Create user">
         </form>
