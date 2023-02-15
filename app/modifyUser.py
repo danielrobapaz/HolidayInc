@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, redirect, render_template, request, session, url_for
 )
 
 from werkzeug.security import generate_password_hash
@@ -39,6 +39,8 @@ def modifyUser():
 def modify():
     if request.method == 'POST':
         error = None
+
+        #TO DO user name atribute in select as in create user
         if len(request.form) == 0:
             error = 'Select a role.'
 
