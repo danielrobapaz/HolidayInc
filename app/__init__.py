@@ -41,5 +41,8 @@ def create_app(test_config=None):
 
     from . import modifyUser
     app.register_blueprint(modifyUser.bp)
+
+    from . import createProyect
+    app.register_blueprint(createProyect.bp)
     
     return app

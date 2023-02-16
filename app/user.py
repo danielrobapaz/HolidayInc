@@ -13,11 +13,32 @@ bp = Blueprint('user', __name__)
 @login_required
 def index():
     db = get_db()
+    users = db.execute(
+        'SELECT id, username, firstname, secondname, role, auth FROM user WHERE role != ?',
+        ('admin',)
+    ).fetchall()
+
+    proyects = db.execute(
+        'SELECT * FROM proyect',
+    ).fetchall()
+
 
     if request.method == 'POST':
         if 'create' in request.form:
             # action of crete a new user button
             return redirect(url_for("createUser.createUser"))
+
+        elif 'proyect' in request.form:
+            return redirect(url_for('createProyect.createProyect'))
+
+        elif 'find' in request.form:
+            user = request.form['find']
+
+            if user != "":
+                users = db.execute (
+                    'SELECT id, username, firstname, secondname, role, auth FROM user WHERE role != ? AND username = ?',
+                    ('admin', user)
+                ).fetchall()
 
         elif 'modify' in request.form:
             # action of modify button
@@ -43,12 +64,13 @@ def index():
                 (id,)
             )
             db.commit()
-
     
-    db = get_db()
-    users = db.execute(
-        'SELECT id, username, firstname, secondname, role, auth FROM user WHERE role != ?',
-        ('admin',)
-    ).fetchall()
+    roles = {
+        'op_manager' : 'Gerente de operaciones',
+        'mechanic_sup' : 'Supervisor del area de mecanica',
+        'painting_sup' : 'Supervisor del area de latoneria y pintura',
+        'mechanic_spec' : 'Especialista en mecanica',
+        'electricity_spec' : 'Especialista en electricidad'
+    }
 
-    return render_template('index/index.html', users=users)
+    return render_template('index/index.html', users=users, areProyects = proyects != [], role = roles)
