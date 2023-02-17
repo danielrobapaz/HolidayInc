@@ -34,7 +34,7 @@ def modifyUser():
         elif 'proyect' in request.form:
             return redirect(url_for('modifyUser.changeProyect'))
 
-    return render_template('index/modifyUser.html', id=session['modify_user'])
+    return render_template('index/root/modifyUser.html', id=session['modify_user'])
 
 
 @bp.route('/changeRole', methods=('GET', 'POST'))
@@ -60,7 +60,7 @@ def changeRole():
             return redirect(url_for('user.index'))
 
         flash(error)
-    return render_template('/index/modify.html')
+    return render_template('/index/root/modify.html')
 
 @bp.route('/changeProyect', methods=('GET', 'POST'))
 @root_required
@@ -83,4 +83,4 @@ def changeProyect():
 
         return redirect(url_for('user.index'))
 
-    return render_template('index/changeProyect.html', proyects = proyects)
+    return render_template('index/root/changeProyect.html', proyects = proyects)

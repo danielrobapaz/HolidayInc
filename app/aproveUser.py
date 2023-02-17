@@ -40,4 +40,4 @@ def aproveUser():
 
         return redirect(url_for('user.index'))
 
-    return render_template('index/aproveUser.html', proyects = proyects)
+    return render_template('index/root/aproveUser.html', proyects = proyects)
