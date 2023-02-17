@@ -29,14 +29,17 @@ def modifyUser():
             return redirect(url_for('user.index'))
 
         elif 'role' in request.form:
-            return redirect(url_for('modifyUser.modify'))
+            return redirect(url_for('modifyUser.changeRole'))
+
+        elif 'proyect' in request.form:
+            return redirect(url_for('modifyUser.changeProyect'))
 
     return render_template('index/modifyUser.html', id=session['modify_user'])
 
 
-@bp.route('/modify', methods=('GET', 'POST'))
+@bp.route('/changeRole', methods=('GET', 'POST'))
 @root_required
-def modify():
+def changeRole():
     if request.method == 'POST':
         error = None
 
@@ -58,3 +61,26 @@ def modify():
 
         flash(error)
     return render_template('/index/modify.html')
+
+@bp.route('/changeProyect', methods=('GET', 'POST'))
+@root_required
+def changeProyect():
+    db = get_db()
+    proyects = db.execute(
+        'SELECT * FROM proyect'
+    )
+
+    if request.method == 'POST':
+        proyId = request.form['proyect']
+
+        # update user table 
+        db.execute(
+            'UPDATE user SET proyId = ? WHERE id = ?',
+            (proyId, session['modify_user']),
+        )
+
+        db.commit()
+
+        return redirect(url_for('user.index'))
+
+    return render_template('index/changeProyect.html', proyects = proyects)

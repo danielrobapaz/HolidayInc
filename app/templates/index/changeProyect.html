@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Change proyect.{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container thin-container left-align">
+    <form method="POST">
+        <label class="left-align" for="proyect">Proyect</label>
+        <select class="browser-default" name="proyect" required>
+            <option value="" disabled selected>Choose a proyect</option>
+            {% for proyect in proyects %}
+            <option value="{{ proyect['id'] }}">{{ proyect['description'] }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn waves-effect waves-ligth amber ascent-4 black-text" type="submit" name="change" value="change">Change proyect</button>
+    </form>
+</div>
+{% endblock %}
