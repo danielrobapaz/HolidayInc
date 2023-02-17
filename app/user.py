@@ -49,13 +49,9 @@ def index():
         elif 'aprove' in request.form:
             # action of aprove button
             id = request.form['aprove']
-            session['modify_id'] = id
-            db.execute(
-                'UPDATE user SET auth = 1 WHERE id = ?',
-                (id,)
-            )
-            db.commit()
-
+            session['aprove_user'] = id
+            return redirect(url_for("aproveUser.aproveUser"))
+            
         elif 'reject' in request.form:
             # action of reject button
             id = request.form['reject']

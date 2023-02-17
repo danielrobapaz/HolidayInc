@@ -40,7 +40,6 @@ def modify():
     if request.method == 'POST':
         error = None
 
-        #TO DO user name atribute in select as in create user
         if len(request.form) == 0:
             error = 'Select a role.'
 
