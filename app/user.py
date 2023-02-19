@@ -3,6 +3,7 @@ from flask import (
 )
 from app.auth import root_required
 from app.db import get_db
+from . import utilities
 
 
 # create the blueprint for the 'user'
@@ -14,7 +15,7 @@ bp = Blueprint('user', __name__)
 def root():
     db = get_db()
     users = db.execute(
-        'SELECT id, username, firstname, secondname, role, auth FROM user WHERE role != ?',
+        'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ?',
         ('admin',)
     ).fetchall()
 
@@ -61,12 +62,4 @@ def root():
             )
             db.commit()
     
-    roles = {
-        'op_manager' : 'Gerente de operaciones',
-        'mechanic_sup' : 'Supervisor del area de mecanica',
-        'painting_sup' : 'Supervisor del area de latoneria y pintura',
-        'mechanic_spec' : 'Especialista en mecanica',
-        'electricity_spec' : 'Especialista en electricidad'
-    }
-
-    return render_template('index/root/rootUser.html', users=users, areProyects = proyects != [], role = roles)
+    return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyects), areProyects = proyects != [])

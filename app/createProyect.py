@@ -12,8 +12,6 @@ bp = Blueprint('createProyect', __name__)
 @bp.route('/createProyect', methods=('GET', 'POST'))
 @root_required
 def createProyect():
-    start = ""
-    end = ""
     if request.method == "POST":
         #request for the input
         description = request.form['description']
@@ -40,7 +38,7 @@ def createProyect():
                 error = f'Proyect is already created'
 
             else:
-                return redirect(url_for('user.index'))
+                return redirect(url_for('user.root'))
 
         flash(error)
 

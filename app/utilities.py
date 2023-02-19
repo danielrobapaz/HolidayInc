@@ -10,3 +10,39 @@ def isEndAfterStart(date1, date2):
     date2_obj = datetime.strptime(date2, '%Y-%m-%d').strftime('%Y-%m-%d')
 
     return date2_obj >= date1_obj
+
+
+def dataForUserTable(users, proyects):
+    """
+    Input: users: sql row object, proyects: sql row object
+    Returns: a dict with the data of users and proyects
+    """
+
+    # create a list of the proyects
+    proyectList = {}
+    for proyect in proyects:
+        proyectList[proyect['id']] = proyect['description']
+
+    roles = {
+        'op_manager' : 'Gerente de operaciones',
+        'mechanic_sup' : 'Supervisor del area de mecanica',
+        'painting_sup' : 'Supervisor del area de latoneria y pintura',
+        'mechanic_spec' : 'Especialista en mecanica',
+        'electricity_spec' : 'Especialista en electricidad'
+    }
+    data = []
+
+    for user in users:
+        data.append(
+            {
+                'id': user['id'],
+                'username': user['username'],
+                'firstname': user['firstname'],
+                'secondname': user['secondname'],
+                'role': roles[user['role']],
+                'proyect': proyectList[user['proyId']]
+            }
+        )
+
+    return data
+
