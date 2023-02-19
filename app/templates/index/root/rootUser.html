@@ -102,7 +102,9 @@
           <td>{{ proyect['status'] }}</td>
           <td>
             <form method="POST">
-              <button class="btn waves-effect waves-ligth white black-text" type="submit" name="modify-proyect" value="{{ proyect['id'] }}">Modify</button>
+                <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="change-dates" value="{{ proyect['id'] }}">Change dates</button>
+                <button class="btn waves-effect waves-ligth amber accent-1 black-text" type="submit" name="enable-proyect" value="{{ proyect['id'] }}">Enable</button>
+                <button class="btn waves-effect waves-ligth white black-text" type="submit" name="close-proyect" value="{{ proyect['id'] }}">Close</button>
             </form>
           </td>
         </tr>

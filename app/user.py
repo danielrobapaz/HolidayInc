@@ -19,11 +19,6 @@ def root():
         ('admin',)
     ).fetchall()
 
-    proyects = db.execute(
-        'SELECT * FROM proyect',
-    ).fetchall()
-
-
     if request.method == 'POST':
         if 'create' in request.form:
             # action of crete a new user button
@@ -61,8 +56,28 @@ def root():
                 (id,)
             )
             db.commit()
-    
-    return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyects), areProyects = proyects != [], proyects = proyects)
+
+        elif 'enable-proyect' in request.form:
+            proyId = request.form['enable-proyect']
+            db.execute(
+                'UPDATE proyect SET status = ? WHERE id = ?',
+                (1, proyId)
+            )
+            db.commit()
+
+        elif 'close-proyect' in request.form:
+            proyId = request.form['close-proyect']
+            db.execute(
+                'UPDATE proyect SET status = ? WHERE id = ?',
+                (0, proyId)
+            )
+            db.commit()
+
+    proyects = db.execute(
+        'SELECT * FROM proyect',
+    ).fetchall()
+
+    return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyects), areProyects = proyects != [], proyects = utilities.dataForProyectTable(proyects))
 
 
 @bp.route('/manager', methods=('POST', 'GET'))
