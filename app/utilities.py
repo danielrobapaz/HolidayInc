@@ -30,6 +30,7 @@ def dataForUserTable(users, proyects):
         'mechanic_spec' : 'Especialista en mecanica',
         'electricity_spec' : 'Especialista en electricidad'
     }
+    
     data = []
 
     for user in users:

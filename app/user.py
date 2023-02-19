@@ -41,7 +41,7 @@ def root():
                     ('admin', user)
                 ).fetchall()
 
-        elif 'modify' in request.form:
+        elif 'modify-user' in request.form:
             # action of modify button
             id = request.form['modify']
             session['modify_user'] = id # store the user id to modify in session.
@@ -62,4 +62,4 @@ def root():
             )
             db.commit()
     
-    return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyects), areProyects = proyects != [])
+    return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyects), areProyects = proyects != [], proyects = proyects)

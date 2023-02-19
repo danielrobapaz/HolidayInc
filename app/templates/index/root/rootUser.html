@@ -32,6 +32,7 @@
   </form>
 </div>
 
+<!-- user table -->
 <div class="left-align">
   <h5 class="card-panel amber accent-1">Users.</h5>
 </div>
@@ -65,7 +66,7 @@
               {% endif %}
             <button class="btn waves-effect waves-ligth white black-text" type="submit" name="reject" value="{{ user['id'] }}">Reject</button>
             {% else %}
-            <button class="btn waves-effect waves-ligth white black-text" type="submit" name="modify" value="{{ user['id'] }}">Modify</button>
+            <button class="btn waves-effect waves-ligth white black-text" type="submit" name="modify-user" value="{{ user['id'] }}">Modify</button>
             {% endif %}
           </form>
         </td>
@@ -73,5 +74,40 @@
     {% endfor %}
   </tbody>
 </table>
+
+
+<!-- proyect table -->
+<div class="left-align">
+    <h5 class="card-panel amber accent-1">Proyects.</h5>
+</div>
+
+<table class="centered">
+    <thead class="card-panel amber accent-1">
+      <tr>
+        <th>Proyect Id</th>
+        <th>Description</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>  
+      {% for proyect in proyects %}
+        <tr>
+          <td>{{ proyect['id'] }}</td>
+          <td>{{ proyect['description']}}</td>
+          <td>{{ proyect['start'] }}</td>
+          <td>{{ proyect['end'] }}</td>
+          <td>{{ proyect['status'] }}</td>
+          <td>
+            <form method="POST">
+              <button class="btn waves-effect waves-ligth white black-text" type="submit" name="modify-proyect" value="{{ proyect['id'] }}">Modify</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
 {% endblock %}
