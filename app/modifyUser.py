@@ -60,7 +60,7 @@ def changeRole():
             return redirect(url_for('user.index'))
 
         flash(error)
-    return render_template('/index/root/modify.html')
+    return render_template('/index/root/changeRole.html')
 
 @bp.route('/changeProyect', methods=('GET', 'POST'))
 @root_required
