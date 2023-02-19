@@ -5,12 +5,15 @@ from flask import (
 
 from app.auth import root_required
 from app.db import get_db
+from . import utilities
 
 bp = Blueprint('createProyect', __name__)
 
 @bp.route('/createProyect', methods=('GET', 'POST'))
 @root_required
 def createProyect():
+    start = ""
+    end = ""
     if request.method == "POST":
         #request for the input
         description = request.form['description']
@@ -22,6 +25,8 @@ def createProyect():
 
         if not description:
             error = 'A proyect name is required.'
+        elif not utilities.isEndAfterStart(start, end):
+            error = 'The proyect must end after it begins'
 
         if error is None:
             try:

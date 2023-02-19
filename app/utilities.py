@@ -1,15 +1,12 @@
-# some functions that we can use anywhere in the app
-def roleStyle(role):
-    """
-        Input: role. string that represents a role in the data base
-        Returns: string that is the role translate into spansh
-    """
-    roles = {
-        'op_manager' : 'Gerente de operaciones',
-        'mechanic_sup' : 'Supervisor del area de mecanica',
-        'paintin_sup' : 'Supervisor del area de latoneria y pintura',
-        'mechacnic_spec' : 'Especialista en mecanica',
-        'electricity_spec' : 'Especialista en electricidad'
-    }
+from datetime import datetime
 
-    return roles
+# some functions that we can use anywhere in the app
+def isEndAfterStart(date1, date2):
+    """
+    Input: date1: string, date2: string
+    Returns true if date2 >= date1
+    """
+    date1_obj = datetime.strptime(date1, '%Y-%m-%d').strftime('%Y-%m-%d')
+    date2_obj = datetime.strptime(date2, '%Y-%m-%d').strftime('%Y-%m-%d')
+
+    return date2_obj >= date1_obj
