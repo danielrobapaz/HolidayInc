@@ -64,7 +64,9 @@
             <td>
               <form method="POST">
                 {% if user['auth'] == 0 %}
-                <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="aprove" value="{{ user['id'] }}">Aprove</button>
+                  {% if areProyects %}
+                  <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="aprove" value="{{ user['id'] }}">Aprove</button>
+                  {% endif %}
                 <button class="btn waves-effect waves-ligth white black-text" type="submit" name="reject" value="{{ user['id'] }}">Reject</button>
                 {% else %}
                 <button class="btn waves-effect waves-ligth white black-text" type="submit" name="modify" value="{{ user['id'] }}">Modify</button>
