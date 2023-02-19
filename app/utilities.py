@@ -47,3 +47,26 @@ def dataForUserTable(users, proyects):
 
     return data
 
+def dataForProyectTable(proyects):
+    """
+    Input: proyects: sql row object
+    Returns: a dict with the data of proyects
+    """
+
+    data = []
+    for proyect in proyects:
+        status = 'Closed'
+        if proyect['status'] == 1:
+            status = 'Enabled'
+
+        data.append(
+            {
+                'id': proyect['id'],
+                'description': proyect['description'],
+                'start': proyect['start'],
+                'end': proyect['end'],
+                'status': status
+            }
+        )
+
+    return data

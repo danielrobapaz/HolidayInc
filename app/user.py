@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, redirect, render_template, request, session, url_for
 )
-from app.auth import root_required
+from app.auth import root_required, manager_required
 from app.db import get_db
 from . import utilities
 
@@ -63,3 +63,34 @@ def root():
             db.commit()
     
     return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyects), areProyects = proyects != [], proyects = proyects)
+
+
+@bp.route('/manager', methods=('POST', 'GET'))
+@manager_required
+def manager():
+    db = get_db()
+
+    if request.method == 'POST':
+        if 'change-date' in request.form:
+            pass
+        elif 'enable-proyect' in request.form:
+            proyId = request.form['enable-proyect']
+            db.execute(
+                'UPDATE proyect SET status = ? WHERE id = ?',
+                (1, proyId)
+            )
+            db.commit()
+
+        elif 'close-proyect' in request.form:
+            proyId = request.form['close-proyect']
+            db.execute(
+                'UPDATE proyect SET status = ? WHERE id = ?',
+                (0, proyId)
+            )
+            db.commit()
+
+    proyects = db.execute(
+        'SELECT * FROM proyect'
+    ).fetchall()
+
+    return render_template('index/manager/managerUser.html', proyects = utilities.dataForProyectTable(proyects))
