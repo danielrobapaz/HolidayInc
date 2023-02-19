@@ -49,7 +49,7 @@ def createUser():
 
             else:
                 # the user was registered, redirect to login view
-                return redirect(url_for("user.index"))
+                return redirect(url_for("user.root"))
 
         flash(error) # show any error that happened
 

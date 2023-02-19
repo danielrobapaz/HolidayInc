@@ -26,7 +26,7 @@ def modifyUser():
                 (idModify,)
             )
             db.commit()
-            return redirect(url_for('user.index'))
+            return redirect(url_for('user.root'))
 
         elif 'role' in request.form:
             return redirect(url_for('modifyUser.changeRole'))
@@ -57,7 +57,7 @@ def changeRole():
             )
             db.commit()
 
-            return redirect(url_for('user.index'))
+            return redirect(url_for('user.root'))
 
         flash(error)
     return render_template('/index/root/changeRole.html')
@@ -81,6 +81,6 @@ def changeProyect():
 
         db.commit()
 
-        return redirect(url_for('user.index'))
+        return redirect(url_for('user.root'))
 
     return render_template('index/root/changeProyect.html', proyects = proyects)

@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, redirect, render_template, request, session, url_for
 )
-from app.auth import login_required
+from app.auth import root_required
 from app.db import get_db
 
 
@@ -9,9 +9,9 @@ from app.db import get_db
 bp = Blueprint('user', __name__)
 
 
-@bp.route('/', methods=('POST', 'GET'))
-@login_required
-def index():
+@bp.route('/root', methods=('POST', 'GET'))
+@root_required
+def root():
     db = get_db()
     users = db.execute(
         'SELECT id, username, firstname, secondname, role, auth FROM user WHERE role != ?',
@@ -69,4 +69,4 @@ def index():
         'electricity_spec' : 'Especialista en electricidad'
     }
 
-    return render_template('index/index.html', users=users, areProyects = proyects != [], role = roles)
+    return render_template('index/root/rootUser.html', users=users, areProyects = proyects != [], role = roles)

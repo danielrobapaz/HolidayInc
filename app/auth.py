@@ -85,7 +85,11 @@ def login():
             session.clear()
             session['user_id'] = user['id']
             session['role'] = user['role']
-            return redirect(url_for('user.index'))
+
+            if user['role'] == 'admin':
+                return redirect(url_for('user.root'))
+
+            #return redirect(url_for('user.user'))
 
         flash(error)
 
