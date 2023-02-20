@@ -27,7 +27,7 @@ def root():
         elif 'proyect' in request.form:
             return redirect(url_for('createProyect.createProyect'))
 
-        elif 'find' in request.form:
+        elif 'find-user' in request.form:
             user = request.form['find']
 
             if user != "":
@@ -89,6 +89,10 @@ def root():
                 ).fetchall()
 
             return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyectsAll), areProyects = proyectsAll != [], proyects = utilities.dataForProyectTable(proyects))
+
+        elif 'modify-proyect' in request.form:
+            session['modify_proyect'] = request.form['modify-proyect']
+            return redirect(url_for('modifyProyect.modifyProyect'))
 
     proyectsAll = db.execute(
         'SELECT * FROM proyect',

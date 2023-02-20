@@ -6,26 +6,30 @@
 
 {% block content %}
 <div class="row">
+  {% if areProyects %}
   <form method="POST">
-    {% if areProyects %}
     <div class="col s3">  
       <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="create" name="create">Create a new user</button>
     </div>
+  </form>
+  <form method="POST">
     <div class="col s3 offset-s4">
       <input placeholder="Enter username" name="find-user" id="username">
     </div>
     <div class="col s2">
       <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Find user">
     </div>
+  </form>
     {% else %}
+  <form method="POST">
     <div class="col s3 offset-s7">
       <input placeholder="Enter username" name="find-user" id="username">
     </div>
     <div class="col s2">
       <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Find user">
     </div>
+  </form>
     {% endif %}
-  </form>   
 </div>
 
 <!-- user table -->
@@ -82,6 +86,8 @@
     <div class="col s3">
       <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="proyect" name="proyect">Create a new proyect</button>
     </div>
+  </form>
+  <form method="POST">
     <div class="col s3 offset-s4">
       <input placeholder="Enter proyect description" name="find-proyect" id="proyect">
     </div>
@@ -112,7 +118,7 @@
           <td>{{ proyect['status'] }}</td>
           <td>
             <form method="POST">
-                <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="change-dates" value="{{ proyect['id'] }}">Change dates</button>
+                <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="modify-proyect" value="{{ proyect['id'] }}">Modify</button>
                 <button class="btn waves-effect waves-ligth amber accent-1 black-text" type="submit" name="enable-proyect" value="{{ proyect['id'] }}">Enable</button>
                 <button class="btn waves-effect waves-ligth white black-text" type="submit" name="close-proyect" value="{{ proyect['id'] }}">Close</button>
             </form>
