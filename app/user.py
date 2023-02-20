@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, redirect, render_template, request, session, url_for
+    Blueprint, redirect, render_template, request, session, url_for, g
 )
 from app.auth import root_required, manager_required
 from app.db import get_db
@@ -86,8 +86,10 @@ def manager():
     db = get_db()
 
     if request.method == 'POST':
-        if 'change-date' in request.form:
-            pass
+        if 'modify' in request.form:
+            session['modify_proyect'] = request.form['modify']
+            return redirect(url_for('modifyProyect.modifyProyect'))
+
         elif 'enable-proyect' in request.form:
             proyId = request.form['enable-proyect']
             db.execute(
@@ -103,6 +105,21 @@ def manager():
                 (0, proyId)
             )
             db.commit()
+
+        elif 'create-proyect' in request.form:
+            return redirect(url_for('createProyect.createProyect'))
+            
+        elif 'find-proyect' in request.form:
+            proy = request.form['find-proyect'] # proyect to find
+
+            if proy != "":
+
+                proyects = db.execute(
+                    'SELECT * FROM proyect WHERE description = ?',
+                    (proy,)
+                )
+                return render_template('index/manager/managerUser.html', proyects = utilities.dataForProyectTable(proyects))
+
 
     proyects = db.execute(
         'SELECT * FROM proyect'

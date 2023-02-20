@@ -159,3 +159,16 @@ def manager_required(view):
         return view(**kwargs)
 
     return wrapped_view    
+
+def modifyProyect_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+
+        elif g.user['role'] != 'op_manager' and g.user['role'] != 'admin':
+            return redirect(url_for('user.index'))
+
+        return view(**kwargs)
+
+    return wrapped_view    

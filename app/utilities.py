@@ -1,4 +1,7 @@
 from datetime import datetime
+from flask import (
+    redirect, url_for
+)
 
 # some functions that we can use anywhere in the app
 def isEndAfterStart(date1, date2):
@@ -70,3 +73,11 @@ def dataForProyectTable(proyects):
         )
 
     return data
+
+
+def redirectToUser(user):
+    if user['role'] == 'admin':
+        return redirect(url_for('user.root'))
+
+    elif user['role'] == 'op_manager':
+        return redirect(url_for('user.manager'))

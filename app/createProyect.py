@@ -3,14 +3,14 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
-from app.auth import root_required
+from app.auth import modifyProyect_required
 from app.db import get_db
 from . import utilities
 
 bp = Blueprint('createProyect', __name__)
 
 @bp.route('/createProyect', methods=('GET', 'POST'))
-@root_required
+@modifyProyect_required
 def createProyect():
     if request.method == "POST":
         #request for the input
@@ -38,8 +38,8 @@ def createProyect():
                 error = f'Proyect is already created'
 
             else:
-                return redirect(url_for('user.root'))
+                return utilities.redirectToUser(g.user)
 
         flash(error)
 
-    return render_template('index/root/createProyect.html')
+    return render_template('proyect/createProyect.html')

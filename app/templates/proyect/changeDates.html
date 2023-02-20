@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Change dates{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <label class="left-align" for="star-date">Begins in</label>
+            <input type="date" value="Starting date" name="starting-date" required>
+            <label class="left-align" for="end-date">Ends in</label>
+            <input type="date" value="Ending date" name="end-date" required>
+            <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Create proyect">
+        </form>
+    </div>
+{% endblock %}
