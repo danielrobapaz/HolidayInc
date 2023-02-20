@@ -36,7 +36,11 @@ def dataForUserTable(users, proyects):
     
     data = []
 
-    for user in users:
+    for user in users: 
+        proyect = ''
+        if user['proyId'] is not None:
+            proyect = proyectList[user['proyId']]
+
         data.append(
             {
                 'id': user['id'],
@@ -44,7 +48,8 @@ def dataForUserTable(users, proyects):
                 'firstname': user['firstname'],
                 'secondname': user['secondname'],
                 'role': roles[user['role']],
-                'proyect': proyectList[user['proyId']]
+                'proyect': proyect,
+                'auth': user['auth']
             }
         )
 

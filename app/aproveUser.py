@@ -38,6 +38,6 @@ def aproveUser():
 
         db.commit()
 
-        return redirect(url_for('user.index'))
+        return redirect(url_for('user.root'))
 
     return render_template('index/root/aproveUser.html', proyects = proyects)

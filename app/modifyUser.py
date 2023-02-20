@@ -83,4 +83,4 @@ def changeProyect():
 
         return redirect(url_for('user.root'))
 
-    return render_template('index/root/changeProyect.html', proyects = proyects)
+    return render_template('/proyect/changeProyect.html', proyects = proyects)

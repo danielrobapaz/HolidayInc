@@ -38,7 +38,7 @@ def root():
 
         elif 'modify-user' in request.form:
             # action of modify button
-            id = request.form['modify']
+            id = request.form['modify-user']
             session['modify_user'] = id # store the user id to modify in session.
             return redirect(url_for("modifyUser.modifyUser"))
 
@@ -73,11 +73,28 @@ def root():
             )
             db.commit()
 
-    proyects = db.execute(
+        elif 'find-proyect' in request.form:
+            proy = request.form['find-proyect']
+            
+            proyectsAll = db.execute(
+                'SELECT * FROM proyect'
+            ).fetchall()
+
+            proyects = proyectsAll
+
+            if proy != "":
+                proyects = db.execute(
+                    'SELECT * FROM proyect WHERE id = ?',
+                    (proy,)
+                ).fetchall()
+
+            return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyectsAll), areProyects = proyectsAll != [], proyects = utilities.dataForProyectTable(proyects))
+
+    proyectsAll = db.execute(
         'SELECT * FROM proyect',
     ).fetchall()
 
-    return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyects), areProyects = proyects != [], proyects = utilities.dataForProyectTable(proyects))
+    return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyectsAll), areProyects = proyectsAll != [], proyects = utilities.dataForProyectTable(proyectsAll))
 
 
 @bp.route('/manager', methods=('POST', 'GET'))

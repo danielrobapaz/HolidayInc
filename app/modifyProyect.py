@@ -26,6 +26,12 @@ def modifyProyect():
                 (idProy)
             )
 
+            # unauthorize every user wich proyect id is proyId
+            db.execute(
+                'UPDATE user set auth = 0 WHERE proyId = ?',
+                (idProy)
+            )
+            
             # delete the proyId of every user
             db.execute(
                 'UPDATE user SET proyId = NULL WHERE proyId = ?',

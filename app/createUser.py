@@ -29,9 +29,9 @@ def createUser():
         if not username:
             error = 'Username is required.'
         elif not firstname:
-            error = 'First name is required'
+            error = 'First name is required.'
         elif not secondname:
-            error = 'Second name is required'
+            error = 'Second name is required.'
         elif not password:
             error = 'Password is required.'
 
