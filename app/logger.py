@@ -22,25 +22,29 @@ def logger_index():
 
 
     if request.method == 'POST':
-        find = request.form['find-log']
-        
-        logsFind = []
-        if find != "":
-            for log in logs:
-                if re.search(find, log['event']):
-                    logsFind.append({
-                      'id': log['id'],
-                      'date': log['date'],
-                      'event': log['event'],
-                      'user': log['user']  
-                    })
+        if 'find-log' in request.form:
+            find = request.form['find-log']
 
-            return render_template('index/logger/loggerIndex.html', areLogs = logsFind != [], logs = logsFind) 
-        
+            logsFind = []
+            if find != "":
+                for log in logs:
+                    if re.search(find, log['event']):
+                        logsFind.append({
+                          'id': log['id'],
+                          'date': log['date'],
+                          'event': log['event'],
+                          'user': log['user']  
+                        })
+
+                return render_template('index/logger/loggerIndex.html', logs = logsFind) 
+
+        elif 'return' in request.form:
+            return utilities.redirectToUser(g.user)
+
     if g.user['role'] != 'admin':
         logs = db.execute(
             'SELECT * FROM logger WHERE user = ?',
             (g.user['username'],)
         ).fetchall()
 
-    return render_template('index/logger/loggerIndex.html', areLogs = logs != [], logs = utilities.dataForLoggerTable(logs))
+    return render_template('index/logger/loggerIndex.html', logs = utilities.dataForLoggerTable(logs))
