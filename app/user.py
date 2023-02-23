@@ -7,7 +7,7 @@ from . import utilities
 
 
 # create the blueprint for the 'user'
-bp = Blueprint('user', __name__)
+bp = Blueprint('user', __name__, url_prefix='/user')
 
 
 @bp.route('/root', methods=('POST', 'GET'))
