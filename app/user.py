@@ -14,10 +14,7 @@ bp = Blueprint('user', __name__)
 @root_required
 def root():
     db = get_db()
-    users = db.execute(
-        'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ?',
-        ('admin',)
-    ).fetchall()
+    
 
     if request.method == 'POST':
         if 'create' in request.form:
@@ -51,6 +48,8 @@ def root():
         elif 'reject' in request.form:
             # action of reject button
             id = request.form['reject']
+
+            utilities.loggerQuery(db, 'admin', 'rejectUser', id)
             db.execute(
                 'DELETE FROM user WHERE id = ?',
                 (id,)
@@ -99,6 +98,11 @@ def root():
 
     proyectsAll = db.execute(
         'SELECT * FROM proyect',
+    ).fetchall()
+
+    users = db.execute(
+        'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ?',
+        ('admin',)
     ).fetchall()
 
     return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyectsAll), areProyects = proyectsAll != [], proyects = utilities.dataForProyectTable(proyectsAll))

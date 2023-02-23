@@ -3,7 +3,7 @@ from flask import (
 )
 
 from werkzeug.security import generate_password_hash
-
+from . import utilities
 from app.auth import root_required
 from app.db import get_db
 
@@ -20,6 +20,8 @@ def modifyUser():
     
     if request.method == 'POST':
         if 'delete' in request.form:
+            utilities.loggerQuery(db, 'admin', 'deleteUser', idModify)
+
             # delete the user from db
             db.execute(
                 "DELETE FROM user WHERE id = ?",
@@ -55,6 +57,10 @@ def changeRole():
                 "UPDATE user SET role = ? WHERE id = ?",
                 (roleModify, id)
             )
+            
+            username = utilities.findUsernameById(db, id)
+            utilities.loggerQuery(db, 'admin', 'setRole', [username, roleModify])
+
             db.commit()
 
             return redirect(url_for('user.root'))
@@ -78,6 +84,9 @@ def changeProyect():
             'UPDATE user SET proyId = ? WHERE id = ?',
             (proyId, session['modify_user']),
         )
+
+        username = utilities.findUsernameById(db, session['modify_user'])
+        utilities.loggerQuery(db, 'admin', 'setProyect', [username, proyId])
 
         db.commit()
 

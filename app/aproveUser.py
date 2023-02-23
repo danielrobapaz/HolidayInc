@@ -3,6 +3,7 @@ from flask import (
 )
 from app.auth import root_required
 from app.db import get_db
+from . import utilities
 
 bp = Blueprint('aproveUser', __name__)
 
@@ -35,6 +36,16 @@ def aproveUser():
             'UPDATE user SET auth = 1 WHERE id = ?',
             (session['aprove_user'])
         )
+
+        # logger querys
+        user = db.execute(
+            'SELECT username FROM user WHERE id = ?',
+            (session['aprove_user'])   
+        ).fetchone()['username']
+        
+        utilities.loggerQuery(db, 'admin', 'aproveUser', user)
+        utilities.loggerQuery(db, 'admin', 'setRole', [user, role])
+        utilities.loggerQuery(db, 'admin', 'setProyect', [user, proyectId])
 
         db.commit()
 

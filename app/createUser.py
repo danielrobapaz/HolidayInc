@@ -5,6 +5,7 @@ from flask import (
 from werkzeug.security import generate_password_hash
 from app.auth import root_required
 from app.db import get_db
+from . import utilities
 
 # creates a blueprint named 'createUser'. A blueprint is a way
 # to organize a group of related views.
@@ -42,6 +43,10 @@ def createUser():
                     "INSERT INTO user (username, firstname, secondname, password, role, proyId, auth) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     (username, firstname, secondname, generate_password_hash(password), role, proyect, 1)
                 )
+                utilities.loggerQuery(db, 'admin', 'createUser', username)
+                utilities.loggerQuery(db, 'admin', 'setRole', [username, role])
+                utilities.loggerQuery(db, 'admin', 'setProyect', [username, proyect])
+
                 db.commit()
 
             except db.IntegrityError:

@@ -6,7 +6,7 @@ from flask import (
 )
 
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from . import utilities
 from app.db import get_db
 
 # creates a blueprint named 'auth'. A blueprint is a way
@@ -43,6 +43,10 @@ def register():
                     "INSERT INTO user (username, firstname, secondname, password, role, auth) VALUES (?, ?, ?, ?, ?, ?)",
                     (username, firstname, secondname, generate_password_hash(password), 'waiting', 0)
                 )
+
+                # insert a new row to logger table in the databse
+                utilities.loggerQuery(db, 'system', 'register', username)
+
                 db.commit()
 
             except db.IntegrityError:

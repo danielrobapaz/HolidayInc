@@ -32,6 +32,7 @@ def createProyect():
                     'INSERT INTO proyect (description, start, end, status) VALUES (?, ?, ?, ?)',
                     (description,start, end, 0)
                 )
+                utilities.loggerQuery(db, g.user['username'], 'createProyect', description)
                 db.commit()
 
             except db.IntegrityError:

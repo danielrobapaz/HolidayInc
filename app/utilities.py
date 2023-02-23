@@ -25,15 +25,16 @@ def dataForUserTable(users, proyects):
     proyectList = {}
     for proyect in proyects:
         proyectList[proyect['id']] = proyect['description']
-
+    
     roles = {
         'op_manager' : 'Gerente de operaciones',
         'mechanic_sup' : 'Supervisor del area de mecanica',
         'painting_sup' : 'Supervisor del area de latoneria y pintura',
         'mechanic_spec' : 'Especialista en mecanica',
-        'electricity_spec' : 'Especialista en electricidad'
+        'electricity_spec' : 'Especialista en electricidad',
+        'waiting': ''
     }
-    
+
     data = []
 
     for user in users: 
@@ -99,11 +100,91 @@ def dataForLoggerTable(logs):
             {
                 'id': log['id'],
                 'date': log['date'],
-                'event': log['eventid'],
-                'user': log['user'],
-                'system': log['system'],
-                'log_text': log['log_text']
+                'event': log['event'],
+                'user': log['user']
             }
         )
-
     return data
+
+def findProyectDescById(db, id):
+    '''
+        Input: db: data base conexion object
+               id: integer, id of the proyect
+        Returns: The description of the proyect whose id is the given
+    '''
+
+    return db.execute(
+        'SELECT description FROM proyect WHERE id = ?',
+        (id),
+    ).fetchone()['description']
+
+def findUsernameById(db, id):
+    '''
+        Input: db: data base conection object
+               id: integer, id of the user
+        Returns: Username whose id is the given
+    '''
+
+    return db.execute(
+        'SELECT username FROM user WHERE id = ?',
+        (id)
+    ).fetchone()['username']
+
+def getEventMsg(db, content, mode):
+    '''
+        Input: db data base conection object
+               content of the message of the event
+               mode: mode of the event
+        Returns: A string that represents the event
+    '''
+    roles = {
+        'op_manager' : 'Gerente de operaciones',
+        'mechanic_sup' : 'Supervisor del area de mecanica',
+        'painting_sup' : 'Supervisor del area de latoneria y pintura',
+        'mechanic_spec' : 'Especialista en mecanica',
+        'electricity_spec' : 'Especialista en electricidad',
+        'waiting': ''
+    }
+
+    msg = ''
+    if mode == 'register':
+        msg = f'Register user \'{content}\' into system'
+
+    elif mode == 'createUser':
+        msg = f'Create user \'{content}\''
+
+    elif mode == 'createProyect':
+        msg = f'Create proyect \'{content}\''
+
+    elif mode == 'setProyect': 
+        msg = f'Set proyect \'{findProyectDescById(db, content[1])}\' to user \'{content[0]}\''
+
+    elif mode == 'setRole':
+        msg = f'Set role \'{roles[content[1]]}\' to user \'{content[0]}\''
+
+    elif mode == 'rejectUser':
+        msg = f'Reject user \'{findUsernameById(db, content)}\''
+
+    elif mode == 'aproveUser':
+        msg = f'Aprove user \'{content}\''
+
+    elif mode == 'deleteUser':
+        msg = f'Delete user \'{findUsernameById(db, content)}\''
+    return msg
+
+def loggerQuery(db, user, mode, content):
+    '''
+        Input: db: data base conexion object
+               user: user of the log
+               mode: operation 
+        Returns: Insert a log in logger table 
+    '''
+
+    # curr time
+    now = datetime.now()
+    currtime = now.strftime('%D - %H:%M')
+
+    db.execute(
+        'INSERT INTO logger (event, date, user) VALUES (?, ?, ?)',
+        (getEventMsg(db, content, mode), currtime, user)
+    )

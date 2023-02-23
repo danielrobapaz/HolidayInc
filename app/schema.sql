@@ -18,12 +18,9 @@ CREATE TABLE user (
 
 CREATE TABLE logger (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    eventid INTEGER NOT NULL,
+    event TEXT NOT NULL,
     date TEXT NOT NULL,
-    user TEXT NOT NULL,
-    system TEXT NOT NULL,
-    log_text TEXT NOT NULL,
-    FOREIGN KEY (user) references user(username)
+    user TEXT NOT NULL
 );
 
 CREATE TABLE systems (
