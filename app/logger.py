@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, redirect, render_template, request, session, url_for, g
 )
-from app.auth import root_required, manager_required
+from app.auth import login_required
 from app.db import get_db
 from . import utilities
 
@@ -11,7 +11,7 @@ bp = Blueprint('logger', __name__)
 
 
 @bp.route('/logger', methods=('POST', 'GET'))
-# @root_required
+@login_required
 def logger_index():
     db = get_db()
     logs = db.execute(

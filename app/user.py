@@ -96,7 +96,7 @@ def root():
 
         elif 'logs' in request.form:
             return redirect(url_for('logger.logger_index'))
-            
+
     proyectsAll = db.execute(
         'SELECT * FROM proyect',
     ).fetchall()
@@ -144,6 +144,8 @@ def manager():
                 )
                 return render_template('index/manager/managerUser.html', proyects = utilities.dataForProyectTable(proyects))
 
+        elif 'logs' in request.form:
+            return redirect(url_for('logger.logger_index'))
 
     proyects = db.execute(
         'SELECT * FROM proyect'
