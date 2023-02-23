@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1> {% block title %}Welcome, {{ g.user['username'] }} {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% if not areLogs %}
+  <h1> No hay logs </h1>
+    {% else %}
+  <form method="POST">
+    <div class="col s3 offset-s7">
+      <input placeholder="Enter log" name="find-log" id="log">
+    </div>
+    <div class="col s2">
+      <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Find logs">
+    </div>
+  </form>
+    {% endif %}
+</div>
+
+<!-- logs table -->
+<div class="left-align">
+  <h5 class="card-panel amber accent-1">Logs</h5>
+</div>
+
+<table class="centered">
+  <thead class="card-panel amber accent-1">
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Event</th>
+      <th>Username</th>
+      <th>System</th>
+      <th>Description</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>  
+    {% for log in logs %}
+      <tr>
+        <td>{{ log['id'] }}</td>
+        <td>{{ log['date']}}</td>
+        <td>{{ log['event'] }}</td>
+        <td>{{ log['user'] }}</td>
+        <td>{{ log['system'] }}</td>
+        <td>{{ log['log_text'] }}</td>
+        <td>
+          <form method="POST">
+              <button class="btn waves-effect waves-ligth white black-text" type="submit" name="delete-log" value="{{ log['id'] }}">Delete</button>
+          </form>
+        </td>
+       </tr>
+     {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}
