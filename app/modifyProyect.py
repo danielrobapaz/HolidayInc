@@ -21,22 +21,32 @@ def modifyProyect():
             db = get_db()
             idProy = session['modify_proyect']
 
+            utilities.loggerQuery(db, g.user['username'], 'deleteProyect', idProy)
             db.execute(
                 'DELETE FROM proyect WHERE id = ?',
                 (idProy)
             )
 
             # unauthorize every user wich proyect id is proyId
+            usersToUnAuthorize = db.execute(
+                'SELECT username FROM user WHERE proyId = ?',
+                (idProy)
+            ).fetchall()
+
             db.execute(
                 'UPDATE user set auth = 0 WHERE proyId = ?',
                 (idProy)
             )
-            
+
             # delete the proyId of every user
             db.execute(
                 'UPDATE user SET proyId = NULL WHERE proyId = ?',
                 (idProy)
             )
+            #log of every unauthorized user
+            for user in usersToUnAuthorize:
+                utilities.loggerQuery(db, 'system', 'unauthorizedUser', user['username'])
+                utilities.loggerQuery(db, 'system', 'removeProyect', user['username'])
             db.commit()
 
             # return to the respective view
@@ -71,6 +81,7 @@ def changeDates():
                 (end, idProy)
             )
 
+            utilities.loggerQuery(db, g.user['username'], 'changeDates', idProy)
             db.commit()
 
             return utilities.redirectToUser(g.user)

@@ -170,6 +170,24 @@ def getEventMsg(db, content, mode):
 
     elif mode == 'deleteUser':
         msg = f'Delete user \'{findUsernameById(db, content)}\''
+
+    elif mode == 'enableProyect':
+        msg = f'Enable proyect \'{findProyectDescById(db, content)}\''
+
+    elif mode == 'closeProyect':
+        msg = f'Close proyect \'{findProyectDescById(db, content)}\''
+    
+    elif mode == 'deleteProyect':
+        msg = f'Delete proyect \'{findProyectDescById(db, content)}\''
+
+    elif mode == 'unauthorizedUser':
+        msg = f'User \'{content}\' unauthorized'
+
+    elif mode == 'removeProyect':
+        msg = f'User \'{content}\' has no proyect assigned'
+    
+    elif mode == 'changeDates':
+        msg = f'Dates of proyect \'{findProyectDescById(db, content)}\' changed'
     return msg
 
 def loggerQuery(db, user, mode, content):

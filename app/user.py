@@ -15,7 +15,6 @@ bp = Blueprint('user', __name__)
 def root():
     db = get_db()
     
-
     if request.method == 'POST':
         if 'create' in request.form:
             # action of crete a new user button
@@ -49,7 +48,7 @@ def root():
             # action of reject button
             id = request.form['reject']
 
-            utilities.loggerQuery(db, 'admin', 'rejectUser', id)
+            utilities.loggerQuery(db, g.user['username'], 'rejectUser', id)
             db.execute(
                 'DELETE FROM user WHERE id = ?',
                 (id,)
@@ -62,6 +61,7 @@ def root():
                 'UPDATE proyect SET status = ? WHERE id = ?',
                 (1, proyId)
             )
+            utilities.loggerQuery(db, g.user['username'], 'enableProyect', proyId)
             db.commit()
 
         elif 'close-proyect' in request.form:
@@ -70,6 +70,7 @@ def root():
                 'UPDATE proyect SET status = ? WHERE id = ?',
                 (0, proyId)
             )
+            utilities.loggerQuery(db, g.user['username'], 'closeProyect', proyId)
             db.commit()
 
         elif 'find-proyect' in request.form:
@@ -124,6 +125,7 @@ def manager():
                 'UPDATE proyect SET status = ? WHERE id = ?',
                 (1, proyId)
             )
+            utilities.loggerQuery(db, g.user['username'], 'enableProyect', proyId)
             db.commit()
 
         elif 'close-proyect' in request.form:
@@ -132,6 +134,7 @@ def manager():
                 'UPDATE proyect SET status = ? WHERE id = ?',
                 (0, proyId)
             )
+            utilities.loggerQuery(db, g.user['username'], 'closeProyect', proyId)
             db.commit()
 
         elif 'create-proyect' in request.form:
