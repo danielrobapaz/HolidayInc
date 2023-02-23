@@ -86,3 +86,24 @@ def redirectToUser(user):
 
     elif user['role'] == 'op_manager':
         return redirect(url_for('user.manager'))
+
+def dataForLoggerTable(logs):
+    """
+    Input: logs: sql row object
+    Returns: a dict with the data of logs
+    """
+
+    data = []
+    for log in logs:
+        data.append(
+            {
+                'id': log['id'],
+                'date': log['date'],
+                'event': log['eventid'],
+                'user': log['user'],
+                'system': log['system'],
+                'log_text': log['log_text']
+            }
+        )
+
+    return data
