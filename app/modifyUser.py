@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, redirect, render_template, request, session, url_for
+    Blueprint, flash, redirect, render_template, request, session, url_for, g
 )
 
 from werkzeug.security import generate_password_hash
@@ -20,7 +20,7 @@ def modifyUser():
     
     if request.method == 'POST':
         if 'delete' in request.form:
-            utilities.loggerQuery(db, 'admin', 'deleteUser', idModify)
+            utilities.loggerQuery(db, g.user['username'], 'deleteUser', idModify)
 
             # delete the user from db
             db.execute(
@@ -59,7 +59,7 @@ def changeRole():
             )
             
             username = utilities.findUsernameById(db, id)
-            utilities.loggerQuery(db, 'admin', 'setRole', [username, roleModify])
+            utilities.loggerQuery(db, g.user['username'], 'setRole', [username, roleModify])
 
             db.commit()
 
@@ -86,7 +86,7 @@ def changeProyect():
         )
 
         username = utilities.findUsernameById(db, session['modify_user'])
-        utilities.loggerQuery(db, 'admin', 'setProyect', [username, proyId])
+        utilities.loggerQuery(db, g.user['username'], 'setProyect', [username, proyId])
 
         db.commit()
 

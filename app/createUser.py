@@ -43,9 +43,9 @@ def createUser():
                     "INSERT INTO user (username, firstname, secondname, password, role, proyId, auth) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     (username, firstname, secondname, generate_password_hash(password), role, proyect, 1)
                 )
-                utilities.loggerQuery(db, 'admin', 'createUser', username)
-                utilities.loggerQuery(db, 'admin', 'setRole', [username, role])
-                utilities.loggerQuery(db, 'admin', 'setProyect', [username, proyect])
+                utilities.loggerQuery(db, g.user['username'], 'createUser', username)
+                utilities.loggerQuery(db, g.user['username'], 'setRole', [username, role])
+                utilities.loggerQuery(db, g.user['username'], 'setProyect', [username, proyect])
 
                 db.commit()
 

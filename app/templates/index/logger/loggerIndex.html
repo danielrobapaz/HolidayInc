@@ -32,9 +32,6 @@
       <th>Date</th>
       <th>Event</th>
       <th>Username</th>
-      <th>System</th>
-      <th>Description</th>
-      <th>Options</th>
     </tr>
   </thead>
   <tbody>  
@@ -44,13 +41,6 @@
         <td>{{ log['date']}}</td>
         <td>{{ log['event'] }}</td>
         <td>{{ log['user'] }}</td>
-        <td>{{ log['system'] }}</td>
-        <td>{{ log['log_text'] }}</td>
-        <td>
-          <form method="POST">
-              <button class="btn waves-effect waves-ligth white black-text" type="submit" name="delete-log" value="{{ log['id'] }}">Delete</button>
-          </form>
-        </td>
        </tr>
      {% endfor %}
   </tbody>
