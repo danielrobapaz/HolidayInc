@@ -51,5 +51,7 @@ def create_app(test_config=None):
     from . import modifyProyect
     app.register_blueprint(modifyProyect.bp)
 
+    from . import logger
+    app.register_blueprint(logger.bp)
     
     return app
