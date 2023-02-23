@@ -5,6 +5,15 @@
 {% endblock %}
 
 {% block content %}
+<!-- log button -->
+<div class="row">
+  <div class="col s2 offset-s10">
+    <form method="POST">
+      <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="logs" id="logs">Logger</button>
+    </form>
+  </div>
+</div>
+
 <div class="row">
   {% if areProyects %}
   <form method="POST">
@@ -127,5 +136,4 @@
       {% endfor %}
     </tbody>
   </table>
-
 {% endblock %}

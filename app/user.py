@@ -94,6 +94,9 @@ def root():
             session['modify_proyect'] = request.form['modify-proyect']
             return redirect(url_for('modifyProyect.modifyProyect'))
 
+        elif 'logs' in request.form:
+            return redirect(url_for('logger.logger_index'))
+            
     proyectsAll = db.execute(
         'SELECT * FROM proyect',
     ).fetchall()

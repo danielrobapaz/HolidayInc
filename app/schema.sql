@@ -1,5 +1,9 @@
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS logger;
+DROP TABLE IF EXISTS systems;
+DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS proyect;
+DROP TABLE IF EXISTS user_proyect;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,14 +16,6 @@ CREATE TABLE user (
     auth INTEGER
 );
 
-CREATE TABLE user_proyect (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    userid INTEGER NOT NULL,
-    proyectid INTEGER NOT NULL,
-    FOREIGN KEY (userid) references user(id),
-    FOREIGN KEY (proyectid) references proyect(id)
-);
-
 CREATE TABLE logger (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     eventid INTEGER NOT NULL,
@@ -27,22 +23,20 @@ CREATE TABLE logger (
     user TEXT NOT NULL,
     system TEXT NOT NULL,
     log_text TEXT NOT NULL,
-    FOREIGN KEY (user) references user(username),
-    -- FOREIGN KEY (system) references systems(id),
-    -- FOREIGN KEY (eventid) references events(id)
+    FOREIGN KEY (user) references user(username)
 );
 
-CREATE TABLE systems {
+CREATE TABLE systems (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NO NULL
-}
+);
 
-CREATE TABLE events {
+CREATE TABLE events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     system TEXT NOT NULL,
     FOREIGN KEY (system) REFERENCES systems(id)
-}
+);
 
 CREATE TABLE proyect (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,4 +44,12 @@ CREATE TABLE proyect (
     start DATE NOT NULL,
     end DATE NOT NULL,
     status INTEGER
+);
+
+CREATE TABLE user_proyect (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userid INTEGER NOT NULL,
+    proyectid INTEGER NOT NULL,
+    FOREIGN KEY (userid) references user(id),
+    FOREIGN KEY (proyectid) references proyect(id)
 );
