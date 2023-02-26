@@ -118,6 +118,19 @@ def findProyectDescById(db, id):
         (id),
     ).fetchone()['description']
 
+
+# def findRoleDescById(db, id):
+#     '''
+#         Input: db: data base conexion object
+#                id: integer, id of the proyect
+#         Returns: The description of the proyect whose id is the given
+#     '''
+
+#     return db.execute(
+#         'SELECT name,description FROM roles WHERE id = ?',
+#         (id),
+#     ).fetchone()['description']
+
 def findUsernameById(db, id):
     '''
         Input: db: data base conection object
@@ -188,6 +201,9 @@ def getEventMsg(db, content, mode):
     
     elif mode == 'changeDates':
         msg = f'Dates of proyect \'{findProyectDescById(db, content)}\' changed'
+
+    elif mode == 'changePassword':
+        msg = f'User \'{content}\' changed it\'s password'
     return msg
 
 def loggerQuery(db, user, mode, content):
@@ -206,3 +222,21 @@ def loggerQuery(db, user, mode, content):
         'INSERT INTO logger (event, date, user) VALUES (?, ?, ?)',
         (getEventMsg(db, content, mode), currtime, user)
     )
+
+def dataForUserProfileInfoTable(userInfo):
+    """
+    Input: userInfo: sql row object
+    Returns: a dict with the data of userInfo
+    """
+
+    dataInfo = []
+    for info in userInfo:
+        dataInfo.append(
+            {
+                'firstname': info['firstname'],
+                'secondname': info['secondname'],
+                'role': info['role'],
+            }
+        )
+
+    return dataInfo

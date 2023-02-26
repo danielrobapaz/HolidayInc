@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1> {% block title %}Welcome, {{ g.user['username'] }} {% endblock %}</h1>
+{% endblock %}
+
+
+{% block content %}
+  <!-- User Info table -->
+  <div class="left-align">
+    <h5 class="card-panel amber accent-1">User Information</h5>
+  </div>
+  
+  <table class="centered">
+    <thead class="card-panel amber accent-1">
+      <tr>
+        <th>Name</th>
+        <th>Second Name</th>
+        <th>Change Password</th>
+      </tr>
+    </thead>
+    <tbody>  
+      {% for user in userInfo %}
+        <tr>
+          <td>{{ user['firstname'] }}</td>
+          <td>{{ user['secondname']}}</td>
+          <td>
+            <form method="POST">
+                <div class="col s3">
+                  <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="change-password" name="change-password">Change password</button>
+                </div>
+              </form>
+          </td>
+         </tr>
+       {% endfor %}
+    </tbody>
+  </table>
+  
+  
+  {% endblock %}

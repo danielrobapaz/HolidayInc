@@ -1,9 +1,10 @@
 from flask import (
-    Blueprint, redirect, render_template, request, session, url_for, g
+    Blueprint, redirect, render_template, request, session, url_for, g, flash
 )
-from app.auth import root_required, manager_required
+from app.auth import root_required, manager_required, login_required
 from app.db import get_db
 from . import utilities
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 # create the blueprint for the 'user'
@@ -159,3 +160,62 @@ def manager():
     ).fetchall()
 
     return render_template('index/manager/managerUser.html', proyects = utilities.dataForProyectTable(proyects))
+
+@bp.route('/profile', methods=('POST', 'GET'))
+@login_required
+def profile():
+    db = get_db()
+    
+    userInfo = db.execute(
+        'SELECT firstname,secondname,role FROM user where username = ?',(g.user['username'],)
+    ).fetchall()
+
+    if request.method == 'POST':
+        if 'change-password' in request.form:
+            # action of crete a new user button
+            return redirect(url_for("user.changePassword"))
+
+    return render_template('index/user/user.html', userInfo = utilities.dataForUserProfileInfoTable(userInfo))
+
+
+@bp.route('/profile/changePassword', methods=('POST', 'GET'))
+@login_required
+def changePassword():
+    db = get_db()
+    
+    userPassword = db.execute(
+        'SELECT password FROM user where username = ?',(g.user['username'],)
+    ).fetchone()
+    if request.method == 'POST':
+        currentPassword = request.form['current-password']
+        newPassword = request.form['new-password']
+        
+        error = None
+
+        if not currentPassword:
+            error = 'Current password required.'
+        elif not newPassword:
+            error = 'New password is required.'
+
+        if error is None:
+            try:
+                # insert a new user to the user table in the database
+                if check_password_hash(userPassword['password'], currentPassword):
+                    db.execute(
+                        "UPDATE user SET password = ? where username = ?",
+                        (generate_password_hash(newPassword),g.user['username'])
+                    )
+                    utilities.loggerQuery(db, g.user['username'], 'changePassword', g.user['username'])
+                    db.commit()
+
+            except db.IntegrityError:
+                error = f"Password cannot be changed."
+
+            else:
+                # the user changed it's password, redirect to login view
+                return redirect(url_for("user.profile"))
+
+        flash(error) # show any error that happened
+
+
+    return render_template('index/user/changePassword.html')

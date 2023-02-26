@@ -96,7 +96,7 @@ def login():
             elif user['role'] == 'op_manager':
                 return redirect(url_for('user.manager'))
 
-            #return redirect(url_for('user.user'))
+            return redirect(url_for('user.profile'))
 
         flash(error)
 
