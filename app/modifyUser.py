@@ -42,6 +42,8 @@ def modifyUser():
 @bp.route('/changeRole', methods=('GET', 'POST'))
 @root_required
 def changeRole():
+    db = get_db()
+    roles = db.execute('SELECT name,description FROM roles')
     if request.method == 'POST':
         error = None
 
@@ -50,9 +52,7 @@ def changeRole():
 
         else:
             roleModify = request.form['select']
-            id = session['modify_user']
-            db = get_db()
-
+            id = session['modify_user']        
             db.execute(
                 "UPDATE user SET role = ? WHERE id = ?",
                 (roleModify, id)
@@ -66,7 +66,7 @@ def changeRole():
             return redirect(url_for('user.root'))
 
         flash(error)
-    return render_template('/index/root/changeRole.html')
+    return render_template('/index/root/changeRole.html', roles = roles)
 
 @bp.route('/changeProyect', methods=('GET', 'POST'))
 @root_required

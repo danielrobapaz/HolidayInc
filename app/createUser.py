@@ -62,4 +62,8 @@ def createUser():
         'SELECT id, description FROM proyect',
     ).fetchall()
 
-    return render_template('index/root/createUser.html', proyects = proyects)
+    roles = db.execute(
+        'SELECT name,description FROM roles'
+    ).fetchall()
+
+    return render_template('index/root/createUser.html', proyects = proyects, roles = roles)
