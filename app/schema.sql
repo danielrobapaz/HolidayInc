@@ -35,6 +35,12 @@ CREATE TABLE events (
     FOREIGN KEY (system) REFERENCES systems(id)
 );
 
+CREATE TABLE roles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    description TEXT NOT NULL
+);
+
 CREATE TABLE proyect (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     description TEXT UNIQUE NOT NULL,
