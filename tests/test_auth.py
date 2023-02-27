@@ -1,5 +1,7 @@
 from . import BaseTestsClass
 from app.db import get_db
+#from http.cookies import SimpleCookie
+#import flask 
 
 class LoginTest(BaseTestsClass):
 
@@ -33,7 +35,9 @@ class LoginTest(BaseTestsClass):
         print("registerUser\n\n")
         res = self.client.post('/auth/register', data={
             'username':'joje',
-            'password':'123'
+            'password':'123',
+            'firstname':'jorge',
+            'secondname':'correia'
         }, follow_redirects=True)
         
         assert res.status_code == 200
@@ -51,7 +55,9 @@ class LoginTest(BaseTestsClass):
         username = 'joje'
         res = self.client.post('/auth/register', data={
             'username':username,
-            'password':'123'
+            'password':'123',
+            'firstname':'jorge',
+            'secondname':'correia'
         }, follow_redirects=True)
         assert res.status_code == 200
         
@@ -110,7 +116,7 @@ class LoginTest(BaseTestsClass):
         
         html = res.get_data(as_text=True)
         
-        assert "Welcome, user" in html
+        assert "Welcome, joje" in html
     
     def test_loginNonAuthorized(self):
         print("loginNonAuthorized\n\n")
@@ -141,7 +147,9 @@ class LoginTest(BaseTestsClass):
         username = 'root'
         res = self.client.post('/auth/register', data={
             'username':username,
-            'password':'root'
+            'password':'root',
+            'firstname':'root',
+            'secondname':'root'
         }, follow_redirects=True)
 
         assert res.status_code == 200
@@ -163,21 +171,46 @@ class LoginTest(BaseTestsClass):
         assert res.status_code == 200
 
         html = res.get_data(as_text=True)
+        assert "Welcome, root" in html
 
-        assert "Welcome, admin" in html
+    def test_rootCreateProject(self):
+        print("rootCreateProject\n\n")
+        self.test_loginRoot()
+        with self.app.app_context():
+            db = get_db()
+            assert db.execute("select * from proyect").fetchone() is None
+
+        res = self.client.post('/createProyect', data={
+            'description':'proyect1',
+            'starting-date':'2023-01-26',
+            'end-date':'2023-02-26'
+        }, follow_redirects=True)
+
+        with self.app.app_context():
+            db = get_db()
+            data = db.execute("select * from proyect").fetchall()
+            #count how many user has auth = 1;
+            count = 0
+            for row in data:
+                count = count + 1
+            assert count == 1
+        assert res.status_code == 200
+        assert res.request.path == '/user/root'
 
     def test_rootCreateUser(self):
         print("rootCreateUser\n\n")
-        self.test_loginRoot()
+        self.test_rootCreateProject()
         res = self.client.post('/createUser', data={
             'username':'joje',
             'password':'joje',
+            'firstname':'jorge',
+            'secondname':'correia',
+            'role':'op_manager',
+            'proyect':'1'
         }, follow_redirects=True)
-
         assert res.status_code == 200
+        assert res.request.path == '/user/root'
 
-        assert res.request.path == '/'
-     
     def test_rootCreateUserAlreadyRegistered(self):
         print("rootCreateUserAlreadyRegistered\n\n")
         self.test_registerUserAuthorize()
@@ -185,42 +218,48 @@ class LoginTest(BaseTestsClass):
         res = self.client.post('/createUser', data={
             'username':'joje',
             'password':'joje',
+            'firstname':'jorge',
+            'secondname':'correia',
+            'role':'op_manager',
+            'proyect':'1'
         }, follow_redirects=True)
         assert res.status_code == 200
         html = res.get_data(as_text=True)
         assert f'User &#39;joje&#39; is already registered.' in html
 
-    def test_rootApproveUser(self):
-        print("rootApproveUser\n\n")
-        self.test_registerUser()
-        self.test_loginRoot()
+    # def test_rootApproveUser(self):
+    #     print("rootApproveUser\n\n")
+    #     self.test_registerUser()
+    #     self.test_rootCreateProject()
         
-        with self.app.app_context():
-            id = get_db().execute("select id from user where auth = 0").fetchone()
-            assert get_db().execute("select * from user where auth = 0").fetchone() is not None
-        
-        res = self.client.post('/', data={
-            'aprove':id,
-        }, follow_redirects=True)
-        with self.app.app_context():
-            assert get_db().execute("select * from user where auth = 1").fetchone() is not None
-        assert res.status_code == 200
-        assert res.request.path == '/'
+    #     with self.app.app_context():
+    #         id = get_db().execute("select id from user where auth = 0").fetchone()
+    #         assert get_db().execute("select * from user where auth = 0").fetchone() is not None
+    #     res = self.client.post('/aproveUser', data={
+    #         'role':'op_manager',
+    #         'proyect':'1',
+    #         'aprove':'aprove',
+
+    #     }, follow_redirects=True)
+    #     print(flask.session['aprove_user'])
+    #     print(res)
+    #     with self.app.app_context():
+    #         assert get_db().execute("select * from user where auth = 1").fetchone() is not None
+    #     assert res.status_code == 200
+    #     assert res.request.path == '/user/root'
 
     def test_rootRejectUser(self):
         print("rootRejectUser\n\n")
         self.test_registerUser()
         self.test_loginRoot()
-
+        
         with self.app.app_context():
             db = get_db()
             id = db.execute("select id from user where auth = 0").fetchone()
             assert db.execute("select * from user where auth = 0").fetchone() is not None
-    
-        res = self.client.post('/', data={
-            'reject': id,
+        res = self.client.post('/user/root', data={
+            'reject': id[0],
         }, follow_redirects=True)
-
         with self.app.app_context():
             db = get_db()
             data = db.execute("select * from user where auth = 1")
@@ -230,9 +269,8 @@ class LoginTest(BaseTestsClass):
             for row in data:
                 count = count + 1
             assert count == 1
-
         assert res.status_code == 200
-        assert res.request.path == '/'
+        assert res.request.path == '/user/root'
 
     def test_loginEmptyAll(self):
         print("loginEmptyAll\n\n")
@@ -285,3 +323,37 @@ class LoginTest(BaseTestsClass):
         },follow_redirects=True)
         
         assert res.status_code == 400
+
+    def test_rootEnableProject(self):
+        print("rootEnableProject\n\n")
+        self.test_rootCreateProject()
+        with self.app.app_context():
+            db = get_db()
+            assert db.execute("select status from proyect where id = 1").fetchone()[0] == 0
+
+        res = self.client.post('/user/root', data={
+            'enable-proyect':'1',
+        }, follow_redirects=True)
+
+        with self.app.app_context():
+            db = get_db()
+            assert db.execute("select status from proyect where id = 1").fetchone()[0] == 1
+        assert res.status_code == 200
+        assert res.request.path == '/user/root'
+
+    def test_rootDisableProject(self):
+        print("rootDisableProject\n\n")
+        self.test_rootEnableProject()
+        with self.app.app_context():
+            db = get_db()
+            assert db.execute("select status from proyect where id = 1").fetchone()[0] == 1
+
+        res = self.client.post('/user/root', data={
+            'close-proyect':'1',
+        }, follow_redirects=True)
+
+        with self.app.app_context():
+            db = get_db()
+            assert db.execute("select status from proyect where id = 1").fetchone()[0] == 0
+        assert res.status_code == 200
+        assert res.request.path == '/user/root'
