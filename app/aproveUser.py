@@ -22,25 +22,25 @@ def aproveUser():
         # update user role
         db.execute(
             'UPDATE user SET role = ? WHERE id = ?',
-            (role, session['aprove_user'])
+            (role, session['aprove_user'],)
         )
 
         # update user proyectId
         db.execute(
             'UPDATE user SET proyId = ? WHERE id = ?',
-            (proyectId, session['aprove_user'])
+            (proyectId, session['aprove_user'],)
         )
 
         # update user auth
         db.execute(
             'UPDATE user SET auth = 1 WHERE id = ?',
-            (session['aprove_user'])
+            (session['aprove_user'],)
         )
 
         # logger querys
         user = db.execute(
             'SELECT username FROM user WHERE id = ?',
-            (session['aprove_user'])   
+            (session['aprove_user'],)   
         ).fetchone()['username']
         
         utilities.loggerQuery(db, 'admin', 'aproveUser', user)

@@ -140,7 +140,7 @@ def findUsernameById(db, id):
 
     return db.execute(
         'SELECT username FROM user WHERE id = ?',
-        (id)
+        (id,)
     ).fetchone()['username']
 
 def getEventMsg(db, content, mode):
