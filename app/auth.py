@@ -145,7 +145,7 @@ def root_required(view):
             return redirect(url_for('auth.login'))
 
         elif g.user['role'] != 'admin':
-            return redirect(url_for('user.user'))
+            return redirect(url_for('user.profile'))
 
         return view(**kwargs)
 
@@ -158,7 +158,7 @@ def manager_required(view):
             return redirect(url_for('auth.login'))
 
         elif g.user['role'] != 'op_manager':
-            return redirect(url_for('user.user'))
+            return redirect(url_for('user.profile'))
 
         return view(**kwargs)
 
@@ -171,7 +171,7 @@ def modifyProyect_required(view):
             return redirect(url_for('auth.login'))
 
         elif g.user['role'] != 'op_manager' and g.user['role'] != 'admin':
-            return redirect(url_for('user.user'))
+            return redirect(url_for('user.profile'))
 
         return view(**kwargs)
 
