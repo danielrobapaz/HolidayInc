@@ -1,8 +1,8 @@
+from datetime import datetime
 from . import BaseTestsClass
 from app.db import get_db
 #from http.cookies import SimpleCookie
-#import flask 
-
+from flask import session
 class LoginTest(BaseTestsClass):
 
     '''def test_loadHome(self):
@@ -188,12 +188,8 @@ class LoginTest(BaseTestsClass):
 
         with self.app.app_context():
             db = get_db()
-            data = db.execute("select * from proyect").fetchall()
-            #count how many user has auth = 1;
-            count = 0
-            for row in data:
-                count = count + 1
-            assert count == 1
+            data = db.execute("select * from proyect where description = 'proyect1'").fetchone()
+            assert data['end'] == datetime(2023,2,26).date() and data['start'] == datetime(2023,1,26).date() and data['description'] == 'proyect1'
         assert res.status_code == 200
         assert res.request.path == '/user/root'
 
@@ -227,26 +223,25 @@ class LoginTest(BaseTestsClass):
         html = res.get_data(as_text=True)
         assert f'User &#39;joje&#39; is already registered.' in html
 
-    # def test_rootApproveUser(self):
-    #     print("rootApproveUser\n\n")
-    #     self.test_registerUser()
-    #     self.test_rootCreateProject()
+    def test_rootApproveUser(self):
+        print("rootApproveUser\n\n")
+        self.test_registerUser()
+        self.test_rootCreateProject()
         
-    #     with self.app.app_context():
-    #         id = get_db().execute("select id from user where auth = 0").fetchone()
-    #         assert get_db().execute("select * from user where auth = 0").fetchone() is not None
-    #     res = self.client.post('/aproveUser', data={
-    #         'role':'op_manager',
-    #         'proyect':'1',
-    #         'aprove':'aprove',
-
-    #     }, follow_redirects=True)
-    #     print(flask.session['aprove_user'])
-    #     print(res)
-    #     with self.app.app_context():
-    #         assert get_db().execute("select * from user where auth = 1").fetchone() is not None
-    #     assert res.status_code == 200
-    #     assert res.request.path == '/user/root'
+        with self.app.app_context():
+            id = get_db().execute("select id from user where auth = 0").fetchone()[0]
+            assert get_db().execute("select * from user where auth = 0").fetchone() is not None
+        with self.client.session_transaction() as session:
+            session['aprove_user'] = id
+        res = self.client.post('/aproveUser', data={
+            'role':'op_manager',
+            'proyect':'1',
+            'aprove':'aprove',
+        }, follow_redirects=True)
+        with self.app.app_context():
+            assert get_db().execute("select * from user where auth = 1").fetchone() is not None
+        assert res.status_code == 200
+        assert res.request.path == '/user/root'
 
     def test_rootRejectUser(self):
         print("rootRejectUser\n\n")
@@ -355,5 +350,25 @@ class LoginTest(BaseTestsClass):
         with self.app.app_context():
             db = get_db()
             assert db.execute("select status from proyect where id = 1").fetchone()[0] == 0
+        assert res.status_code == 200
+        assert res.request.path == '/user/root'
+
+    def test_rootModifyProject(self):
+        self.test_rootCreateProject()
+        print("rootCreateProject\n\n")
+        with self.app.app_context():
+            db = get_db()
+            assert db.execute("select * from proyect where id = 1").fetchone() is not None
+        with self.client.session_transaction() as session:
+            session['modify_proyect'] = '1'
+        res = self.client.post('/changeDatesProyect', data={
+            'starting-date':datetime(2023,4,26).date(),
+            'end-date':datetime(2023,5,26).date(),
+        }, follow_redirects=True)
+        
+        with self.app.app_context():
+            db = get_db()
+            data = db.execute("select * from proyect where description = 'proyect1'").fetchone()
+            assert data['end'] == datetime(2023,5,26).date() and data['start'] == datetime(2023,4,26).date()
         assert res.status_code == 200
         assert res.request.path == '/user/root'
