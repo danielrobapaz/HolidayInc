@@ -15,7 +15,12 @@ bp = Blueprint('user', __name__, url_prefix='/user')
 @root_required
 def root():
     db = get_db()
-    
+    find = False
+    users = db.execute(
+        'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ?',
+        ('admin',)
+    ).fetchall()
+
     if request.method == 'POST':
         if 'create' in request.form:
             # action of crete a new user button
@@ -25,13 +30,15 @@ def root():
             return redirect(url_for('createProyect.createProyect'))
 
         elif 'find-user' in request.form:
-            user = request.form['find']
+            user = request.form['find-user']
 
             if user != "":
                 users = db.execute (
-                    'SELECT id, username, firstname, secondname, role, auth FROM user WHERE role != ? AND username = ?',
+                    'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ? AND username = ?',
                     ('admin', user)
                 ).fetchall()
+
+                find = True
 
         elif 'modify-user' in request.form:
             # action of modify button
@@ -85,7 +92,7 @@ def root():
 
             if proy != "":
                 proyects = db.execute(
-                    'SELECT * FROM proyect WHERE id = ?',
+                    'SELECT * FROM proyect WHERE description = ?',
                     (proy,)
                 ).fetchall()
 
@@ -102,10 +109,11 @@ def root():
         'SELECT * FROM proyect',
     ).fetchall()
 
-    users = db.execute(
-        'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ?',
-        ('admin',)
-    ).fetchall()
+    if not find:
+        users = db.execute(
+            'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ?',
+            ('admin',)
+        ).fetchall()
 
     return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyectsAll), areProyects = proyectsAll != [], proyects = utilities.dataForProyectTable(proyectsAll))
 
