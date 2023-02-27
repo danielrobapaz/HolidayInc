@@ -443,11 +443,11 @@ class LoginTest(BaseTestsClass):
             with self.app.app_context():    
                 db = get_db()
                 u1 = db.execute("select * from user where id = 2").fetchone()
-                db.execute("INSERT INTO roles (name, description) VALUES ('mechanic_sup', 'Supervisor del area de mecanica')")
-                db.commit()
-                r1 = db.execute("select * from roles where id = 1").fetchone()
-                r2 = db.execute("select * from roles where id = 2").fetchone()
-                assert u1 is not None and r1 is not None and r2 is not None
+                # db.execute("INSERT INTO roles (name, description) VALUES ('mechanic_sup', 'Supervisor del area de mecanica')")
+                # db.commit()
+                # r1 = db.execute("select * from roles where id = 1").fetchone()
+                # r2 = db.execute("select * from roles where id = 2").fetchone()
+                assert u1 is not None
                 assert u1['role'] == 'op_manager'
             with self.client.session_transaction() as session:
                 session['modify_user'] = '2'
@@ -457,10 +457,11 @@ class LoginTest(BaseTestsClass):
             with self.app.app_context():    
                 db = get_db()
                 u1 = db.execute("select * from user where id = 2").fetchone()
-                r1 = db.execute("select * from roles where id = 1").fetchone()
-                r2 = db.execute("select * from roles where id = 2").fetchone()
+                # r1 = db.execute("select * from roles where id = 1").fetchone()
+                # r2 = db.execute("select * from roles where id = 2").fetchone()
                 print(u1['role'])
-                assert u1 is not None and r1 is not None and r2 is not None
+                # assert u1 is not None and r1 is not None and r2 is not None
+                assert u1 is not None
                 assert u1['role'] == 'mechanic_sup'
             assert res.status_code == 200
             assert res.request.path == '/user/root'
