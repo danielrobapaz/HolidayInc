@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Welcome, {{ g.user['username'] }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  {% if areProyects %}
+  <form method="POST">
+    <div class="col s3">  
+      <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="create" name="create">Create a new user</button>
+    </div>
+  </form>
+  <form method="POST">
+    <div class="col s3 offset-s4">
+      <input placeholder="Enter username" name="find-user" id="username">
+    </div>
+    <div class="col s2">
+      <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Find user">
+    </div>
+  </form>
+    {% else %}
+  <form method="POST">
+    <div class="col s3 offset-s7">
+      <input placeholder="Enter username" name="find-user" id="username">
+    </div>
+    <div class="col s2">
+      <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Find user">
+    </div>
+  </form>
+    {% endif %}
+</div>
+
+<!-- user table -->
+<div class="left-align">
+  <h5 class="card-panel amber accent-1">Users.</h5>
+</div>
+
+<table class="centered">
+  <thead class="card-panel amber accent-1">
+    <tr>
+      <th>User Id</th>
+      <th>Username</th>
+      <th>First name</th>
+      <th>Second name</th>
+      <th>Role</th>
+      <th>Current proyect</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>  
+    {% for user in users %}
+      <tr>
+        <td>{{ user['id'] }}</td>
+        <td>{{ user['username']}}</td>
+        <td>{{ user['firstname'] }}</td>
+        <td>{{ user['secondname'] }}</td>
+        <td>{{ user['role'] }}</td>
+        <td>{{ user['proyect'] }}</td>
+        <td>
+          <form method="POST">
+            {% if user['auth'] == 0 %}
+              {% if areProyects %}
+              <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="aprove" value="{{ user['id'] }}">Aprove</button>
+              {% endif %}
+            <button class="btn waves-effect waves-ligth white black-text" type="submit" name="reject" value="{{ user['id'] }}">Reject</button>
+            {% else %}
+            <button class="btn waves-effect waves-ligth white black-text" type="submit" name="modify-user" value="{{ user['id'] }}">Modify</button>
+            {% endif %}
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

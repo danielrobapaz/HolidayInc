@@ -9,9 +9,9 @@ from app.db import get_db
 
 
 # creates a blueprint naned 'modifyUser'.
-bp = Blueprint('modifyUser', __name__, url_prefix='/modifyUser')
+bp = Blueprint('modifyUser', __name__, url_prefix='/root/user')
 
-@bp.route('/', methods=('GET', 'POST'))
+@bp.route('/modifyUser', methods=('GET', 'POST'))
 @root_required
 def modifyUser():
     # id of user to modify
@@ -39,7 +39,7 @@ def modifyUser():
     return render_template('index/root/modifyUser.html', id=session['modify_user'])
 
 
-@bp.route('/changeRole', methods=('GET', 'POST'))
+@bp.route('/modifyUser/changeRole', methods=('GET', 'POST'))
 @root_required
 def changeRole():
     db = get_db()
@@ -72,7 +72,7 @@ def changeRole():
         flash(error)
     return render_template('/index/root/changeRole.html', roles = roles)
 
-@bp.route('/changeProyect', methods=('GET', 'POST'))
+@bp.route('/modifyUser/changeProyect', methods=('GET', 'POST'))
 @root_required
 def changeProyect():
     db = get_db()

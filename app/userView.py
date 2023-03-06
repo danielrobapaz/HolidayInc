@@ -9,8 +9,41 @@ from . import utilities
 
 # creates a blueprint named 'createUser'. A blueprint is a way
 # to organize a group of related views.
-bp = Blueprint('createUser', __name__)
+bp = Blueprint('userView', __name__, url_prefix='/root')
 
+@bp.route('/users', methods=('GET', 'POST'))
+@root_required
+def userView():
+    db = get_db()
+
+    if request.method == 'POST':
+        if 'create' in request.form:
+            return redirect(url_for('userView.createUser'))
+        
+        elif 'modify-user' in request.form:
+            session['modify_user'] = request.form['modify-user']
+            return redirect(url_for('modifyUser.modifyUser'))
+    
+    users = db.execute(
+        """SELECT 
+            u.id as id, 
+            u.username as username, 
+            u.firstname as firstname, 
+            u.secondname as secondname, 
+            r.name as role, 
+            p.description as proyect, 
+            u.auth as auth
+           FROM user u
+           INNER JOIN roles r ON u.roleId = r.id
+           INNER JOIN proyect p ON u.proyId = p.id 
+           WHERE u.id != 0"""
+    ).fetchall()
+
+    areProyects = db.execute(
+        """SELECT * FROM proyect"""
+    ).fetchall() != []
+
+    return render_template('index/root/userView.html', users=users, areProyects=areProyects)
 
 @bp.route('/createUser', methods=('GET', 'POST'))
 @root_required

@@ -15,35 +15,12 @@ bp = Blueprint('user', __name__, url_prefix='/user')
 @root_required
 def root():
     db = get_db()
-    find = False
-    users = db.execute(
-        """SELECT 
-            u.id as id, 
-            u.username as username, 
-            u.firstname as firstname, 
-            u.secondname as secondname, 
-            r.name as role, 
-            p.description as proyect, 
-            u.auth as auth
-           FROM user u
-           INNER JOIN roles r ON u.roleId = r.id
-           INNER JOIN proyect p ON u.proyId = p.id 
-           WHERE u.id != 0"""
-    ).fetchall()
-
-    proyects = db.execute(
-        """SELECT
-            p.id,
-            p.description as description,
-            p.start as start,
-            p.end as end,
-            s.name as status
-           FROM proyect p
-           INNER JOIN proyectStatus s ON p.statusId = s.id"""
-    ).fetchall()
-
     if request.method == 'POST':
-        if 'create' in request.form:
+        if 'user' in request.form:
+            return redirect(url_for('userView.userView'))
+        elif 'proyect' in request.form:
+            pass
+        elif 'create' in request.form:
             # action of crete a new user button
             return redirect(url_for("createUser.createUser"))
 
@@ -87,7 +64,7 @@ def root():
         elif 'enable-proyect' in request.form:
             proyId = request.form['enable-proyect']
             db.execute(
-                'UPDATE proyect SET status = ? WHERE id = ?',
+                'UPDATE proyect SET statusId = ? WHERE id = ?',
                 (1, proyId)
             )
             utilities.loggerQuery(db, g.user['username'], 'enableProyect', proyId)
@@ -96,8 +73,8 @@ def root():
         elif 'close-proyect' in request.form:
             proyId = request.form['close-proyect']
             db.execute(
-                'UPDATE proyect SET status = ? WHERE id = ?',
-                (0, proyId)
+                'UPDATE proyect SET statusId = ? WHERE id = ?',
+                (2, proyId)
             )
             utilities.loggerQuery(db, g.user['username'], 'closeProyect', proyId)
             db.commit()
@@ -125,7 +102,33 @@ def root():
 
         elif 'logs' in request.form:
             return redirect(url_for('logger.logger_index'))
- 
+    
+    users = db.execute(
+        """SELECT 
+            u.id as id, 
+            u.username as username, 
+            u.firstname as firstname, 
+            u.secondname as secondname, 
+            r.name as role, 
+            p.description as proyect, 
+            u.auth as auth
+           FROM user u
+           INNER JOIN roles r ON u.roleId = r.id
+           INNER JOIN proyect p ON u.proyId = p.id 
+           WHERE u.id != 0"""
+    ).fetchall()
+
+    proyects = db.execute(
+        """SELECT
+            p.id,
+            p.description as description,
+            p.start as start,
+            p.end as end,
+            s.name as status
+           FROM proyect p
+           INNER JOIN proyectStatus s ON p.statusId = s.id"""
+    ).fetchall()
+
     return render_template('index/root/rootUser.html', users=users, areProyects=proyects != [], proyects=proyects)
 
 

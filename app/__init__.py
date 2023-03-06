@@ -36,8 +36,8 @@ def create_app(test_config=None):
     app.register_blueprint(user.bp)
     app.add_url_rule('/', endpoint='index')
 
-    from . import createUser
-    app.register_blueprint(createUser.bp)
+    from . import userView
+    app.register_blueprint(userView.bp)
 
     from . import modifyUser
     app.register_blueprint(modifyUser.bp)
