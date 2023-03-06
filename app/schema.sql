@@ -12,34 +12,12 @@ CREATE TABLE user (
     firstname TEXT NOT NULL,
     secondname TEXT NOT NULL,
     password TEXT NOT NULL,
-    role TEXT,
+    roleId INTEGER,
     proyId INTEGER,
-    auth INTEGER
-);
+    auth INTEGER,
 
-CREATE TABLE logger (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    event TEXT NOT NULL,
-    date TEXT NOT NULL,
-    user TEXT NOT NULL
-);
-
-CREATE TABLE systems (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NO NULL
-);
-
-CREATE TABLE events (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    system TEXT NOT NULL,
-    FOREIGN KEY (system) REFERENCES systems(id)
-);
-
-CREATE TABLE roles (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE,
-    description TEXT NOT NULL
+    FOREIGN KEY (proyId) REFERENCES proyect(id),
+    FOREIGN KEY (roleId) REFERENCES roles(id) 
 );
 
 CREATE TABLE proyect (
@@ -50,10 +28,16 @@ CREATE TABLE proyect (
     status INTEGER
 );
 
-CREATE TABLE user_proyect (
+CREATE TABLE logger (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    userid INTEGER NOT NULL,
-    proyectid INTEGER NOT NULL,
-    FOREIGN KEY (userid) references user(id),
-    FOREIGN KEY (proyectid) references proyect(id)
+    event TEXT NOT NULL,
+    date TEXT NOT NULL,
+    user TEXT NOT NULL
+
+    FOREIGN KEY (user) REFERENCES user(username)
+);
+
+CREATE TABLE roles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
 );
