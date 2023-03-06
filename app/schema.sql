@@ -1,9 +1,6 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS logger;
-DROP TABLE IF EXISTS systems;
-DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS proyect;
-DROP TABLE IF EXISTS user_proyect;
 DROP TABLE IF EXISTS roles;
 
 CREATE TABLE user (
@@ -16,8 +13,8 @@ CREATE TABLE user (
     proyId INTEGER,
     auth INTEGER,
 
-    FOREIGN KEY (proyId) REFERENCES proyect(id),
-    FOREIGN KEY (roleId) REFERENCES roles(id) 
+    FOREIGN KEY (roleId) REFERENCES roles(id),
+    FOREIGN KEY (proyId) REFERENCES proyect(id)
 );
 
 CREATE TABLE proyect (
@@ -33,11 +30,9 @@ CREATE TABLE logger (
     event TEXT NOT NULL,
     date TEXT NOT NULL,
     user TEXT NOT NULL
-
-    FOREIGN KEY (user) REFERENCES user(username)
 );
 
 CREATE TABLE roles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL UNIQUE
 );
