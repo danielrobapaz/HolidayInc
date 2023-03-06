@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS logger;
 DROP TABLE IF EXISTS proyect;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS proyectStatus;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,7 +23,9 @@ CREATE TABLE proyect (
     description TEXT UNIQUE NOT NULL,
     start DATE NOT NULL,
     end DATE NOT NULL,
-    status INTEGER
+    statusId INTEGER,
+
+    FOREIGN KEY (statusId) REFERENCES proyectStatus(id)
 );
 
 CREATE TABLE logger (
@@ -35,4 +38,9 @@ CREATE TABLE logger (
 CREATE TABLE roles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE proyectStatus (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
 );

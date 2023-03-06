@@ -22,14 +22,9 @@
             <label class="left-align" for="role">Role.</label>
             <select class="browser-default" name="role" required>
                 <option value="" disabled selected>Choose your option</option>
-                <option value="op_manager">Gerente de operaciones</option>
-                <option value="mechanic_sup">Supervisor de area de mecanica general</option>
-                <option value="painting_sup">Supervisor de area de latoneria y pintura</option>
-                <option value="mechanic_spec">Especialista en mecanica</option>
-                <option value="electricity_spec">Especialista en electricidad</option>
-                {# % for role in roles %# }
-                <!-- <option value="{{ role['name']}}">{{ role['description']}}</option>> -->
-                {# % endfor  %#}
+                {% for role in roles %}
+                <option value="{{ role['id']}}">{{ role['name']}}</option>
+                {% endfor %}
                 
             </select>
 
@@ -37,7 +32,7 @@
             <select class="browser-default" name="proyect" required>
                 <option value="" disabled selected>Choose a proyect</option>
                 {% for proyect in proyects %}
-                    <option value="{{ proyect['id']}}">{{ proyect['description']}}</option>>
+                <option value="{{ proyect['id']}}">{{ proyect['description']}}</option>
                 {% endfor %}
             </select>
             

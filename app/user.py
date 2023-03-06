@@ -17,8 +17,29 @@ def root():
     db = get_db()
     find = False
     users = db.execute(
-        'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ?',
-        ('admin',)
+        """SELECT 
+            u.id as id, 
+            u.username as username, 
+            u.firstname as firstname, 
+            u.secondname as secondname, 
+            r.name as role, 
+            p.description as proyect, 
+            u.auth as auth
+           FROM user u
+           INNER JOIN roles r ON u.roleId = r.id
+           INNER JOIN proyect p ON u.proyId = p.id 
+           WHERE u.id != 0"""
+    ).fetchall()
+
+    proyects = db.execute(
+        """SELECT
+            p.id,
+            p.description as description,
+            p.start as start,
+            p.end as end,
+            s.name as status
+           FROM proyect p
+           INNER JOIN proyectStatus s ON p.statusId = s.id"""
     ).fetchall()
 
     if request.method == 'POST':
@@ -104,18 +125,8 @@ def root():
 
         elif 'logs' in request.form:
             return redirect(url_for('logger.logger_index'))
-
-    proyectsAll = db.execute(
-        'SELECT * FROM proyect',
-    ).fetchall()
-
-    if not find:
-        users = db.execute(
-            'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ?',
-            ('admin',)
-        ).fetchall()
-
-    return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyectsAll), areProyects = proyectsAll != [], proyects = utilities.dataForProyectTable(proyectsAll))
+ 
+    return render_template('index/root/rootUser.html', users=users, areProyects=proyects != [], proyects=proyects)
 
 
 @bp.route('/manager', methods=('POST', 'GET'))

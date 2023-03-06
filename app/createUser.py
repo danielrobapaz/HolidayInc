@@ -40,7 +40,8 @@ def createUser():
             try:
                 # insert a new user to the user table in the database
                 db.execute(
-                    "INSERT INTO user (username, firstname, secondname, password, role, proyId, auth) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    """INSERT INTO user (username, firstname, secondname, password, roleId, proyId, auth) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?)""",
                     (username, firstname, secondname, generate_password_hash(password), role, proyect, 1)
                 )
                 utilities.loggerQuery(db, g.user['username'], 'createUser', username)
@@ -59,11 +60,18 @@ def createUser():
         flash(error) # show any error that happened
 
     proyects = db.execute(
-        'SELECT id, description FROM proyect',
+        """SELECT 
+            id, 
+            description 
+           FROM proyect""",
     ).fetchall()
 
     roles = db.execute(
-        'SELECT name,description FROM roles'
+        """SELECT 
+            id,
+            name 
+           FROM roles
+           WHERE id != 1"""
     ).fetchall()
 
     return render_template('index/root/createUser.html', proyects = proyects, roles = roles)

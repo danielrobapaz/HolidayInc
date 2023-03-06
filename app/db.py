@@ -47,16 +47,19 @@ def init_db_command():
     # inserting the admin user, this will happen every time the db is initialized
     db = get_db()
     try:
-        roles = ['Gerente de operaciones',
+        roles = ['admin',
+                 'Gerente de operaciones',
                  'Analista de operaciones', 
                  'Supervisor de mecanica', 
                  'Supervisor de pintura y latoneria', 
                  'Especialista en electricidad']
         
+        proyStatus = ['Enabled', 'Closed']
+
         db.execute(
             """INSERT INTO user (username, firstname, secondname, password, roleId, auth) 
                VALUES (?, ?, ?, ?, ?, ?)""",
-            ('root', 'root', 'root', generate_password_hash('root'), 0, 1)
+            ('root', 'root', 'root', generate_password_hash('root'), 1, 1)
         )
 
         for role in roles:
@@ -66,6 +69,12 @@ def init_db_command():
                    (role,)
             )
 
+        for status in proyStatus:
+            db.execute(
+                """INSERT INTO proyectStatus (name)
+                   VALUES (?)""",
+                   (status,)
+            )
 
         db.commit()
     except db.IntegrityError:

@@ -18,6 +18,7 @@
                     <option value="mechanic_spec">Especialista en mecanica</option>
                     <option value="electricity_spec">Especialista en electricidad</option>
                     {# % for role in roles % #}
+                    <option value="{{role['id']}}">{{ role['name']} }</option>
                     <!-- <option value="{# role['name'] #}">{# role['description'] #}</option>> -->
                     {# % endfor % #}
                 </select>

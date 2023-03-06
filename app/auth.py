@@ -88,12 +88,12 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            session['role'] = user['role']
+            session['role_id'] = user['roleId']
 
-            if user['role'] == 'admin':
+            if session['role_id'] == 1:
                 return redirect(url_for('user.root'))
 
-            elif user['role'] == 'op_manager':
+            elif session['role_id'] == 2:
                 return redirect(url_for('user.manager'))
 
             return redirect(url_for('user.profile'))
@@ -144,7 +144,7 @@ def root_required(view):
         if g.user is None:
             return redirect(url_for('auth.login'))
 
-        elif g.user['role'] != 'admin':
+        elif g.user['roleId'] != 1:
             return redirect(url_for('user.profile'))
 
         return view(**kwargs)
@@ -157,7 +157,7 @@ def manager_required(view):
         if g.user is None:
             return redirect(url_for('auth.login'))
 
-        elif g.user['role'] != 'op_manager':
+        elif g.user['roleId'] != 2:
             return redirect(url_for('user.profile'))
 
         return view(**kwargs)
@@ -170,7 +170,7 @@ def modifyProyect_required(view):
         if g.user is None:
             return redirect(url_for('auth.login'))
 
-        elif g.user['role'] != 'op_manager' and g.user['role'] != 'admin':
+        elif g.user['roleId'] != 1 and g.user['roleId'] != 2:
             return redirect(url_for('user.profile'))
 
         return view(**kwargs)

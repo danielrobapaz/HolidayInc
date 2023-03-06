@@ -82,10 +82,10 @@ def dataForProyectTable(proyects):
 
 
 def redirectToUser(user):
-    if user['role'] == 'admin':
+    if user['roleId'] == 1:
         return redirect(url_for('user.root'))
 
-    elif user['role'] == 'op_manager':
+    elif user['roleId'] == 2:
         return redirect(url_for('user.manager'))
 
 def dataForLoggerTable(logs):
@@ -119,17 +119,16 @@ def findProyectDescById(db, id):
     ).fetchone()['description']
 
 
-# def findRoleDescById(db, id):
-#     '''
-#         Input: db: data base conexion object
-#                id: integer, id of the proyect
-#         Returns: The description of the proyect whose id is the given
-#     '''
-
-#     return db.execute(
-#         'SELECT name,description FROM roles WHERE id = ?',
-#         (id),
-#     ).fetchone()['description']
+def findRoleNameById(db, id):
+    '''
+        Input: db: data base conection object
+               id: integer, id of the role
+        Returns: The name of the role whose id is the given
+    '''
+    return db.execute(
+        'SELECT name FROM roles WHERE id = ?',
+        (id),
+    ).fetchone()['name']
 
 def findUsernameById(db, id):
     '''
@@ -150,14 +149,6 @@ def getEventMsg(db, content, mode):
                mode: mode of the event
         Returns: A string that represents the event
     '''
-    roles = {
-        'op_manager' : 'Gerente de operaciones',
-        'mechanic_sup' : 'Supervisor del area de mecanica',
-        'painting_sup' : 'Supervisor del area de latoneria y pintura',
-        'mechanic_spec' : 'Especialista en mecanica',
-        'electricity_spec' : 'Especialista en electricidad',
-        'waiting': ''
-    }
 
     msg = ''
     if mode == 'register':
@@ -173,7 +164,7 @@ def getEventMsg(db, content, mode):
         msg = f'Set proyect \'{findProyectDescById(db, content[1])}\' to user \'{content[0]}\''
 
     elif mode == 'setRole':
-        msg = f'Set role \'{roles[content[1]]}\' to user \'{content[0]}\''
+        msg = f'Set role \'{findRoleNameById(db, content[1])}\' to user \'{content[0]}\''
 
     elif mode == 'rejectUser':
         msg = f'Reject user \'{findUsernameById(db, content)}\''

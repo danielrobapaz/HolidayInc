@@ -29,8 +29,8 @@ def createProyect():
         if error is None:
             try:
                 db.execute(
-                    'INSERT INTO proyect (description, start, end, status) VALUES (?, ?, ?, ?)',
-                    (description,start, end, 0)
+                    'INSERT INTO proyect (description, start, end, statusId) VALUES (?, ?, ?, ?)',
+                    (description,start, end, 2)
                 )
                 utilities.loggerQuery(db, g.user['username'], 'createProyect', description)
                 db.commit()
