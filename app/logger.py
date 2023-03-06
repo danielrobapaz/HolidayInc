@@ -41,7 +41,7 @@ def logger_index():
         elif 'return' in request.form:
             return utilities.redirectToUser(g.user)
 
-    if g.user['role'] != 'admin':
+    if g.user['roleId'] != 1:
         logs = db.execute(
             'SELECT * FROM logger WHERE user = ?',
             (g.user['username'],)

@@ -43,7 +43,11 @@ def modifyUser():
 @root_required
 def changeRole():
     db = get_db()
-    roles = db.execute('SELECT name,description FROM roles')
+    roles = db.execute("""SELECT 
+                            id, name 
+                          FROM roles
+                          WHERE id != 1""").fetchall()
+    
     if request.method == 'POST':
         error = None
 
@@ -54,7 +58,7 @@ def changeRole():
             roleModify = request.form['select']
             id = session['modify_user']        
             db.execute(
-                "UPDATE user SET role = ? WHERE id = ?",
+                "UPDATE user SET roleId = ? WHERE id = ?",
                 (roleModify, id)
             )
             
