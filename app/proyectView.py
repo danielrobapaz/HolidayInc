@@ -6,6 +6,7 @@ from flask import (
 from app.auth import modifyProyect_required
 from app.db import get_db
 from . import utilities
+import re
 
 bp = Blueprint('proyectView', __name__, url_prefix='/root')
 
@@ -13,6 +14,7 @@ bp = Blueprint('proyectView', __name__, url_prefix='/root')
 @modifyProyect_required
 def proyectView():
     db = get_db()
+    flag = False
 
     if request.method == 'POST':
         if 'create-proyect' in request.form:
@@ -40,22 +42,49 @@ def proyectView():
             return redirect(url_for('user.root'))
 
         elif 'find-proyect' in request.form:
-            pass
+            find = request.form['find-proyect']
+            proyectsToFilter = db.execute(
+
+                """SELECT
+                 p.id as id,
+                 p.description as description,
+                 p.start as start,
+                 p.end as end,
+                 s.name as status
+                FROM proyect p
+                INNER JOIN proyectStatus s ON p.statusId = s.id"""        
+            ).fetchall()
+
+            proyectsFiltered = []
+            for proyect in proyectsToFilter:
+                if re.search(find, proyect['description']):
+                    proyectsFiltered.append({
+                        'id': proyect['id'],
+                        'description': proyect['description'],
+                        'start': proyect['start'],
+                        'end': proyect['end'],
+                        'status': proyect['status']
+                    })
+
+            proyects = proyectsFiltered
+            flag = True
 
         elif 'modify-proyect' in request.form:
             session['modify_proyect'] = request.form['modify-proyect']
             return redirect(url_for('modifyProyect.modifyProyect'))
     
-    proyects = db.execute(
-        """SELECT
-            p.id,
-            p.description as description,
-            p.start as start,
-            p.end as end,
-            s.name as status
-           FROM proyect p
-           INNER JOIN proyectStatus s ON p.statusId = s.id"""
-    ).fetchall()
+    if not flag:
+        proyects = db.execute(
+            """SELECT
+                p.id,
+                p.description as description,
+                p.start as start,
+                p.end as end,
+                s.name as status
+               FROM proyect p
+               INNER JOIN proyectStatus s ON p.statusId = s.id"""
+        ).fetchall()
+
     return render_template('proyect/proyectView.html', proyects=proyects)
 
 @bp.route('/proyect/createProyect', methods=('GET', 'POST'))

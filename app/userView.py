@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash
 from app.auth import root_required
 from app.db import get_db
 from . import utilities
+import re
 
 # creates a blueprint named 'createUser'. A blueprint is a way
 # to organize a group of related views.
@@ -15,6 +16,7 @@ bp = Blueprint('userView', __name__, url_prefix='/root')
 @root_required
 def userView():
     db = get_db()
+    flag = False
 
     if request.method == 'POST':
         if 'create' in request.form:
@@ -40,22 +42,55 @@ def userView():
 
         elif 'return' in request.form:
             return redirect(url_for('user.root'))
+        
+        elif 'find-user' in request.form:
+            find = request.form['find-user']
 
+            usersToFilter = db.execute(
+                """SELECT 
+                    u.id as id, 
+                    u.username as username, 
+                    u.firstname as firstname, 
+                    u.secondname as secondname, 
+                    r.name as role, 
+                    p.description as proyect, 
+                    u.auth as auth
+                   FROM user u
+                   JOIN roles r ON u.roleId = r.id
+                   LEFT JOIN proyect p ON u.proyId = p.id 
+                   WHERE u.id != 1"""
+            ).fetchall()
+
+            usersFiltered = []
+            for user in usersToFilter:
+                if re.search(find, user['username']) or re.search(find, user['firstname']) or re.search(find, user['secondname']):
+                    usersFiltered.append({
+                        'id': user['id'],
+                        'username': user['username'],
+                        'firstname': user['firstname'],
+                        'secondname': user['secondname'],
+                        'role': user['role'],
+                        'proyect': user['proyect'],
+                        'auth': user['auth']
+                    }) 
+            users = usersFiltered
+            flag = True
     
-    users = db.execute(
-        """SELECT 
-            u.id as id, 
-            u.username as username, 
-            u.firstname as firstname, 
-            u.secondname as secondname, 
-            r.name as role, 
-            p.description as proyect, 
-            u.auth as auth
-           FROM user u
-           JOIN roles r ON u.roleId = r.id
-           LEFT JOIN proyect p ON u.proyId = p.id 
-           WHERE u.id != 1"""
-    ).fetchall()
+    if not flag:
+        users = db.execute(
+            """SELECT 
+                u.id as id, 
+                u.username as username, 
+                u.firstname as firstname, 
+                u.secondname as secondname, 
+                r.name as role, 
+                p.description as proyect, 
+                u.auth as auth
+               FROM user u
+               JOIN roles r ON u.roleId = r.id
+               LEFT JOIN proyect p ON u.proyId = p.id 
+               WHERE u.id != 1"""
+        ).fetchall()
 
     areProyects = db.execute(
         """SELECT * FROM proyect"""
