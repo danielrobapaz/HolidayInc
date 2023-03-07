@@ -40,8 +40,8 @@ def register():
             try:
                 # insert a new user to the user table in the database
                 db.execute(
-                    "INSERT INTO user (username, firstname, secondname, password, role, auth) VALUES (?, ?, ?, ?, ?, ?)",
-                    (username, firstname, secondname, generate_password_hash(password), 'waiting', 0)
+                    "INSERT INTO user (username, firstname, secondname, password, roleId, auth) VALUES (?, ?, ?, ?, ?, ?)",
+                    (username, firstname, secondname, generate_password_hash(password), 2, 0)
                 )
 
                 # insert a new row to logger table in the databse
@@ -103,7 +103,7 @@ def login():
     return render_template('auth/login.html')
 
 
-# a function that runds before the view function,
+# a function that runs before the view function,
 # no matter what URL is requested.
 # It checks if a user id is stored in session
 # and gets the user's data from the database 

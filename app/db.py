@@ -48,6 +48,7 @@ def init_db_command():
     db = get_db()
     try:
         roles = ['admin',
+                 'Waiting',
                  'Gerente de operaciones',
                  'Analista de operaciones', 
                  'Supervisor de mecanica', 

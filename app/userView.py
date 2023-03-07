@@ -23,6 +23,21 @@ def userView():
         elif 'modify-user' in request.form:
             session['modify_user'] = request.form['modify-user']
             return redirect(url_for('modifyUser.modifyUser'))
+        
+        elif 'aprove' in request.form:
+            session['aprove_user'] = request.form['aprove']
+            return redirect(url_for('userView.aproveUser'))
+        
+        elif 'reject' in request.form:
+            id = request.form['reject']
+
+            utilities.loggerQuery(db, g.user['username'], 'rejectUser', id)
+            db.execute(
+                'DELETE FROM user WHERE id = ?',
+                (id,)
+            )
+            db.commit()
+
     
     users = db.execute(
         """SELECT 
@@ -34,9 +49,9 @@ def userView():
             p.description as proyect, 
             u.auth as auth
            FROM user u
-           INNER JOIN roles r ON u.roleId = r.id
-           INNER JOIN proyect p ON u.proyId = p.id 
-           WHERE u.id != 0"""
+           JOIN roles r ON u.roleId = r.id
+           LEFT JOIN proyect p ON u.proyId = p.id 
+           WHERE u.id != 1"""
     ).fetchall()
 
     areProyects = db.execute(
@@ -44,6 +59,7 @@ def userView():
     ).fetchall() != []
 
     return render_template('index/root/userView.html', users=users, areProyects=areProyects)
+
 
 @bp.route('/createUser', methods=('GET', 'POST'))
 @root_required
@@ -108,3 +124,49 @@ def createUser():
     ).fetchall()
 
     return render_template('index/root/createUser.html', proyects = proyects, roles = roles)
+
+@bp.route('/aproveUser', methods=('POST', 'GET'))
+@root_required
+def aproveUser():
+    db = get_db()
+    proyects = db.execute(
+        'SELECT * FROM proyect'
+    ).fetchall()
+
+    if request.method == 'POST':
+        role = request.form['role']
+        proyectId = request.form['proyect']
+
+        # update user role
+        db.execute(
+            'UPDATE user SET role = ? WHERE id = ?',
+            (role, session['aprove_user'],)
+        )
+
+        # update user proyectId
+        db.execute(
+            'UPDATE user SET proyId = ? WHERE id = ?',
+            (proyectId, session['aprove_user'],)
+        )
+
+        # update user auth
+        db.execute(
+            'UPDATE user SET auth = 1 WHERE id = ?',
+            (session['aprove_user'],)
+        )
+
+        # logger querys
+        user = db.execute(
+            'SELECT username FROM user WHERE id = ?',
+            (session['aprove_user'],)   
+        ).fetchone()['username']
+        
+        utilities.loggerQuery(db, 'admin', 'aproveUser', user)
+        utilities.loggerQuery(db, 'admin', 'setRole', [user, role])
+        utilities.loggerQuery(db, 'admin', 'setProyect', [user, proyectId])
+
+        db.commit()
+
+        return redirect(url_for('user.root'))
+
+    return render_template('index/root/aproveUser.html', proyects = proyects)

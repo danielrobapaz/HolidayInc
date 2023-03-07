@@ -18,118 +18,14 @@ def root():
     if request.method == 'POST':
         if 'user' in request.form:
             return redirect(url_for('userView.userView'))
-        elif 'proyect' in request.form:
-            pass
-        elif 'create' in request.form:
-            # action of crete a new user button
-            return redirect(url_for("createUser.createUser"))
 
         elif 'proyect' in request.form:
-            return redirect(url_for('createProyect.createProyect'))
-
-        elif 'find-user' in request.form:
-            user = request.form['find-user']
-
-            if user != "":
-                users = db.execute (
-                    'SELECT id, username, firstname, secondname, role, proyId, auth FROM user WHERE role != ? AND username = ?',
-                    ('admin', user)
-                ).fetchall()
-
-                find = True
-
-        elif 'modify-user' in request.form:
-            # action of modify button
-            id = request.form['modify-user']
-            session['modify_user'] = id # store the user id to modify in session.
-            return redirect(url_for("modifyUser.modifyUser"))
-
-        elif 'aprove' in request.form:
-            # action of aprove button
-            id = request.form['aprove']
-            session['aprove_user'] = id
-            return redirect(url_for("aproveUser.aproveUser"))
-            
-        elif 'reject' in request.form:
-            # action of reject button
-            id = request.form['reject']
-
-            utilities.loggerQuery(db, g.user['username'], 'rejectUser', id)
-            db.execute(
-                'DELETE FROM user WHERE id = ?',
-                (id,)
-            )
-            db.commit()
-
-        elif 'enable-proyect' in request.form:
-            proyId = request.form['enable-proyect']
-            db.execute(
-                'UPDATE proyect SET statusId = ? WHERE id = ?',
-                (1, proyId)
-            )
-            utilities.loggerQuery(db, g.user['username'], 'enableProyect', proyId)
-            db.commit()
-
-        elif 'close-proyect' in request.form:
-            proyId = request.form['close-proyect']
-            db.execute(
-                'UPDATE proyect SET statusId = ? WHERE id = ?',
-                (2, proyId)
-            )
-            utilities.loggerQuery(db, g.user['username'], 'closeProyect', proyId)
-            db.commit()
-
-        elif 'find-proyect' in request.form:
-            proy = request.form['find-proyect']
-            
-            proyectsAll = db.execute(
-                'SELECT * FROM proyect'
-            ).fetchall()
-
-            proyects = proyectsAll
-
-            if proy != "":
-                proyects = db.execute(
-                    'SELECT * FROM proyect WHERE description = ?',
-                    (proy,)
-                ).fetchall()
-
-            return render_template('index/root/rootUser.html', users=utilities.dataForUserTable(users, proyectsAll), areProyects = proyectsAll != [], proyects = utilities.dataForProyectTable(proyects))
-
-        elif 'modify-proyect' in request.form:
-            session['modify_proyect'] = request.form['modify-proyect']
-            return redirect(url_for('modifyProyect.modifyProyect'))
+            return redirect(url_for('proyectView.proyectView'))
 
         elif 'logs' in request.form:
             return redirect(url_for('logger.logger_index'))
-    
-    users = db.execute(
-        """SELECT 
-            u.id as id, 
-            u.username as username, 
-            u.firstname as firstname, 
-            u.secondname as secondname, 
-            r.name as role, 
-            p.description as proyect, 
-            u.auth as auth
-           FROM user u
-           INNER JOIN roles r ON u.roleId = r.id
-           INNER JOIN proyect p ON u.proyId = p.id 
-           WHERE u.id != 0"""
-    ).fetchall()
 
-    proyects = db.execute(
-        """SELECT
-            p.id,
-            p.description as description,
-            p.start as start,
-            p.end as end,
-            s.name as status
-           FROM proyect p
-           INNER JOIN proyectStatus s ON p.statusId = s.id"""
-    ).fetchall()
-
-    return render_template('index/root/rootUser.html', users=users, areProyects=proyects != [], proyects=proyects)
+    return render_template('index/root/rootUser.html')
 
 
 @bp.route('/manager', methods=('POST', 'GET'))
