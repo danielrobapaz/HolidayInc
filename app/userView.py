@@ -38,6 +38,9 @@ def userView():
             )
             db.commit()
 
+        elif 'return' in request.form:
+            return redirect(url_for('user.root'))
+
     
     users = db.execute(
         """SELECT 

@@ -39,7 +39,7 @@ def logger_index():
                 return render_template('index/logger/loggerIndex.html', logs = logsFind) 
 
         elif 'return' in request.form:
-            return utilities.redirectToUser(g.user)
+            return utilities.redirectFromLogger(g.user)
 
     if g.user['roleId'] != 1:
         logs = db.execute(

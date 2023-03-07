@@ -36,6 +36,9 @@ def proyectView():
             utilities.loggerQuery(db, g.user['username'], 'closeProyect', proyId)
             db.commit()
 
+        elif 'return' in request.form:
+            return redirect(url_for('user.root'))
+
         elif 'find-proyect' in request.form:
             pass
 
@@ -85,7 +88,7 @@ def createProyect():
                 error = f'Proyect is already created'
 
             else:
-                return utilities.redirectToUser(g.user)
+                return utilities.redirectFromProyect(g.user)
 
         flash(error)
 

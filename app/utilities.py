@@ -14,80 +14,20 @@ def isEndAfterStart(date1, date2):
 
     return date2_obj >= date1_obj
 
-
-def dataForUserTable(users, proyects):
-    """
-    Input: users: sql row object, proyects: sql row object
-    Returns: a dict with the data of users and proyects
-    """
-
-    # create a list of the proyects
-    proyectList = {}
-    for proyect in proyects:
-        proyectList[proyect['id']] = proyect['description']
-    
-    roles = {
-        'op_manager' : 'Gerente de operaciones',
-        'mechanic_sup' : 'Supervisor del area de mecanica',
-        'painting_sup' : 'Supervisor del area de latoneria y pintura',
-        'mechanic_spec' : 'Especialista en mecanica',
-        'electricity_spec' : 'Especialista en electricidad',
-        'waiting': ''
-    }
-
-    data = []
-
-    for user in users: 
-        proyect = ''
-        if user['proyId'] is not None:
-            proyect = proyectList[user['proyId']]
-
-        data.append(
-            {
-                'id': user['id'],
-                'username': user['username'],
-                'firstname': user['firstname'],
-                'secondname': user['secondname'],
-                'role': roles[user['role']],
-                'proyect': proyect,
-                'auth': user['auth']
-            }
-        )
-
-    return data
-
-def dataForProyectTable(proyects):
-    """
-    Input: proyects: sql row object
-    Returns: a dict with the data of proyects
-    """
-
-    data = []
-    for proyect in proyects:
-        status = 'Closed'
-        if proyect['status'] == 1:
-            status = 'Enabled'
-
-        data.append(
-            {
-                'id': proyect['id'],
-                'description': proyect['description'],
-                'start': proyect['start'],
-                'end': proyect['end'],
-                'status': status
-            }
-        )
-
-    return data
-
-
-def redirectToUser(user):
+def redirectFromProyect(user):
     if user['roleId'] == 1:
-        return redirect(url_for('user.root'))
+        return redirect(url_for('proyectView.proyectView'))
 
     elif user['roleId'] == 2:
         return redirect(url_for('user.manager'))
 
+def redirectFromLogger(user):
+    if user['roleId'] == 1:
+        return redirect(url_for('user.root'))
+    
+    elif user['roleId'] == 2:
+        return redirect(url_for('user.manager'))
+    
 def dataForLoggerTable(logs):
     """
     Input: logs: sql row object
