@@ -50,5 +50,8 @@ def create_app(test_config=None):
 
     from . import logger
     app.register_blueprint(logger.bp)
+
+    from . import analistView
+    app.register_blueprint(analistView.bp)
     
     return app
