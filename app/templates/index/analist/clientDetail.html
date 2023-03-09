@@ -21,6 +21,7 @@
             <button class="btn amber accent-3 black-text" name="add">Add car</button>
         </div>
     </form>
+    <!--find car-->
     <form method="POST">
       <div class="col s3 offset-s4">
         <input placeholder="Enter car" name="find">
@@ -50,6 +51,7 @@
             <th>Motor Serial</th>
             <th>Color</th>
             <th>Problem</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -64,6 +66,16 @@
             <td>{{ car['motorSerial'] }}</td>
             <td>{{ car['color'] }}</td>
             <td>{{ car['problem'] }}</td>
+            <td>
+                <form method = "POST">
+                    <button class="btn amber accent-4 black-text" name="modify" value="{{ car['id'] }}">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button class="btn amber accent-2 black-text" name="delete" value="{{ car['id' ]}}">
+                        <i class="material-icons">delete</i>
+                    </button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

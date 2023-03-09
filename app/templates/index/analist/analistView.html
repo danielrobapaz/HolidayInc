@@ -16,15 +16,28 @@
 {% endif %}
 
 <div class="row">
+    <!--add client button-->
     <form method="POST">
         <div class="col s3">
-            <button class="btn amber accent-3 black-text" name="add" id="name">Add client</button>
+            <button class="btn amber accent-3 black-text" name="add">Add clients</button>
         </div>
     </form>
+    <!--find clien button-->
+    <form method="POST">
+      <div class="col s3 offset-s4">
+        <input placeholder="Enter car" name="find">
+      </div>
+      <div class="col s2">
+        <button class="btn amber accent-3 black-text" type="submit" value="Find logs">
+            <i class="material-icons">find_in_page</i>
+        </button>
+      </div>
+    </form>
 </div>
+
 <!--client table-->
 <div class="left-align">
-    <h5 class="card-panel amber accent-1">Cars</h5>
+    <h5 class="card-panel amber accent-1">Clients</h5>
 </div>
 
 <table class="centered">
@@ -56,6 +69,12 @@
                 <form method="POST">
                     <button class="btn amber accent-4 black-text", name="detail" value="{{ client['id'] }}">
                         <i class="material-icons">dehaze</i>
+                    </button>
+                    <button class="btn amber accent-4 black-text", name="modify" value="{{ client['id'] }}">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button class="btn amber accent-2 black-text" name="delete" value="{{ client['id'] }}">
+                        <i class="material-icons">delete</i>
                     </button>
                 </form>
             </td>

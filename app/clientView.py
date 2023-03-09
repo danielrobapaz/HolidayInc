@@ -12,6 +12,7 @@ bp = Blueprint('clientView', __name__, url_prefix="/clients")
 @bp.route('', methods=('POST', 'GET'))
 def clientView():
     db = get_db()
+    flag = False
     if request.method == "POST":
         if 'add' in request.form:
             return redirect(url_for('clientView.addClient'))
@@ -20,13 +21,31 @@ def clientView():
             session['client_id'] = request.form['detail']
             return redirect(url_for('clientView.clientDetail'))
         
+        if 'delete' in request.form:
+            id = request.form['delete']
+            db.execute("""
+                        DELETE FROM clients WHERE id = ?""", id)
+            
+            db.commit()
+            
         if 'return' in request.form:
             return redirect(url_for('user.root'))
 
         if 'find' in request.form:
-            find = request.form['fin']
-        
-    clients = db.execute('SELECT * FROM clients').fetchall()
+            find = request.form['find']
+
+            clientToFilter = db.execute("SELECT * FROM clients").fetchall()
+            clientFiltered = []
+
+            for client in clientToFilter:
+                if re.search(find, client['firstname']) or re.search(find, client['secondname']):
+                    clientFiltered.append(client)
+
+            clients = clientFiltered
+            flag = True
+    
+    if not flag:
+        clients = db.execute('SELECT * FROM clients').fetchall()
 
     return render_template('index/analist/analistView.html', clients=clients)
 
@@ -89,6 +108,12 @@ def clientDetail():
         if 'return' in request.form:
             return redirect(url_for('clientView.clientView'))
 
+        if 'delete' in request.form:
+            id = request.form['delete']
+            db.execute("""
+                        DELETE FROM cars WHERE id = ?""", id)
+            db.commit()
+
         if 'find' in request.form:
             find = request.form['find']
 
@@ -128,7 +153,7 @@ def addCar():
         elif not re.search("[\d\w]{17}", motor):
             error = 'Invalid motor serial'
 
-        elif not re.search("\f{4}", year) or int(year) > 2023:
+        elif not re.search("\d{4}", year) or int(year) > 2023:
             error = 'Invalid year'
 
         if error is None:
