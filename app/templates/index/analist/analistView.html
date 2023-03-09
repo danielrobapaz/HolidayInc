@@ -5,6 +5,15 @@
 {% endblock %}
 
 {% block content %}
+{% if g.user['roleId'] == 1 %}
+<div class="row">
+    <form method="POST">
+        <div class="col s1 offset-s10">
+            <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
+        </div>
+    </form>
+</div>
+{% endif %}
 
 <div class="row">
     <form method="POST">

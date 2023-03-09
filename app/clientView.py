@@ -20,6 +20,9 @@ def clientView():
             session['client_id'] = request.form['detail']
             return redirect(url_for('clientView.clientDetail'))
         
+        if 'return' in request.form:
+            return redirect(url_for('user.root'))
+        
     clients = db.execute('SELECT * FROM clients').fetchall()
 
     return render_template('index/analist/analistView.html', clients=clients)
@@ -77,6 +80,9 @@ def clientDetail():
     if request.method == 'POST':
         if 'add' in request.form:
             return redirect(url_for('clientView.addCar'))
+        
+        if 'return' in request.form:
+            return redirect(url_for('clientView.clientView'))
 
     clientId = session['client_id']
     cars = db.execute("SELECT * FROM cars WHERE ownerId = ?", (clientId)).fetchall()

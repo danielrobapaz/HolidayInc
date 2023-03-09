@@ -5,18 +5,20 @@
 {% endblock %}
 
 {% block content %}
+<!--return butotn-->
 <div class="row">
     <form method="POST">
         <div class="col s1 offset-s10">
-            <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
+            <button class="btn amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
         </div>
     </form>
 </div>
 
+<!--find proyect-->
 <div class="row">
   <form method="POST">
     <div class="col s3">
-      <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="create-proyect" name="create-proyect">Create proyect</button>
+      <button class="btn amber accent-3 black-text" type="submit" value="create-proyect" name="create-proyect">Create proyect</button>
     </div>
   </form>
   <form method="POST">
@@ -24,7 +26,9 @@
       <input placeholder="Enter proyect description" name="find-proyect" id="proyect">
     </div>
     <div class="col s2">
-      <input class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" value="Find proyect">
+      <button class="btn amber accent-3 black-text">
+        <i class="material-icons">find_in_page</i>
+      </button>
     </div>
   </form>
 </div>
@@ -55,9 +59,15 @@
           <td>{{ proyect['status'] }}</td>
           <td>
             <form method="POST">
-                <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit" name="modify-proyect" value="{{ proyect['id'] }}">Modify</button>
-                <button class="btn waves-effect waves-ligth amber accent-1 black-text" type="submit" name="enable-proyect" value="{{ proyect['id'] }}">Enable</button>
-                <button class="btn waves-effect waves-ligth white black-text" type="submit" name="close-proyect" value="{{ proyect['id'] }}">Close</button>
+                <button class="btn amber accent-3 black-text" type="submit" name="modify-proyect" value="{{ proyect['id'] }}">
+                  <i class="material-icons">edit</i>
+                </button>
+                <button class="btn amber accent-1 black-text" type="submit" name="enable-proyect" value="{{ proyect['id'] }}">
+                  <i class="material-icons">play_arrow</i>
+                </button>
+                <button class="btn white black-text" type="submit" name="close-proyect" value="{{ proyect['id'] }}">
+                  <i class="material-icons">pause</i>
+                </button>
             </form>
           </td>
         </tr>
