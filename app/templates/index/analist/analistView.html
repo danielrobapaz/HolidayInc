@@ -3,3 +3,55 @@
 {% block header %}
     <h1>{%block title %}Welcome, {{ g.user['username']}}{% endblock %}</h1>
 {% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <form method="POST">
+        <div class="col s3">
+            <button class="btn amber accent-3 black-text" name="add" id="name">Add client</button>
+        </div>
+    </form>
+</div>
+<!--client table-->
+<div class="left-align">
+    <h5 class="card-panel amber accent-1">Cars</h5>
+</div>
+
+<table class="centered">
+    <thead class="card-panel amber acent-1">
+        <tr>
+            <th>Id</th>
+            <th>DNI</th>
+            <th>Firstname</th>
+            <th>Secondname</th>
+            <th>Birthday</th>
+            <th>Phone number</th>
+            <th>Mail</th>
+            <th>Address</th>
+            <th>Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+        <tr>
+            <td>{{ client['id'] }}</td>
+            <td>{{ client['dni'] }}</td>
+            <td>{{ client['firstname'] }}</td>
+            <td>{{ client['secondname'] }}</td>
+            <td>{{ client['Birthday'] }}</td>
+            <td>{{ client['tlf'] }}</td>
+            <td>{{ client['mail'] }}</td>
+            <td>{{ client['address'] }}</td>
+            <td>
+                <form method="POST">
+                    <button class="btn amber accent-4 black-text", name="detail" value="{{ client['id'] }}">
+                        <i class="material-icons">dehaze</i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

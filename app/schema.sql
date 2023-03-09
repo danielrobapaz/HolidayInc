@@ -51,38 +51,26 @@ CREATE TABLE proyectStatus (
 
 CREATE TABLE clients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    dni TEXT NOT NULL,
+    dni TEXT NOT NULL UNIQUE,
     firstname TEXT NOT NULL,
     secondname TEXT NOT NULL,
     birthday TEXT NOT NULL,
     tlf TEXT NOT NULL,
     mail TEXT NOT NULL,
-    adress TEXT NOT NULL
+    address TEXT NOT NULL
 );
 
 CREATE TABLE cars (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ownerId INTEGER NOT NULL,
-    plaque TEXT NOT NULL,
-    brandId TEXT NOT NULL,
-    modelId TEXT NOT NULL,
+    plaque TEXT NOT NULL UNIQUE,
+    brand TEXT NOT NULL,
+    model TEXT NOT NULL,
     year INTEGER NOT NULL,
     bodyWorkSerial TEXT NOT NULL,
     motorSerial TEXT NOT NULL,
     color TEXT NOT NULL,
     problem TEXT NOT NULL,
 
-    FOREIGN KEY (ownerId) REFERENCES clients(id),
-    FOREIGN KEY (brandId) REFERENCES carBrands(id),
-    FOREIGN KEY (modelId) REFERENCES carModels(id)
-);
-
-CREATE TABLE carBrands (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    brandName TEXT NOT NULL
-);
-
-CREATE TABLE carModels (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    modelName TEXT NOT NULl
+    FOREIGN KEY (ownerId) REFERENCES clients(id)
 );

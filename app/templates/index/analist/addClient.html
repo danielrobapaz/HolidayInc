@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Add client{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <label class="left-align" for="username">DNI.</label>
+            <input placeholder="Enter username" name="dni" id="dni" required>
+            
+            <label class="left-align" for="firstname">First name.</label>
+            <input placeholder="Enter firstname" name="firstname" id="firstname" required>
+
+            <label class="left-align" for="secondname">Second name.</label>
+            <input placeholder="Enter second name" name="secondname" id="secondname" required>
+
+            <label class="left-align" for="password">Birthday.</label>
+            <input type="date" value="Starting date" name="birthday" required>
+
+            <label class="left-align" for="role">Phone number.</label>
+            <input placeholder="Enter second name" name="phone" id="phone" required>
+            
+            <label class="left-align" for="role">Mail.</label>
+            <input placeholder="Enter second name" name="mail" id="mail" required>
+            
+            <label class="left-align" for="role">Address.</label>
+            <input placeholder="Enter second name" name="address" id="address" required>
+
+            <input class="btn waves-effect waves-ligth amber accent-3 black-text " type="submit" value="Create user">
+        </form>
+    </div>
+{% endblock %}

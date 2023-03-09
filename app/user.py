@@ -14,7 +14,6 @@ bp = Blueprint('user', __name__, url_prefix='/user')
 @bp.route('/root', methods=('POST', 'GET'))
 @root_required
 def root():
-    db = get_db()
     if request.method == 'POST':
         if 'user' in request.form:
             return redirect(url_for('userView.userView'))
@@ -24,7 +23,10 @@ def root():
 
         elif 'logs' in request.form:
             return redirect(url_for('logger.logger_index'))
-
+        
+        elif 'clients' in request.form:
+            return redirect(url_for('clientView.clientView'))
+        
     return render_template('index/root/rootUser.html')
 
 

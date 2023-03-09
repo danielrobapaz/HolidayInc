@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{%block title %}Welcome, {{ g.user['username']}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <form method="POST">
+        <div class="col s3">
+            <button class="btn amber accent-3 black-text" name="add" id="name">Add car</button>
+        </div>
+    </form>
+</div>
+<!--client table-->
+<div class="left-align">
+    <h5 class="card-panel amber accent-1">Cars</h5>
+</div>
+
+<table class="centered">
+    <thead class="card-panel amber acent-1">
+        <tr>
+            <th>Id</th>
+            <th>Plaque</th>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>Bodywork Serial</th>
+            <th>MotorSerial</th>
+            <th>Color</th>
+            <th>Problem</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for car in cars %}
+        <tr>
+            <td>{{ car['id'] }}</td>
+            <td>{{ car['plaque'] }}</td>
+            <td>{{ car['brand'] }}</td>
+            <td>{{ car['model'] }}</td>
+            <td>{{ car['year'] }}</td>
+            <td>{{ car['bodyWorkSerial'] }}</td>
+            <td>{{ car['motorSerial'] }}</td>
+            <td>{{ car['color'] }}</td>
+            <td>{{ car['problem'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
