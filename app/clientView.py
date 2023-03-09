@@ -104,14 +104,14 @@ def addCar():
         db = get_db()
         error = None
 
-#        if len(bodywork) != 17:
-#            error = 'Invalid bodywork serial'
-#
-#        elif len(motor) != 17:
-#            error = 'Invalid motor serial'
-#
-#        elif utilities.isYear(year):
-#            error = 'Invalid year'
+        if not re.search("[\d\w]{17}", bodywork):
+            error = 'Invalid bodywork serial'
+
+        elif not re.search("[\d\w]{17}", motor):
+            error = 'Invalid motor serial'
+
+        elif not re.search("\f{4}", year) or int(year) > 2023:
+            error = 'Invalid year'
 
         if error is None:
             try:

@@ -92,12 +92,12 @@ def login():
 
             if session['role_id'] == 1:
                 return redirect(url_for('user.root'))
-
-            elif session['role_id'] == 3:
+            
+            if session['role_id'] == 3:
                 return redirect(url_for('user.manager'))
             
-            elif session['role_id'] == 4:
-                return redirect(url_for('analistView.analistView'))
+            if session['role_id'] == 4:
+                return redirect(url_for('user.analist'))
 
             return redirect(url_for('user.profile'))
 
