@@ -99,7 +99,7 @@ def login():
             if session['role_id'] == 4:
                 return redirect(url_for('user.analist'))
 
-            return redirect(url_for('user.profile'))
+            #return redirect(url_for('user.profile'))
 
         flash(error)
 
@@ -160,7 +160,7 @@ def manager_required(view):
         if g.user is None:
             return redirect(url_for('auth.login'))
 
-        elif g.user['roleId'] != 2:
+        elif g.user['roleId'] != 3:
             return redirect(url_for('user.profile'))
 
         return view(**kwargs)
@@ -173,7 +173,7 @@ def modifyProyect_required(view):
         if g.user is None:
             return redirect(url_for('auth.login'))
 
-        elif g.user['roleId'] != 1 and g.user['roleId'] != 2:
+        elif g.user['roleId'] != 1 and g.user['roleId'] != 3:
             return redirect(url_for('user.profile'))
 
         return view(**kwargs)

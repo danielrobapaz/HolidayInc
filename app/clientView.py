@@ -22,6 +22,9 @@ def clientView():
         
         if 'return' in request.form:
             return redirect(url_for('user.root'))
+
+        if 'find' in request.form:
+            find = request.form['fin']
         
     clients = db.execute('SELECT * FROM clients').fetchall()
 

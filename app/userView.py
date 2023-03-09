@@ -158,7 +158,7 @@ def createUser():
             id,
             name 
            FROM roles
-           WHERE id != 1"""
+           WHERE name != 'admin' AND name != 'Waiting'"""
     ).fetchall()
 
     return render_template('index/root/createUser.html', proyects = proyects, roles = roles)
@@ -177,7 +177,7 @@ def aproveUser():
 
         # update user role
         db.execute(
-            'UPDATE user SET role = ? WHERE id = ?',
+            'UPDATE user SET roleId = ? WHERE id = ?',
             (role, session['aprove_user'],)
         )
 
@@ -206,5 +206,10 @@ def aproveUser():
         db.commit()
 
         return redirect(url_for('user.root'))
+    
+    roles = db.execute("""
+                        SELECT * 
+                        FROM roles
+                        WHERE name != 'admin' AND name != 'Waiting' """).fetchall()
 
-    return render_template('index/root/aproveUser.html', proyects = proyects)
+    return render_template('index/root/aproveUser.html', proyects = proyects, roles=roles)

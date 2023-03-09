@@ -50,7 +50,7 @@ def modifyProyect():
             db.commit()
 
             # return to the respective view
-            return utilities.redirectToUser(g.user)
+            return utilities.redirectFromProyect(g.user)
 
     return render_template('proyect/modifyProyect.html')
 
@@ -84,7 +84,7 @@ def changeDates():
             utilities.loggerQuery(db, g.user['username'], 'changeDates', idProy)
             db.commit()
 
-            return utilities.redirectToUser(g.user)
+            return utilities.redirectFromProyect(g.user)
 
         flash(error)
 

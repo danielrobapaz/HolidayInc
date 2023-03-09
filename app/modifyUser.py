@@ -28,7 +28,7 @@ def modifyUser():
                 (idModify,)
             )
             db.commit()
-            return redirect(url_for('user.root'))
+            return redirect(url_for('userView.userView'))
 
         elif 'role' in request.form:
             return redirect(url_for('modifyUser.changeRole'))

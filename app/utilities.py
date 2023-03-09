@@ -18,14 +18,14 @@ def redirectFromProyect(user):
     if user['roleId'] == 1:
         return redirect(url_for('proyectView.proyectView'))
 
-    elif user['roleId'] == 2:
+    elif user['roleId'] == 3:
         return redirect(url_for('user.manager'))
 
 def redirectFromLogger(user):
     if user['roleId'] == 1:
         return redirect(url_for('user.root'))
     
-    elif user['roleId'] == 2:
+    elif user['roleId'] == 3:
         return redirect(url_for('user.manager'))
     
 def dataForLoggerTable(logs):
@@ -67,7 +67,7 @@ def findRoleNameById(db, id):
     '''
     return db.execute(
         'SELECT name FROM roles WHERE id = ?',
-        (id),
+        (id,)
     ).fetchone()['name']
 
 def findUsernameById(db, id):

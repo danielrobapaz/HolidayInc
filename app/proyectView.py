@@ -15,7 +15,6 @@ bp = Blueprint('proyectView', __name__, url_prefix='/root')
 def proyectView():
     db = get_db()
     flag = False
-
     if request.method == 'POST':
         if 'create-proyect' in request.form:
             return redirect(url_for('proyectView.createProyect'))

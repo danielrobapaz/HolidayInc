@@ -10,11 +10,9 @@
         <label class="left-align" for="role">Role</label>
         <select class="browser-default" name="role" required>
             <option value="" disabled selected>Choose your role</option>
-            <option value="op_manager">Gerente de operaciones</option>
-            <option value="mechanic_sup">Supervisor de area de mecanica general</option>
-            <option value="painting_sup">Supervisor de area de latoneria y pintura</option>
-            <option value="mechanic_spec">Especialista en mecanica</option>
-            <option value="electricity_spec">Especialista en electricidad</option>
+            {% for role in roles %}
+            <option value="{{ role['id'] }}"> {{ role['name'] }}</option>
+            {% endfor %}
         </select>
         
         <label class="left-align" for="proyect">Proyect</label>
@@ -24,7 +22,7 @@
             <option value="{{ proyect['id'] }}">{{ proyect['description']}}</option>
             {% endfor %}
         </select>
-        <button class="btn waves-effect waves-ligth amber accent-1 black-text left-align" type="submit" name="aprove" value="aprove">
+        <button class="btn amber accent-1 black-text left-align" type="submit" name="aprove" value="aprove">
             Aprove user
         </button>
     </form>
