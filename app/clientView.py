@@ -79,6 +79,8 @@ def addClient():
 @bp.route('/details', methods=('POST', 'GET'))
 def clientDetail():
     db = get_db()
+    clientId = session['client_id']
+    flag = False
 
     if request.method == 'POST':
         if 'add' in request.form:
@@ -87,8 +89,21 @@ def clientDetail():
         if 'return' in request.form:
             return redirect(url_for('clientView.clientView'))
 
-    clientId = session['client_id']
-    cars = db.execute("SELECT * FROM cars WHERE ownerId = ?", (clientId)).fetchall()
+        if 'find' in request.form:
+            find = request.form['find']
+
+            carsToFilter = db.execute("SELECT * FROM cars WHERE ownerId = ?", clientId).fetchall()
+            carsFiltered = []
+
+            for car in carsToFilter:
+                if re.search(find, car['brand']) or re.search(find, car['model']):
+                    carsFiltered.append(car)
+
+            cars = carsFiltered
+            flag = True
+    
+    if not flag:
+        cars = db.execute("SELECT * FROM cars WHERE ownerId = ?", (clientId)).fetchall()
 
     return render_template('index/analist/clientDetail.html', cars=cars)
 

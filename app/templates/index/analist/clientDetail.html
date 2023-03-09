@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="row">
     <form method="POST">
         <div class="col s1 offset-s10">
@@ -14,10 +15,21 @@
 </div>
 
 <div class="row">
+    <!--add car button-->
     <form method="POST">
         <div class="col s3">
             <button class="btn amber accent-3 black-text" name="add">Add car</button>
         </div>
+    </form>
+    <form method="POST">
+      <div class="col s3 offset-s4">
+        <input placeholder="Enter car" name="find">
+      </div>
+      <div class="col s2">
+        <button class="btn amber accent-3 black-text" type="submit" value="Find logs">
+            <i class="material-icons">find_in_page</i>
+        </button>
+      </div>
     </form>
 </div>
 
