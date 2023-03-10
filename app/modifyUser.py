@@ -46,7 +46,7 @@ def changeRole():
     roles = db.execute("""SELECT 
                             id, name 
                           FROM roles
-                          WHERE id != 1""").fetchall()
+                          WHERE name != 'admin' and name != 'Waiting'""").fetchall()
     
     if request.method == 'POST':
         error = None
@@ -67,7 +67,7 @@ def changeRole():
 
             db.commit()
 
-            return redirect(url_for('user.root'))
+            return redirect(url_for('userView.userView'))
 
         flash(error)
     return render_template('/index/root/changeRole.html', roles = roles)

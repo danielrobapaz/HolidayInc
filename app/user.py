@@ -58,6 +58,9 @@ def profile():
 
     return render_template('index/user/user.html', userInfo = utilities.dataForUserProfileInfoTable(userInfo))
 
+@bp.route('/analist', methods=('POST', 'GET'))
+def analist():
+    return redirect(url_for('clientView.clientView'))
 
 @bp.route('/profile/changePassword', methods=('POST', 'GET'))
 @login_required

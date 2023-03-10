@@ -99,7 +99,7 @@ def login():
             if session['role_id'] == 4:
                 return redirect(url_for('user.analist'))
 
-            #return redirect(url_for('user.profile'))
+            return redirect(url_for('user.profile'))
 
         flash(error)
 

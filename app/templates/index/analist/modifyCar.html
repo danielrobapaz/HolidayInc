@@ -1,35 +1,35 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}Add car{% endblock %}</h1>
+    <h1>{% block title %}Modify car{% endblock %}</h1>
 {% endblock %} 
 
 {% block content %} 
     <div class="container left-align thin-container">
         <form method="POST">
             <label class="left-align" for="username">Plaque.</label>
-            <input value="{{ car['plaque']}}" name="plaque" required>
+            <input value="{{ car['plaque']}}" name="plaque">
             
             <label class="left-align" for="brand">Brand.</label>
-            <input value="{{ car['brand']}}" name="brand" required>
+            <input value="{{ car['brand']}}" name="brand">
 
             <label class="left-align" for="model">Model.</label>
-            <input value="{{ car['model']}}" name="model" required>
+            <input value="{{ car['model']}}" name="model">
 
             <label class="left-align" for="year">Year.</label>
-            <input value="{{ car['year']}}" name="year" required>
+            <input value="{{ car['year']}}" name="year">
 
             <label class="left-align" for="bodywork">Bodywork serial</label>
-            <input value="{{ car['bodyWorkSerial'] }}" name="bodywork" required>
+            <input value="{{ car['bodyWorkSerial'] }}" name="bodywork">
             
             <label class="left-align" for="motor">Motor serial.</label>
-            <input value="{{ car['motorSerial'] }}" name="motor" required>
+            <input value="{{ car['motorSerial'] }}" name="motor">
             
             <label class="left-align" for="color">Color.</label>
-            <input value="{{ car['color']}}" name="color" required>
+            <input value="{{ car['color']}}" name="color">
             
             <label class="left-align" for="problem">Problem.</label>
-            <input value="{{ car['problem'] }}" name="problem" required>
+            <input value="{{ car['problem'] }}" name="problem">
             
             <input class="btn waves-effect waves-ligth amber accent-3 black-text " type="submit" value="Create user">
         </form>
