@@ -7,6 +7,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 from . import page
 class LoginTests(BaseTestsClass):
     
@@ -139,27 +140,35 @@ class LoginTests(BaseTestsClass):
             if (e.text == "Incorrect password."):
                 self.assertEqual(e.text,"Incorrect password.")
 
-    # def test_LoginRootApproveUser(self):
-    #     self.driver.get("http://localhost:5000/auth/login")
-    #     assert "Log In" in self.driver.title
-    #     passwd = self.driver.find_element(By.ID, "password")
-    #     passwd.clear()
-    #     passwd.send_keys("root")
-    #     user = self.driver.find_element(By.ID, "username")
-    #     user.clear()
-    #     user.send_keys("root")
-    #     user.send_keys(Keys.RETURN)
-    #     wait = WebDriverWait(self.driver, 10)
-    #     wait.until(EC.url_to_be("http://localhost:5000/user/root"))
-    #     actualUrl = "http://localhost:5000/user/root"
-    #     expectedUrl= self.driver.current_url
-    #     self.assertEqual(expectedUrl,actualUrl)
-    #     user_button = self.driver.find_element(By.ID, "user")
-    #     user_button.click()
-    #     wait.until(EC.url_to_be("http://localhost:5000/root/users"))
-    #     actualUrl = "http://localhost:5000/root/users"
-    #     expectedUrl= self.driver.current_url
-    #     self.assertEqual(expectedUrl,actualUrl)
+    def test_rootRejectUser(self):
+        self.test_registerNonRegisteredUser()
+        self.driver.get("http://localhost:5000/auth/login")
+        assert "Log In" in self.driver.title
+        passwd = self.driver.find_element(By.ID, "password")
+        passwd.clear()
+        passwd.send_keys("root")
+        user = self.driver.find_element(By.ID, "username")
+        user.clear()
+        user.send_keys("root")
+        user.send_keys(Keys.RETURN)
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/user/root"))
+        actualUrl = "http://localhost:5000/user/root"
+        expectedUrl= self.driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        user_button = self.driver.find_element(By.ID, "user")
+        user_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/users"))
+        actualUrl = "http://localhost:5000/root/users"
+        expectedUrl= self.driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        reject_button = self.driver.find_element(By.NAME, "reject")
+        reject_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/users"))
+        actualUrl = "http://localhost:5000/root/users"
+        expectedUrl= self.driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
 
     def test_RootCreateProyect(self):
         self.driver.get("http://localhost:5000/auth/login")
@@ -186,8 +195,12 @@ class LoginTests(BaseTestsClass):
         create_proyect_button.click()
         proyect_description = self.driver.find_element(By.ID, "description")
         proyect_description.send_keys("testproyect")
-        self.driver.execute_script(f'document.getElementById("starting-date").setAttribute("value", "03/10/2023");')
-        self.driver.execute_script(f'document.getElementById("end-date").setAttribute("value", "03/15/2023");')
+        proyect_starting_date = self.driver.find_element(By.ID, "starting-date")
+        proyect_starting_date.click()
+        proyect_starting_date.send_keys("2023-03-10")
+        proyect_end_date = self.driver.find_element(By.ID, "end-date")
+        proyect_end_date.click()
+        proyect_end_date.send_keys("2023-03-15")
         proyect_description.send_keys(Keys.RETURN)
         wait.until(EC.url_to_be("http://localhost:5000/root/proyects"))
         actualUrl = "http://localhost:5000/root/proyects"
@@ -195,3 +208,42 @@ class LoginTests(BaseTestsClass):
         self.assertEqual(expectedUrl,actualUrl)
 
         
+    # def test_rootAproveUser(self):
+    #     self.test_registerNonRegisteredUser()
+    #     self.test_RootCreateProyect()
+    #     self.driver.get("http://localhost:5000/auth/login")
+    #     assert "Log In" in self.driver.title
+    #     passwd = self.driver.find_element(By.ID, "password")
+    #     passwd.clear()
+    #     passwd.send_keys("root")
+    #     user = self.driver.find_element(By.ID, "username")
+    #     user.clear()
+    #     user.send_keys("root")
+    #     user.send_keys(Keys.RETURN)
+    #     wait = WebDriverWait(self.driver, 10)
+    #     wait.until(EC.url_to_be("http://localhost:5000/user/root"))
+    #     actualUrl = "http://localhost:5000/user/root"
+    #     expectedUrl= self.driver.current_url
+    #     self.assertEqual(expectedUrl,actualUrl)
+    #     user_button = self.driver.find_element(By.ID, "user")
+    #     user_button.click()
+    #     wait.until(EC.url_to_be("http://localhost:5000/root/users"))
+    #     actualUrl = "http://localhost:5000/root/users"
+    #     expectedUrl= self.driver.current_url
+    #     self.assertEqual(expectedUrl,actualUrl)
+    #     reject_button = self.driver.find_element(By.NAME, "aprove")
+    #     reject_button.click()
+    #     wait.until(EC.url_to_be("http://localhost:5000/root/aproveUser"))
+    #     actualUrl = "http://localhost:5000/root/aproveUser"
+    #     expectedUrl= self.driver.current_url
+    #     self.assertEqual(expectedUrl,actualUrl)
+    #     roleSelect = Select(self.driver.find_element(By.NAME, "role"))
+    #     roleSelect.select_by_visible_text("Gerente de operaciones")
+    #     proyectSelect = Select(self.driver.find_element(By.NAME, "proyect"))
+    #     proyectSelect.select_by_visible_text("testproyect")
+    #     aproveButton = self.driver.find_element(By.NAME, "aprove")
+    #     aproveButton.click()
+    #     wait.until(EC.url_to_be("http://localhost:5000/user/root"))
+    #     actualUrl = "http://localhost:5000/user/root"
+    #     expectedUrl= self.driver.current_url
+    #     self.assertEqual(expectedUrl,actualUrl)
