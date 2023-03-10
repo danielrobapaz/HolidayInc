@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Modify client{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <label class="left-align" for="username">DNI.</label>
+            <input value="{{ client['dni'] }}" name="dni" id="dni">
+            
+            <label class="left-align" for="firstname">First name.</label>
+            <input value="{{ client['firstname'] }}" name="firstname" id="firstname">
+
+            <label class="left-align" for="secondname">Second name.</label>
+            <input value="{{ client['secondname'] }}" name="secondname" id="secondname">
+
+            <label class="left-align" for="phone number">Phone number.</label>
+            <input value="{{ client['tlf'] }}" name="phone" id="phone">
+            
+            <label class="left-align" for="mail">Mail.</label>
+            <input value="{{ client['mail'] }}" name="mail" id="mail">
+            
+            <label class="left-align" for="address">Address.</label>
+            <input value="{{ client['address'] }}" name="address" id="address">
+
+            <input class="btn amber accent-3 black-text " type="submit" value="Create user">
+        </form>
+    </div>
+{% endblock %}
