@@ -82,6 +82,17 @@ def findUsernameById(db, id):
         (id,)
     ).fetchone()['username']
 
+def findClientNameById(db, id):
+    return db.execute(
+        'SELECT firstname FROM clients WHERE id = ?',
+        (id)
+    ).fetchone()['firstname']
+
+def findCarInfoById(db, id):
+    info = db.execute('SELECT brand, model FROM cars WHERE id = ?', (id)).fetchone()
+
+    return info['brand'] + ' ' + info['model']
+
 def getEventMsg(db, content, mode):
     '''
         Input: db data base conection object
@@ -135,6 +146,24 @@ def getEventMsg(db, content, mode):
 
     elif mode == 'changePassword':
         msg = f'User \'{content}\' changed it\'s password'
+
+    elif mode == 'addClient':
+        msg = f'Client \'{content}\' was added'
+
+    elif mode == 'deleteClient':
+        msg = f'Client \'{findClientNameById(db, content)}\' was deleted'
+
+    elif mode == 'modifyClient':
+        msg = f'Client \'{findClientNameById(db, content)}\' was modified'
+
+    elif mode == 'addCar':
+        msg = f'Car \'{content[1]} {content[2]}\' was addeed to user \'{findClientNameById(db, content[0])}\''
+
+    elif mode == 'deleteCar':
+        msg = f'Car \'{findCarInfoById(db, content)}\' was deleted'
+
+    elif mode == 'modifyCar':
+        msg = f'Car \'{content[0]} {content[1]}\' was modified'
     return msg
 
 def loggerQuery(db, user, mode, content):

@@ -23,6 +23,7 @@ def clientView():
         
         if 'delete' in request.form:
             id = request.form['delete']
+            utilities.loggerQuery(db, g.user['username'], 'deleteClient', id)
             db.execute("""
                         DELETE FROM clients WHERE id = ?""", id)
             
@@ -90,6 +91,7 @@ def addClient():
                             VALUES
                                 (?, ?, ?, ?, ?, ?, ?)""", 
                             (dni, firstname, secondname, birthday, phone, mail, address,))
+                utilities.loggerQuery(db, g.user['username'], 'addClient', firstname)
                 db.commit()
 
                 return redirect(url_for('clientView.clientView'))
@@ -153,6 +155,7 @@ def modifyClient():
                 db.execute("""UPDATE clients SET address = ? WHERE id = ?""", 
                             (address, id))
                 
+                utilities.loggerQuery(db, g.user['username'], 'modifyClient', id)
                 db.commit()
 
                 return redirect(url_for('clientView.clientView'))
@@ -183,6 +186,9 @@ def clientDetail():
 
         if 'delete' in request.form:
             id = request.form['delete']
+
+            utilities.loggerQuery(db, g.user['username'], 'deleteCar', id)
+            
             db.execute("""
                         DELETE FROM cars WHERE id = ?""", id)
             db.commit()
@@ -246,6 +252,7 @@ def addCar():
                             VALUES (?, ?, ?, ?, ?, ? ,?, ?, ?)""",
                             (session['client_id'], plaque, brand, model, year, bodywork, motor, color, problem,))
 
+                utilities.loggerQuery(db, g.user['username'], 'addCar', [session['client_id'], brand, model])
                 db.commit()
 
                 return redirect(url_for('clientView.clientDetail'))
@@ -260,6 +267,7 @@ def addCar():
 def modifyCar():
     id = session['car_id']
     db = get_db()
+    car = db.execute("SELECT * FROM cars WHERE id = ?", id).fetchone()
 
     if request.method == "POST":
         plaque = request.form['plaque']
@@ -308,6 +316,8 @@ def modifyCar():
                 
                 db.execute("""UPDATE cars SET problem = ? WHERE id = ?""", 
                             (problem, id))
+                
+                utilities.loggerQuery(db, g.user['username'], 'modifyCar', [car['brand'], car['model']])
                 db.commit()
 
                 return redirect(url_for('clientView.clientDetail'))
@@ -317,5 +327,4 @@ def modifyCar():
 
         flash(error)
 
-    car = db.execute("SELECT * FROM cars WHERE id = ?", id).fetchone()
     return render_template('index/analist/modifyCar.html', car=car)
