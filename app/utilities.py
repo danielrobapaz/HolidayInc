@@ -28,6 +28,9 @@ def redirectFromLogger(user):
     elif user['roleId'] == 3:
         return redirect(url_for('user.manager'))
     
+    if user['roleId'] == 4:
+        return redirect(url_for('clientView.clientView'))
+    
 def dataForLoggerTable(logs):
     """
     Input: logs: sql row object

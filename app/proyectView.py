@@ -71,6 +71,9 @@ def proyectView():
         elif 'modify-proyect' in request.form:
             session['modify_proyect'] = request.form['modify-proyect']
             return redirect(url_for('modifyProyect.modifyProyect'))
+        
+        elif 'logs' in request.form:
+            return redirect(url_for('logger.logger_index'))
     
     if not flag:
         proyects = db.execute(

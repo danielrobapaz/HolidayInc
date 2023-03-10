@@ -48,7 +48,9 @@ def clientView():
 
             clients = clientFiltered
             flag = True
-    
+
+        if 'logs' in request.form:
+            return redirect(url_for('logger.logger_index'))
     if not flag:
         clients = db.execute('SELECT * FROM clients').fetchall()
 
