@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Edit Department{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <label class="left-align">Description.</label>
+            <input value="{{ dep['description']}}" name="desc">
+            <input class="btn amber accent-3 black-text " type="submit" value="Edit">
+        </form>
+    </div>
+{% endblock %}

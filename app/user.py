@@ -27,6 +27,9 @@ def root():
         elif 'clients' in request.form:
             return redirect(url_for('clientView.clientView'))
         
+        elif 'dep' in request.form:
+            return redirect(url_for('department.departmentView'))
+        
     return render_template('index/root/rootUser.html')
 
 

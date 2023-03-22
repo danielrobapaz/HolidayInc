@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS clients;
 DROP TABLE IF EXISTS cars;
 DROP TABLE IF EXISTS carBrands;
 DROP TABLE IF EXISTS carModels;
+DROP TABLE IF EXISTS departments;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -73,4 +74,9 @@ CREATE TABLE cars (
     problem TEXT NOT NULL,
 
     FOREIGN KEY (ownerId) REFERENCES clients(id)
+);
+
+CREATE TABLE departments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    description TEXT NOT NULL UNIQUE
 );

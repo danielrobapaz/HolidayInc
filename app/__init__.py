@@ -53,5 +53,8 @@ def create_app(test_config=None):
 
     from . import clientView
     app.register_blueprint(clientView.bp)
+
+    from . import department
+    app.register_blueprint(department.bp)
     
     return app
