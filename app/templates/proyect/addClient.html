@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>{% block title %}Add client{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <label class="left-align" for="vechicule">Vehicle</label>
+            <select class="browser-default" name="plaque" required>
+                <option value="" disabled selected>Choose vehicle</option>
+                {% for vehi in vehicules %}
+                <option value="{{vehi['id']}}">{{vehi['plaque']}} - {{vehi['firstname']}} {{vehi['secondname']}} ({{vehi['dni']}})</option>
+                {% endfor %}
+            </select>
+            
+            <label class="left-align" for="manager">Manager</label>
+            <select class="browser-default" name="manager" required>
+                <option value="" disabled selected>Choose manager</option>
+                {% for manager in managers %}
+                <option value="{{manager['id']}}">{{manager['firstname']}} {{manager['secondname']}}</option>
+                {% endfor %}
+            </select>
+
+            <label class="left-align" for="problem">Problem</label>
+            <select class="browser-default" name="problem" required>
+                <option value="" disabled selected>Choose problem</option>
+                {% for problem in problems %}
+                <option value="{{problem['id']}}">{{problem['problem']}} - Department: {{problem['description']}}</option>
+                {% endfor %}
+            </select>
+
+            <label class="left-align" for="solutions">Solution</label>
+            <input placeholder="Enter solution" name="solution" id="solution" required>
+            
+            <label class="left-align" for="total">Total</label>
+            <input placeholder="Enter total" name="total" id="total" required>
+
+            <label class="left-align" for="observation">Observation</label>
+            <input placeholder="Enter observations" name="obser" id="obser" value="None">
+
+            <input class="btn waves-effect waves-ligth amber accent-3 black-text " type="submit" value="Add client">
+        </form>
+    </div>
+{% endblock %}

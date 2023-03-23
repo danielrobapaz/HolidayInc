@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS carBrands;
 DROP TABLE IF EXISTS carModels;
 DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS problems;
+DROP TABLE IF EXISTS proyectClients;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -88,4 +89,24 @@ CREATE TABLE problems (
     depId INTEGER NOT NULL,
 
     FOREIGN KEY (depId) REFERENCES departments(id)
+);
+
+CREATE TABLE proyectClients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    proyId INTEGER NOT NULL,
+    clientId INTEGER NOT NULL,
+    carId INTEGER NOT NULL,
+    managerId INTEGER NOT NULL,
+    departmentId INTEGER NOT NULL,
+    problemId INTEGER NOT NULL,
+    solution TEXT NOT NULL,
+    subtotal INTEGER NOT NULL,
+    observation TEXT,
+
+    FOREIGN KEY (proyId) REFERENCES proyect(id),
+    FOREIGN KEY (clientId) REFERENCES clients(id),
+    FOREIGN KEY (carId) REFERENCES cars(id),
+    FOREIGN KEY (managerId) REFERENCES user(id),
+    FOREIGN KEY (departmentId) REFERENCES departments(id),
+    FOREIGN KEY (problemId) REFERENCES problems(id)
 );

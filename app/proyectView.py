@@ -74,6 +74,10 @@ def proyectView():
         
         elif 'logs' in request.form:
             return redirect(url_for('logger.logger_index'))
+        
+        elif 'detail' in request.form:
+            session['proyId'] = request.form['detail']
+            return redirect(url_for('proyectView.detail'))
     
     if not flag:
         proyects = db.execute(
@@ -124,3 +128,53 @@ def createProyect():
         flash(error)
 
     return render_template('proyect/createProyect.html')
+
+@bp.route('/proyect/detail', methods=("POST", "GET"))
+@modifyProyect_required
+def detail():
+    db = get_db()
+    id = session['proyId']
+
+    if request.method == "POST":
+        if 'return' in request.form:
+            return redirect(url_for('proyectView.proyectView'))
+        
+        if 'add' in request.form:
+            return redirect(url_for('proyectView.addClient'))
+
+    currProy = db.execute("SELECT * from proyect WHERE id = ?", id).fetchone()
+
+    return render_template('proyect/detail.html', currProy=currProy)
+
+
+@bp.route('/addClient', methods=("POST", "GET"))
+@modifyProyect_required
+def addClient():
+    db = get_db()
+
+    vehicules = db.execute("""SELECT 
+                                cars.id as id,
+                                cars.plaque as plaque, 
+                                cars.brand as brand,
+                                clients.firstname as firstname,
+                                clients.secondname as secondname,
+                                clients.dni as dni
+                             FROM cars
+                             INNER JOIN clients ON
+                                cars.ownerId = clients.id""").fetchall()
+    
+    managers = db.execute("""SELECT 
+                                id, 
+                                firstname,
+                                secondname
+                                FROM user
+                                WHERE roleId = 3
+                                """).fetchall()
+    
+    problems = db.execute("""SELECT 
+                                problems.problem as problem,
+                                departments.description as description
+                                FROM problems
+                                INNER JOIN departments ON
+                                    problems.depId = departments.id""").fetchall()
+    return render_template('proyect/addClient.html', vehicules=vehicules, managers=managers, problems=problems)
