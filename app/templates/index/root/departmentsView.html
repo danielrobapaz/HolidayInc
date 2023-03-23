@@ -7,9 +7,15 @@
 {% block content %}
 <div class="row">
   <form method="POST">
-      <div class="col s1 offset-s10">
-          <button class="btn amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
-      </div>
+    <!--problems button-->
+    <div class="col s3">
+      <button class="btn amber accent-3 black-text" type="subtmit" value="problems" name="problems">Problems</button>
+    </div>
+    
+    <!--return button-->
+    <div class="col s1 offset-s8">
+      <button class="btn amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
+    </div>
   </form>
 </div>
 <div class="row">
@@ -50,6 +56,9 @@
             </button>
             <button class="btn amber accent-3 black-text" type="submit" name="delete" value="{{ dep['id'] }}">
                 <i class="material-icons">delete</i>
+            </button>
+            <button class="btn amber accent-1 black-text" type="submit" name="detail", value="{{ dep['id'] }}">
+                <i class="material-icons">dehaze</i>
             </button>
           </form>
         </td>

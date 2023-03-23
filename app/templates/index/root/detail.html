@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Problems of department{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <form method="POST">
+    <!--return button-->
+    <div class="col s1 offset-s8">
+      <button class="btn amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
+    </div>
+  </form>
+</div>
+
+<!-- problem table -->
+<div class="left-align">
+  <h5 class="card-panel amber accent-1">Problems.</h5>
+</div>
+
+<table class="centered">
+  <thead class="card-panel amber accent-1">
+    <tr>
+      <th>Id</th>
+      <th>Problem</th>
+    </tr>
+  </thead>
+  <tbody>  
+    {% for problem in problems %}
+      <tr>
+        <td>{{ problem['id'] }}</td>
+        <td>{{ problem['problem']}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

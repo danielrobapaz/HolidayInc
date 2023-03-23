@@ -42,6 +42,13 @@ def departmentView():
             if not error is None:
                 flash(error)
 
+        elif 'problems' in request.form:
+            return redirect(url_for('department.problems'))
+        
+        elif 'detail' in request.form:
+            session['dep-id'] = request.form['detail']
+            return redirect(url_for('department.detail'))
+
     departments = db.execute('SELECT * FROM departments').fetchall()
     return render_template('index/root/departmentsView.html', departments=departments)
 
@@ -72,3 +79,50 @@ def editDepartment():
 
     dep = db.execute("SELECT * FROM departments WHERE id = ?", (id)).fetchone()
     return render_template('index/root/editDepartment.html', dep=dep)
+
+@bp.route('problems', methods=("POST", "GET"))
+@root_required
+def problems():
+    db = get_db()
+
+    if request.method == "POST":
+        id = request.form['select']
+        problem = request.form['problem']
+
+        error = None
+
+        if len(problem) == 0:
+            error = 'Invalid problem'
+
+        if error is None:
+            try:
+                db.execute("""
+                           INSERT INTO problems
+                           (problem, depId)
+                           VALUES (?, ?)""", (problem, id))
+                
+                db.commit()
+
+            except db.IntegrityError:
+                error = 'Problem already exists'
+
+        if not error is None:
+            flash(error)
+
+        else:
+            return redirect(url_for('department.departmentView'))
+
+    departments = db.execute("SELECT * FROM departments").fetchall()
+    return render_template("index/root/problems.html", departments=departments)
+
+
+@bp.route('detail', methods=("POST", "GET"))
+@root_required
+def detail():
+    db = get_db()
+    id = session['dep-id']
+    if request.method == 'POST':
+        return redirect(url_for('department.departmentView'))
+    
+    problems = db.execute("SELECT * FROM problems WHERE depId = ?", (id,)).fetchall()
+    return render_template('index/root/detail.html', problems=problems)

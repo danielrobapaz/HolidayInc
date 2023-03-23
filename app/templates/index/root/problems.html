@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Add problem to a department. {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <form method="POST">
+            <div class="col s3">
+                <label class="left-align">Department</label>
+                <select class="browser-default" name="select">
+                    <option value="None" disabled selected required>Department</option>
+                    {% for dep in departments %}
+                    <option value="{{ dep['id'] }}">{{ dep['description']}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col s4">
+                <label class="left-align" for="problem">Problem</label>
+                <input placeholder="Problem" name="problem" id="problem" required>
+            </div>
+            <div class="col s5">
+                <button class="btn waves-effect waves-ligth amber accent-3 black-text" type="submit">
+                    Add problem
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
