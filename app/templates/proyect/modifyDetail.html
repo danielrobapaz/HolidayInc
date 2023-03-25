@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>{% block title %}Modify client{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <label class="left-align" for="vechicule">Vehicle</label>
+            <select class="browser-default" name="plaque">
+                <option value="" disabled selected>Choose vehicle</option>
+                {% for vehi in vehicules %}
+                <option value="{{vehi['id']}}">{{vehi['plaque']}} - {{vehi['firstname']}} {{vehi['secondname']}} ({{vehi['dni']}})</option>
+                {% endfor %}
+            </select>
+            
+            <label class="left-align" for="manager">Manager</label>
+            <select class="browser-default" name="manager">
+                <option value="" disabled selected>Choose manager</option>
+                {% for manager in managers %}
+                <option value="{{manager['id']}}">{{manager['firstname']}} {{manager['secondname']}}</option>
+                {% endfor %}
+            </select>
+
+            <label class="left-align" for="problem">Problem</label>
+            <select class="browser-default" name="problem">
+                <option value="" disabled selected>Choose problem</option>
+                {% for problem in problems %}
+                <option value="{{problem['id']}}">{{problem['problem']}} - Department: {{problem['description']}}</option>
+                {% endfor %}
+            </select>
+
+            <label class="left-align" for="solutions">Solution</label>
+            <input name="solution" id="solution" value="{{client['solution']}}">
+            
+            <label class="left-align" for="total">Total</label>
+            <input name="total" id="total" value="{{client['subtotal']}}">
+
+            <label class="left-align" for="observation">Observation</label>
+            <input name="obser" id="obser" value="{{client['observation']}}">
+
+            <input class="btn waves-effect waves-ligth amber accent-3 black-text " type="submit" value="Modify">
+        </form>
+    </div>
+{% endblock %}

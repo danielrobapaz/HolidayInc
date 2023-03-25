@@ -149,7 +149,11 @@ def detail():
                         WHERE id = ?""", id)
             
             db.commit()
-            
+
+        elif 'edit' in request.form:
+            session['editProy'] = request.form['edit']
+            return redirect(url_for('proyectView.modifyDetail'))
+
     currProy = db.execute("SELECT * from proyect WHERE id = ?", id).fetchone()
 
     proyectClients = db.execute("""
@@ -236,3 +240,79 @@ def addClient():
                                 INNER JOIN departments ON
                                     problems.depId = departments.id""").fetchall()
     return render_template('proyect/addClient.html', vehicules=vehicules, managers=managers, problems=problems)
+
+@bp.route('modifyDetail', methods=("POST", "GET"))
+@modifyProyect_required
+def modifyDetail():
+    db = get_db()
+    id = session['editProy']
+
+    if request.method == 'POST':
+
+        if 'plaque' in request.form:
+            carId = request.form['plaque']
+            # Buscamos el cliente al cual le pertenece el carro
+            clientId = db.execute("SELECT ownerId FROM cars WHERE id =?", (carId)).fetchone()['ownerId']
+            
+            db.execute("UPDATE proyectClients SET carId = ? WHERE id = ?", (carId, id))
+            db.execute("UPDATE proyectClients SET clientId = ? WHERE id = ?", (clientId, id))
+        
+        if 'manager' in request.form:
+            managerId = request.form['manager']
+            db.execute("UPDATE proyectClients SET managerId = ? WHERE id = ?", (managerId, id))
+        
+        if 'problem' in request.form:
+            problemId = request.form['problem']
+            
+            # Buscamos el departamento correspondiente al problema    
+            depId = db.execute("SELECT depId FROM problems WHERE id = ?", problemId).fetchone()
+            depId = depId['depId']
+
+            db.execute("UPDATE proyectClients SET problemId = ? WHERE id = ?", (problemId, id))
+            db.execute("UPDATE proyectClients SET deparmentId = ? WHERE id = ?", (depId, id))
+            
+        solution = request.form['solution']
+        total = request.form['total']
+        observation = request.form['obser']
+
+        db.execute("UPDATE proyectClients SET solution = ? WHERE id = ?", (solution, id))
+        db.execute("UPDATE proyectClients SET subtotal = ? WHERE id = ?", (total, id))
+        db.execute("UPDATE proyectClients SET observation = ? WHERE id = ?", (observation, id))
+
+        db.commit()
+
+        return redirect(url_for('proyectView.detail'))
+
+    client = db.execute("""SELECT 
+                            *
+                        FROM proyectClients
+                        WHERE id = ?""", id).fetchone()
+    
+    vehicules = db.execute("""SELECT 
+                                cars.id as id,
+                                cars.plaque as plaque, 
+                                cars.brand as brand,
+                                clients.firstname as firstname,
+                                clients.secondname as secondname,
+                                clients.dni as dni
+                             FROM cars
+                             INNER JOIN clients ON
+                                cars.ownerId = clients.id""").fetchall()
+    
+    managers = db.execute("""SELECT 
+                                id, 
+                                firstname,
+                                secondname
+                                FROM user
+                                WHERE roleId != 1 AND roleId != 2
+                                """).fetchall()
+    
+    problems = db.execute("""SELECT 
+                                problems.id as id,
+                                problems.problem as problem,
+                                departments.description as description
+                                FROM problems
+                                INNER JOIN departments ON
+                                    problems.depId = departments.id""").fetchall()
+    
+    return render_template('proyect/modifyDetail.html', client=client, vehicules=vehicules, managers=managers, problems=problems)

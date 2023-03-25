@@ -40,17 +40,20 @@
     <tbody>  
       {% for proyect in proyectClients %}
         <tr>
-          <td>{{ proyect['id'] }}</td>
-          <td>{{ proyect['plaque']}}</td>
+          <td>{{proyect['id']}}</td>
+          <td>{{proyect['plaque']}}</td>
           <td>{{proyect['managerFirstName']}} {{proyect['managerSecondName']}}</td>
-          <td>{{ proyect['problem'] }}</td>
-          <td>{{ proyect['solution'] }}</td>
-          <td>{{ proyect['subtotal'] }}</td>
-          <td>{{ proyect['observation'] }}</td>
+          <td>{{proyect['problem']}}</td>
+          <td>{{proyect['solution']}}</td>
+          <td>{{proyect['subtotal']}}</td>
+          <td>{{proyect['observation']}}</td>
           <td>
             <form method="POST">
-                <button class="btn amber accent-3 black-text" type="submit" name="delete" value="{{ proyect['id'] }}">
+                <button class="btn amber accent-3 black-text" type="submit" name="delete" value="{{proyect['id']}}">
                   <i class="material-icons">delete</i>
+                </button>
+                <button class="btn amber accent-3 black-text" type="submit" name="edit" value="{{proyect['id']}}">
+                  <i class="material-icons">edit</i>
                 </button>
             </form>
           </td>
