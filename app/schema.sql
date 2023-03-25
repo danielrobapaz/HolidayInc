@@ -66,7 +66,7 @@ CREATE TABLE clients (
 CREATE TABLE cars (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ownerId INTEGER NOT NULL,
-    plaque TEXT NOT NULL UNIQUE,
+    plaque TEXT NOT NULL,
     brand TEXT NOT NULL,
     model TEXT NOT NULL,
     year INTEGER NOT NULL,

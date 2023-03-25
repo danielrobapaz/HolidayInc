@@ -144,13 +144,62 @@ def detail():
 
     currProy = db.execute("SELECT * from proyect WHERE id = ?", id).fetchone()
 
-    return render_template('proyect/detail.html', currProy=currProy)
+    proyectClients = db.execute("""
+                                 SELECT
+                                    pClients.id as id,
+                                    cars.plaque as plaque,
+                                    user.firstname as managerFirstName,
+                                    user.secondname as managerSecondName,
+                                    problems.problem as problem,
+                                    pClients.subtotal as subtotal,
+                                    pClients.observation as observation,
+                                    pClients.solution as solution 
+                                 FROM proyectClients as pClients
+                                 INNER JOIN cars ON cars.id = pClients.carId
+                                 INNER JOIN user ON user.id = pClients.managerId 
+                                 INNER JOIN departments ON departments.id = pClients.departmentId
+                                 INNER JOIN problems ON problems.id = pClients.problemId
+                                 WHERE pClients.proyId = ?""", id).fetchall()
+
+    return render_template('proyect/detail.html', proyectClients=proyectClients, currProy=currProy)
 
 
 @bp.route('/addClient', methods=("POST", "GET"))
 @modifyProyect_required
 def addClient():
     db = get_db()
+    proyId = session['proyId']
+
+    if request.method == "POST":
+        carId = request.form['plaque']
+        managerId = request.form['manager']
+        problemId = request.form['problem']
+        solution = request.form['solution']
+        total = request.form['total']
+        observation = request.form['obser']
+
+        # Buscamos el departamento correspondiente al problema
+        
+        depId = db.execute("SELECT depId FROM problems WHERE id = ?", problemId).fetchone()
+        depId = depId['depId']
+
+        # Buscamos el cliente al cual le pertenece el carro
+        clientId = db.execute("SELECT ownerId FROM cars WHERE id =?", (carId)).fetchone()['ownerId']
+        
+        # agregamos registro a la base de datos
+        db.execute("""
+                    INSERT INTO proyectClients
+                    (proyId, clientId, carId, managerId, 
+                     departmentId, problemId, solution, subtotal,
+                     observation)
+                    VALUES
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (proyId, clientId, carId, managerId, depId, problemId, solution,
+                         total, observation,))
+        
+        db.commit()
+
+        return redirect(url_for('proyectView.detail'))
 
     vehicules = db.execute("""SELECT 
                                 cars.id as id,
@@ -168,10 +217,11 @@ def addClient():
                                 firstname,
                                 secondname
                                 FROM user
-                                WHERE roleId = 3
+                                WHERE roleId != 1 AND roleId != 2
                                 """).fetchall()
     
     problems = db.execute("""SELECT 
+                                problems.id as id,
                                 problems.problem as problem,
                                 departments.description as description
                                 FROM problems

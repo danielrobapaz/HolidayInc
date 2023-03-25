@@ -38,26 +38,19 @@
       </tr>
     </thead>
     <tbody>  
-      {% for proyect in proyects %}
+      {% for proyect in proyectClients %}
         <tr>
           <td>{{ proyect['id'] }}</td>
-          <td>{{ proyect['description']}}</td>
-          <td>{{ proyect['start'] }}</td>
-          <td>{{ proyect['end'] }}</td>
-          <td>{{ proyect['status'] }}</td>
+          <td>{{ proyect['plaque']}}</td>
+          <td>{{proyect['managerFirstName']}} {{proyect['managerSecondName']}}</td>
+          <td>{{ proyect['problem'] }}</td>
+          <td>{{ proyect['solution'] }}</td>
+          <td>{{ proyect['subtotal'] }}</td>
+          <td>{{ proyect['observation'] }}</td>
           <td>
             <form method="POST">
                 <button class="btn amber accent-3 black-text" type="submit" name="modify-proyect" value="{{ proyect['id'] }}">
-                  <i class="material-icons">edit</i>
-                </button>
-                <button class="btn amber accent-1 black-text" type="submit" name="enable-proyect" value="{{ proyect['id'] }}">
-                  <i class="material-icons">play_arrow</i>
-                </button>
-                <button class="btn white black-text" type="submit" name="close-proyect" value="{{ proyect['id'] }}">
-                  <i class="material-icons">pause</i>
-                </button>
-                <button class="btn amber accent-3 black-text" type="submit" name="detail" value="{{ proyect['id'] }}">
-                  <i class="material-icons">dehaze</i>
+                  <i class="material-icons">delete</i>
                 </button>
             </form>
           </td>
