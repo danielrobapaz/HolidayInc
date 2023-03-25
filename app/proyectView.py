@@ -139,9 +139,17 @@ def detail():
         if 'return' in request.form:
             return redirect(url_for('proyectView.proyectView'))
         
-        if 'add' in request.form:
+        elif 'add' in request.form:
             return redirect(url_for('proyectView.addClient'))
 
+        elif 'delete' in request.form:
+            id = request.form['delete']
+            db.execute("""
+                        DELETE FROM proyectClients
+                        WHERE id = ?""", id)
+            
+            db.commit()
+            
     currProy = db.execute("SELECT * from proyect WHERE id = ?", id).fetchone()
 
     proyectClients = db.execute("""
