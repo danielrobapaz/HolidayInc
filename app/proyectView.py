@@ -192,7 +192,7 @@ def addClient():
 
         # Buscamos el departamento correspondiente al problema
         
-        depId = db.execute("SELECT depId FROM problems WHERE id = ?", problemId).fetchone()
+        depId = db.execute("SELECT depId FROM problems WHERE id = ?", (problemId,)).fetchone()
         depId = depId['depId']
 
         # Buscamos el cliente al cual le pertenece el carro
@@ -265,7 +265,7 @@ def modifyDetail():
             problemId = request.form['problem']
             
             # Buscamos el departamento correspondiente al problema    
-            depId = db.execute("SELECT depId FROM problems WHERE id = ?", problemId).fetchone()
+            depId = db.execute("SELECT depId FROM problems WHERE id = ?", (problemId,)).fetchone()
             depId = depId['depId']
 
             db.execute("UPDATE proyectClients SET problemId = ? WHERE id = ?", (problemId, id))

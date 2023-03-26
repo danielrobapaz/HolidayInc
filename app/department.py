@@ -22,7 +22,9 @@ def departmentView():
         elif 'delete' in request.form:
             delDep = request.form['delete']
 
-            db.execute("DELETE FROM departments WHERE id = ?", (delDep))
+            db.execute("DELETE FROM departments WHERE id = ?", (delDep,))
+            db.execute('DELETE FROM proyectClients WHERE departmentId = ?', (delDep,))
+            
             db.commit()
 
         elif 'create' in request.form:

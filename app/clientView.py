@@ -24,8 +24,9 @@ def clientView():
         if 'delete' in request.form:
             id = request.form['delete']
             utilities.loggerQuery(db, g.user['username'], 'deleteClient', id)
-            db.execute("""
-                        DELETE FROM clients WHERE id = ?""", id)
+            
+            db.execute("DELETE FROM clients WHERE id = ?", (id,))
+            db.execute("DELETE FROM proyectClients WHERE clientId = ?", (id,))
             
             db.commit()
             
@@ -191,8 +192,8 @@ def clientDetail():
 
             utilities.loggerQuery(db, g.user['username'], 'deleteCar', id)
             
-            db.execute("""
-                        DELETE FROM cars WHERE id = ?""", id)
+            db.execute("DELETE FROM cars WHERE id = ?", (id,))
+            db.execute("DELETE FROM proyectClients WHERE carId = ?", (id,))
             db.commit()
         
         if 'find' in request.form:

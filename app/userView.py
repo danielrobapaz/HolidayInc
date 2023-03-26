@@ -38,6 +38,13 @@ def userView():
                 'DELETE FROM user WHERE id = ?',
                 (id,)
             )
+
+            # eliminamos los datos de clientes en proyectos donde corresponda
+            db.execute(
+                'DELETE FROM proyectClients WHERE managerId = ?',
+                (id,)
+            )
+
             db.commit()
 
         elif 'return' in request.form:
@@ -142,7 +149,7 @@ def createUser():
 
             else:
                 # the user was registered, redirect to login view
-                return redirect(url_for("user.root"))
+                return redirect(url_for("userView.userView"))
 
         flash(error) # show any error that happened
 
