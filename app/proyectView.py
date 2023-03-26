@@ -146,7 +146,7 @@ def detail():
             id = request.form['delete']
             db.execute("""
                         DELETE FROM proyectClients
-                        WHERE id = ?""", id)
+                        WHERE id = ?""", (id,))
             
             db.commit()
 
@@ -154,7 +154,7 @@ def detail():
             session['editProy'] = request.form['edit']
             return redirect(url_for('proyectView.modifyDetail'))
 
-    currProy = db.execute("SELECT * from proyect WHERE id = ?", id).fetchone()
+    currProy = db.execute("SELECT * from proyect WHERE id = ?", (id,)).fetchone()
 
     proyectClients = db.execute("""
                                  SELECT
@@ -171,9 +171,17 @@ def detail():
                                  INNER JOIN user ON user.id = pClients.managerId 
                                  INNER JOIN departments ON departments.id = pClients.departmentId
                                  INNER JOIN problems ON problems.id = pClients.problemId
-                                 WHERE pClients.proyId = ?""", id).fetchall()
+                                 WHERE pClients.proyId = ?""", (id,)).fetchall()
 
-    return render_template('proyect/detail.html', proyectClients=proyectClients, currProy=currProy)
+    clients = db.execute("SELECT * FROM clients").fetchall()
+    users = db.execute("SELECT * FROM user WHERE roleId != 1 AND roleId != 2").fetchall()
+    cars = db.execute("SELECT * FROM cars").fetchall()
+    departments = db.execute("SELECT * FROM departments").fetchall()
+    problems = db.execute("SELECT * FROM problems").fetchall()
+
+    canAddClient = clients != [] and users != [] and cars != [] and departments != [] and problems != []
+
+    return render_template('proyect/detail.html', proyectClients=proyectClients, currProy=currProy, canAddClient=canAddClient)
 
 
 @bp.route('/addClient', methods=("POST", "GET"))
@@ -239,6 +247,7 @@ def addClient():
                                 FROM problems
                                 INNER JOIN departments ON
                                     problems.depId = departments.id""").fetchall()
+
     return render_template('proyect/addClient.html', vehicules=vehicules, managers=managers, problems=problems)
 
 @bp.route('modifyDetail', methods=("POST", "GET"))

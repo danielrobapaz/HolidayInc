@@ -24,6 +24,7 @@ def departmentView():
 
             db.execute("DELETE FROM departments WHERE id = ?", (delDep,))
             db.execute('DELETE FROM proyectClients WHERE departmentId = ?', (delDep,))
+            db.execute('DELETE FROM problems WHERE depId = ?', (delDep,))
             
             db.commit()
 

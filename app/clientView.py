@@ -27,6 +27,7 @@ def clientView():
             
             db.execute("DELETE FROM clients WHERE id = ?", (id,))
             db.execute("DELETE FROM proyectClients WHERE clientId = ?", (id,))
+            db.execute('DELETE FROM cars WHERE ownerId = ?', (id,))
             
             db.commit()
             

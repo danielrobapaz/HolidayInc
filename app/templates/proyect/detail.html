@@ -7,11 +7,14 @@
 {% block content %}
 <div class="row">
     <form method="POST">
+        <!--add car button-->
+        {% if canAddClient %}
         <div class="col s3">
             <button class="btn amber accent-3 black-text" type="submit" value="add" name="add">
                 Add a client
             </button>
         </div>
+        {% endif %}
         <!--return butotn-->
         <div class="col s1 offset-s7">
             <button class="btn amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
