@@ -198,16 +198,22 @@ def addClient():
         total = request.form['total']
         observation = request.form['obser']
 
-        # Buscamos el departamento correspondiente al problema
+        error = None
         
+        if not total.isnumeric():
+            error = "Total must be a number greater than zero."
+
+        # Buscamos el departamento correspondiente al problema
         depId = db.execute("SELECT depId FROM problems WHERE id = ?", (problemId,)).fetchone()
         depId = depId['depId']
 
         # Buscamos el cliente al cual le pertenece el carro
         clientId = db.execute("SELECT ownerId FROM cars WHERE id =?", (carId)).fetchone()['ownerId']
         
-        # agregamos registro a la base de datos
-        db.execute("""
+        if error is None:
+
+            # agregamos registro a la base de datos
+            db.execute("""
                     INSERT INTO proyectClients
                     (proyId, clientId, carId, managerId, 
                      departmentId, problemId, solution, subtotal,
@@ -217,9 +223,11 @@ def addClient():
                     """, (proyId, clientId, carId, managerId, depId, problemId, solution,
                          total, observation,))
         
-        db.commit()
+            db.commit()
 
-        return redirect(url_for('proyectView.detail'))
+            return redirect(url_for('proyectView.detail'))
+
+        flash(error)
 
     vehicules = db.execute("""SELECT 
                                 cars.id as id,

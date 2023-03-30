@@ -230,10 +230,10 @@ def addCar():
         db = get_db()
         error = None
 
-        if not re.search("[\d\w]{17}", bodywork):
+        if not re.search("[\d\w]{17}", bodywork) or len(bodywork) != 17:
             error = 'Invalid bodywork serial'
 
-        elif not re.search("[\d\w]{17}", motor):
+        elif not re.search("[\d\w]{17}", motor) or len(motor) != 17:
             error = 'Invalid motor serial'
 
         elif not re.search("\d{4}", year) or int(year) > 2023:

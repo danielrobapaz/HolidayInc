@@ -8,10 +8,11 @@
 <div class="row">
   <form method="POST">
     <!--problems button-->
+    {% if  areProblems %}
     <div class="col s3">
       <button class="btn amber accent-3 black-text" type="subtmit" value="problems" name="problems">Problems</button>
     </div>
-    
+    {% endif %}
     <!--return button-->
     <div class="col s1 offset-s8">
       <button class="btn amber accent-3 black-text" type="submit" value="return" name="return">Return</button>

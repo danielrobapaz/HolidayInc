@@ -53,7 +53,7 @@ def departmentView():
             return redirect(url_for('department.detail'))
 
     departments = db.execute('SELECT * FROM departments').fetchall()
-    return render_template('index/root/departmentsView.html', departments=departments)
+    return render_template('index/root/departmentsView.html', departments=departments, areProblems = departments != [])
 
 
 @bp.route('edit', methods=("POST", "GET"))
