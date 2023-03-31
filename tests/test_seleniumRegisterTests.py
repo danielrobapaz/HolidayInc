@@ -9,7 +9,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 
-class registerTests(SeleniumClass):
+class seleniumRegisterTests(SeleniumClass):
     
     def test_registerNonRegisteredUser(self):
         driver = self.driver
