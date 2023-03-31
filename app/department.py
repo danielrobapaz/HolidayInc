@@ -22,6 +22,9 @@ def departmentView():
         elif 'delete' in request.form:
             delDep = request.form['delete']
 
+            # logger query
+            utilities.loggerQuery(db, g.user['username'], 'delDep', delDep)
+
             db.execute("DELETE FROM departments WHERE id = ?", (delDep,))
             db.execute('DELETE FROM proyectClients WHERE departmentId = ?', (delDep,))
             db.execute('DELETE FROM problems WHERE depId = ?', (delDep,))
@@ -37,6 +40,9 @@ def departmentView():
             if error is None:
                 try:
                     db.execute("INSERT INTO departments (description) values (?)", (dep,))
+                    db.commit()
+
+                    utilities.loggerQuery(db, g.user['username'], 'addDep', dep)
                     db.commit()
 
                 except db.IntegrityError:
@@ -69,6 +75,7 @@ def editDepartment():
             error = "Invalid name"
         if error is None:
             try:
+                utilities.loggerQuery(db, g.user['username'], 'editDep', id)
                 db.execute("UPDATE departments SET description = ? WHERE id = ?", (desc, id))
                 db.commit()
 
@@ -80,7 +87,7 @@ def editDepartment():
         else:
             return redirect(url_for('department.departmentView'))
 
-    dep = db.execute("SELECT * FROM departments WHERE id = ?", (id)).fetchone()
+    dep = db.execute("SELECT * FROM departments WHERE id = ?", (id,)).fetchone()
     return render_template('index/root/editDepartment.html', dep=dep)
 
 @bp.route('problems', methods=("POST", "GET"))
@@ -103,6 +110,8 @@ def problems():
                            INSERT INTO problems
                            (problem, depId)
                            VALUES (?, ?)""", (problem, id))
+                
+                utilities.loggerQuery(db, g.user['username'], 'addProblem', problem)
                 
                 db.commit()
 

@@ -58,7 +58,7 @@ def findProyectDescById(db, id):
 
     return db.execute(
         'SELECT description FROM proyect WHERE id = ?',
-        (id),
+        (id,),
     ).fetchone()['description']
 
 
@@ -92,9 +92,22 @@ def findClientNameById(db, id):
     ).fetchone()['firstname']
 
 def findCarInfoById(db, id):
-    info = db.execute('SELECT brand, model FROM cars WHERE id = ?', (id)).fetchone()
+    info = db.execute('SELECT brand, model FROM cars WHERE id = ?', (id,)).fetchone()
 
     return info['brand'] + ' ' + info['model']
+
+def findDepInfoById(db, id):
+    info = db.execute('SELECT description FROM departments WHERE id = ?', (id,)).fetchone()
+
+    return info['description']
+
+def findProyectClientById(db, id):
+    info = db.execute('SELECT proyId FROM proyectClients WHERE id = ?', (id,)).fetchone()
+    proyId = info['proyId']
+
+    info = findProyectDescById(db, proyId)
+
+    return info
 
 def getEventMsg(db, content, mode):
     '''
@@ -167,6 +180,27 @@ def getEventMsg(db, content, mode):
 
     elif mode == 'modifyCar':
         msg = f'Car \'{content[0]} {content[1]}\' was modified'
+
+    elif mode == 'delDep':
+        msg = f'Deparment \'{findDepInfoById(db, content)}\' was deleted'
+
+    elif mode == 'addDep':
+        msg = f'Deparment \'{content}\' was created'
+    
+    elif mode == 'editDep': 
+        msg = f'Deparment \'{findDepInfoById(db, content)}\' was modified'
+
+    elif mode == 'addProblem':
+        msg = f'Problem \'{content}\' was created'
+
+    elif mode == 'addClientProy': 
+        msg = f'Car \'{findCarInfoById(db, content[1])}\' was added to proyect \'{findProyectDescById(db, content[0])}\''
+    
+    elif mode == 'editDetail':
+        msg = f'Car of proyect \'{findProyectClientById(db, content)}\' was modified'
+    
+    elif mode == 'deleteClientProy':
+        msg = f'Car of proyect \'{findProyectClientById(db, content)}\' was deleted'
     return msg
 
 def loggerQuery(db, user, mode, content):

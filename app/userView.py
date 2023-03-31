@@ -39,12 +39,6 @@ def userView():
                 (id,)
             )
 
-            # eliminamos los datos de clientes en proyectos donde corresponda
-            db.execute(
-                'DELETE FROM proyectClients WHERE managerId = ?',
-                (id,)
-            )
-
             db.commit()
 
         elif 'return' in request.form:

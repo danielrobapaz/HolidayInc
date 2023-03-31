@@ -144,6 +144,9 @@ def detail():
 
         elif 'delete' in request.form:
             id = request.form['delete']
+
+            utilities.loggerQuery(db, g.user['username'], 'deleteClientProy', id)
+
             db.execute("""
                         DELETE FROM proyectClients
                         WHERE id = ?""", (id,))
@@ -183,7 +186,6 @@ def detail():
 
     return render_template('proyect/detail.html', proyectClients=proyectClients, currProy=currProy, canAddClient=canAddClient)
 
-
 @bp.route('/addClient', methods=("POST", "GET"))
 @modifyProyect_required
 def addClient():
@@ -222,9 +224,10 @@ def addClient():
                         (?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, (proyId, clientId, carId, managerId, depId, problemId, solution,
                          total, observation,))
-        
             db.commit()
 
+            utilities.loggerQuery(db, g.user['username'], 'addClientProy', [proyId, carId])
+            db.commit()
             return redirect(url_for('proyectView.detail'))
 
         flash(error)
@@ -292,6 +295,8 @@ def modifyDetail():
         total = request.form['total']
         observation = request.form['obser']
 
+        utilities.loggerQuery(db, g.user['username'], 'editDetail', id)
+
         db.execute("UPDATE proyectClients SET solution = ? WHERE id = ?", (solution, id))
         db.execute("UPDATE proyectClients SET subtotal = ? WHERE id = ?", (total, id))
         db.execute("UPDATE proyectClients SET observation = ? WHERE id = ?", (observation, id))
@@ -303,7 +308,7 @@ def modifyDetail():
     client = db.execute("""SELECT 
                             *
                         FROM proyectClients
-                        WHERE id = ?""", id).fetchone()
+                        WHERE id = ?""", (id,)).fetchone()
     
     vehicules = db.execute("""SELECT 
                                 cars.id as id,
