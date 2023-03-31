@@ -295,3 +295,79 @@ class seleniumClientsTests(SeleniumClass):
         for k in elements:
             if (k.text == "JAKF9031ALFOF2231"):
                 self.assertEqual(k.text,"JAKF9031ALFOF2231")
+
+
+    def test_rootModifyCar(self):
+        self.test_rootAddCar()
+        driver = self.driver
+        driver.get("http://localhost:5000/clients/details")
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/clients/details"))
+        actualUrl = "http://localhost:5000/clients/details"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        element = driver.find_element(By.TAG_NAME, 'tr')
+        elements = element.find_elements(By.TAG_NAME, 'td')
+        for k in elements:
+            if (k.text == "A1E231"):
+                self.assertEqual(k.text,"A1E231")
+                old_plaque = k.text
+            elif (k.text == "Bad lights"):
+                self.assertEqual(k.text,"Bad lights")
+                old_problem = k.text
+        car_modify = driver.find_element(By.NAME, "modify")
+        car_modify.click()
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/clients/modifyCar"))
+        actualUrl = "http://localhost:5000/clients/modifyCar"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        car_plaque = driver.find_element(By.NAME, "plaque")
+        car_plaque.click()
+        car_plaque.clear()
+        car_plaque.send_keys("A1EASF")
+        car_problem = driver.find_element(By.NAME, "problem")
+        car_problem.click()
+        car_problem.clear()
+        car_problem.send_keys("No accelerate")
+        car_plaque.send_keys(Keys.RETURN)
+        wait.until(EC.url_to_be("http://localhost:5000/clients/details"))
+        actualUrl = "http://localhost:5000/clients/details"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        element = driver.find_element(By.TAG_NAME, 'tr')
+        elements = element.find_elements(By.TAG_NAME, 'td')
+        for k in elements:
+            if (k.text == "A1EASF"):
+                self.assertNotEqual(k.text,old_plaque)
+        for k in elements:
+            if (k.text == "No accelerate"):
+                self.assertNotEqual(k.text,old_problem)
+
+    def test_rootDeleteCar(self):
+        self.test_rootAddCar()
+        driver = self.driver
+        driver.get("http://localhost:5000/clients/details")
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/clients/details"))
+        actualUrl = "http://localhost:5000/clients/details"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        element = driver.find_element(By.TAG_NAME, 'tr')
+        elements = element.find_elements(By.TAG_NAME, 'td')
+        for k in elements:
+            if (k.text == "A1E231"):
+                self.assertEqual(k.text,"A1E231")
+                old_plaque = k.text
+        car_delete = driver.find_element(By.NAME, "delete")
+        car_delete.click()
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/clients/details"))
+        actualUrl = "http://localhost:5000/clients/details"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        element = driver.find_element(By.TAG_NAME, 'tr')
+        elements = element.find_elements(By.TAG_NAME, 'td')
+        for k in elements:
+            if (k.text == "None"):
+                self.assertNotEqual(k.text,old_plaque)
