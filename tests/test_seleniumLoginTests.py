@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
-from .test_seleniumRegisterTests import registerTests
+from .test_seleniumRegisterTests import *
 
 class seleniumLoginTests(SeleniumClass):
     
@@ -29,7 +29,7 @@ class seleniumLoginTests(SeleniumClass):
         self.assertEqual(expectedUrl,actualUrl)
 
     def test_loginRegisteredNonAuthorizedUser(self):
-        registerTests.test_registerNonRegisteredUser(self)
+        seleniumRegisterTests.test_registerNonRegisteredUser(self)
         self.driver.get("http://localhost:5000/auth/login")
         assert "Log In" in self.driver.title
         passwd = self.driver.find_element(By.ID, "password")
