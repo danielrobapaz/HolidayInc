@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 
 
-class seleniumClientsTests(SeleniumClass):
+class seleniumDepartmentTests(SeleniumClass):
 
     def test_RootCreateDepartment(self):
         driver = self.driver
