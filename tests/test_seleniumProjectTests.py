@@ -260,4 +260,29 @@ class seleniumProjectTests(SeleniumClass):
         elements = element.find_elements(By.TAG_NAME, 'div')
         for e in elements:
             if (e.text == "The proyect must end after it begins"):
-                self.assertEqual(e.text,"The proyect must end after it begins") 
+                self.assertEqual(e.text,"The proyect must end after it begins")
+
+    def test_RootRemoveProyect(self):
+        self.test_RootCreateProyect()
+        driver = self.driver
+        wait = WebDriverWait(driver, 20)
+        driver.implicitly_wait(1)
+        actualUrl = "http://localhost:5000/root/proyects"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        modify_proyect_button = driver.find_element(By.NAME, "modify-proyect")
+        modify_proyect_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/modifyProyect"))
+        actualUrl = "http://localhost:5000/modifyProyect"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        delete_button = driver.find_element(By.NAME, "delete")
+        delete_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyects"))
+        actualUrl = "http://localhost:5000/root/proyects"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        try:
+            modify_proyect_button = driver.find_element(By.NAME, "modify-proyect")
+        except:
+            print("Proyect Deleted")
