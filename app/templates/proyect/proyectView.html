@@ -5,9 +5,16 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST">
-  <button class="btn amber accent-3 black-text" name="logs">logger</button>
-</form>
+{% if g.user['roleId'] != 1%}
+<div class="row">
+    <div class="col s2 offset-s10">
+        <form method="POST">
+            <button class="btn amber accent-3 black-text" name="logs">logger</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
 <!--return butotn-->
 {% if g.user['roleId'] == 1 %}
 <div class="row">
