@@ -284,3 +284,110 @@ class seleniumMultiTests(SeleniumClass):
         actualUrl = "http://localhost:5000/root/proyect/detail"
         expectedUrl= driver.current_url
         self.assertEqual(expectedUrl,actualUrl)
+
+
+    def test_RootEditCarInAProyect(self):
+        self.test_RootAddCarToProyect()
+        # Go To Proyect
+        print("Go To Project")
+        driver = self.driver
+        driver.get("http://localhost:5000/auth/login")
+        assert "Log In" in driver.title
+        passwd = driver.find_element(By.ID, "password")
+        passwd.clear()
+        passwd.send_keys("root")
+        user = driver.find_element(By.ID, "username")
+        user.clear()
+        user.send_keys("root")
+        user.send_keys(Keys.RETURN)
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/user/root"))
+        actualUrl = "http://localhost:5000/user/root"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        user_button = driver.find_element(By.ID, "proyect")
+        user_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyects"))
+        actualUrl = "http://localhost:5000/root/proyects"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        edit_detail_proyect_button = driver.find_element(By.NAME, "detail")
+        edit_detail_proyect_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
+        actualUrl = "http://localhost:5000/root/proyect/detail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # Edit Proyect
+
+        edit_proyect_button = driver.find_element(By.NAME, "edit")
+        edit_proyect_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/modifyDetail"))
+        actualUrl = "http://localhost:5000/root/modifyDetail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        solution = driver.find_element(By.NAME,"solution")
+        oldSolution = solution.get_attribute("value")
+        solution.send_keys("fix other things")
+        solution.send_keys(Keys.RETURN)
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
+        actualUrl = "http://localhost:5000/root/proyect/detail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        driver.implicitly_wait(10)
+        element = driver.find_element(By.TAG_NAME, 'section')   
+        elements = element.find_elements(By.TAG_NAME, 'div')
+        for e in elements:
+            if (e.text == "fix other things"):
+                self.assertEqual(e.text,"fix other things")
+                self.assertNotEqual(oldSolution,e.text) 
+
+
+    def test_RootDeleteCarInAProyect(self):
+        self.test_RootAddCarToProyect()
+        # Go To Proyect
+        print("Go To Project")
+        driver = self.driver
+        driver.get("http://localhost:5000/auth/login")
+        assert "Log In" in driver.title
+        passwd = driver.find_element(By.ID, "password")
+        passwd.clear()
+        passwd.send_keys("root")
+        user = driver.find_element(By.ID, "username")
+        user.clear()
+        user.send_keys("root")
+        user.send_keys(Keys.RETURN)
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/user/root"))
+        actualUrl = "http://localhost:5000/user/root"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        user_button = driver.find_element(By.ID, "proyect")
+        user_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyects"))
+        actualUrl = "http://localhost:5000/root/proyects"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        
+        edit_detail_proyect_button = driver.find_element(By.NAME, "detail")
+        edit_detail_proyect_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
+        actualUrl = "http://localhost:5000/root/proyect/detail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # Delete Car 
+
+        edit_proyect_button = driver.find_element(By.NAME, "delete")
+        edit_proyect_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
+        actualUrl = "http://localhost:5000/root/proyect/detail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        element = driver.find_element(By.TAG_NAME, 'section')   
+        elements = element.find_elements(By.TAG_NAME, 'div')
+        for e in elements:
+            if (e.text == None):
+                self.assertEqual(e.text,None)
+        driver.implicitly_wait(10)
