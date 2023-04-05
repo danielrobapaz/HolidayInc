@@ -4,7 +4,7 @@ sys.path.append('../')
 from . import UnitTestClass
 from http.cookies import SimpleCookie
 from flask import session
-from .tests_unitProjectTests import *
+from .test_unitProjectTests import *
 from .test_unitLoginTests import *
 from .test_unitRegisterTests import *
 
@@ -13,22 +13,22 @@ class unitUserTests(UnitTestClass):
     def test_rootCreateUser(self):
         print("rootCreateUser\n\n")
         unitProjectTests.test_rootCreateProject(self)
-        res = self.client.post('/createUser', data={
+        res = self.client.post('/root/createUser', data={
             'username':'joje',
             'password':'joje',
             'firstname':'jorge',
             'secondname':'correia',
-            'role':'op_manager',
+            'role':'3',
             'proyect':'1'
         }, follow_redirects=True)
         assert res.status_code == 200
-        assert res.request.path == '/user/root'
+        assert res.request.path == '/root/users'
 
     def test_rootCreateUserAlreadyRegistered(self):
         print("rootCreateUserAlreadyRegistered\n\n")
         unitRegisterTests.test_registerUserAuthorize(self)
         unitLoginTests.test_loginRoot(self)
-        res = self.client.post('/createUser', data={
+        res = self.client.post('/root/createUser', data={
             'username':'joje',
             'password':'joje',
             'firstname':'jorge',
@@ -50,8 +50,8 @@ class unitUserTests(UnitTestClass):
             assert get_db().execute("select * from user where auth = 0").fetchone() is not None
         with self.client.session_transaction() as session:
             session['aprove_user'] = id
-        res = self.client.post('/aproveUser', data={
-            'role':'op_manager',
+        res = self.client.post('/root/aproveUser', data={
+            'role':'3',
             'proyect':'1',
             'aprove':'aprove',
         }, follow_redirects=True)
@@ -92,7 +92,7 @@ class unitUserTests(UnitTestClass):
                 assert u1 is not None
             with self.client.session_transaction() as session:
                 session['modify_user'] = '2'
-            res = self.client.post('/modifyUser', data={
+            res = self.client.post('/root/user/modifyUser', data={
                 'delete':'delete',
             }, follow_redirects=True)
             with self.app.app_context():    
@@ -100,7 +100,7 @@ class unitUserTests(UnitTestClass):
                 u1 = db.execute("select * from user where id = '2'").fetchone()
                 assert u1 is None
             assert res.status_code == 200
-            assert res.request.path == '/user/root'
+            assert res.request.path == '/root/users'
 
     def test_userChangeRole(self):
             print("rootUserChangeRole\n")
@@ -113,20 +113,20 @@ class unitUserTests(UnitTestClass):
                 # r1 = db.execute("select * from roles where id = 1").fetchone()
                 # r2 = db.execute("select * from roles where id = 2").fetchone()
                 assert u1 is not None
-                assert u1['role'] == 'op_manager'
+                assert u1['roleId'] == 3
             with self.client.session_transaction() as session:
                 session['modify_user'] = '2'
-            res = self.client.post('/modifyUser/changeRole', data={
-                'select':'mechanic_sup',
+            res = self.client.post('/root/user/modifyUser/changeRole', data={
+                'select':'5',
             }, follow_redirects=True)
             with self.app.app_context():    
                 db = get_db()
                 u1 = db.execute("select * from user where id = 2").fetchone()
                 # r1 = db.execute("select * from roles where id = 1").fetchone()
                 # r2 = db.execute("select * from roles where id = 2").fetchone()
-                print(u1['role'])
+                #print(u1['role'])
                 # assert u1 is not None and r1 is not None and r2 is not None
                 assert u1 is not None
-                assert u1['role'] == 'mechanic_sup'
+                assert u1['roleId'] == 5
             assert res.status_code == 200
-            assert res.request.path == '/user/root'
+            assert res.request.path == '/root/users'
