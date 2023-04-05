@@ -26,7 +26,21 @@ class unitRegisterTests(UnitTestClass):
       
     def test_registerAlreadyRegisteredUser(self):
         print("registerAlreadyRegisteredUser\n\n")
-        self.test_registerUser()
+        res = self.client.post('/auth/register', data={
+            'username':'joje',
+            'password':'123',
+            'firstname':'jorge',
+            'secondname':'correia'
+        }, follow_redirects=True)
+        
+        assert res.status_code == 200
+        
+        html = res.get_data(as_text=True)
+        
+        assert res.request.path == '/auth/login'
+        
+        with self.app.app_context():
+            assert get_db().execute("select * from user where username = 'joje'",).fetchone() is not None
         username = 'joje'
         res = self.client.post('/auth/register', data={
             'username':username,
@@ -45,7 +59,21 @@ class unitRegisterTests(UnitTestClass):
 
     def test_registerUserAuthorize(self):
         print("registerUserAuthorize\n\n")
-        self.test_registerUser()
+        res = self.client.post('/auth/register', data={
+            'username':'joje',
+            'password':'123',
+            'firstname':'jorge',
+            'secondname':'correia'
+        }, follow_redirects=True)
+        
+        assert res.status_code == 200
+        
+        html = res.get_data(as_text=True)
+        
+        assert res.request.path == '/auth/login'
+        
+        with self.app.app_context():
+            assert get_db().execute("select * from user where username = 'joje'",).fetchone() is not None
         with self.app.app_context():
             get_db().execute("update user set auth=1 where username = 'joje'",).fetchone()
             get_db().commit()
