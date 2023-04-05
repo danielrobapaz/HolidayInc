@@ -271,7 +271,7 @@ def addCar():
 def modifyCar():
     id = session['car_id']
     db = get_db()
-    car = db.execute("SELECT * FROM cars WHERE id = ?", id).fetchone()
+    car = db.execute("SELECT * FROM cars WHERE id = ?", (id,)).fetchone()
 
     if request.method == "POST":
         plaque = request.form['plaque']
@@ -298,28 +298,28 @@ def modifyCar():
         if error is None:
             try:
                 db.execute("""UPDATE cars SET plaque = ? WHERE id = ?""", 
-                            (plaque, id))
+                            (plaque, id,))
                 
                 db.execute("""UPDATE cars SET brand = ? WHERE id = ?""", 
-                            (brand, id))
+                            (brand, id,))
                 
                 db.execute("""UPDATE cars SET model = ? WHERE id = ?""", 
-                            (model, id))
+                            (model, id,))
                 
                 db.execute("""UPDATE cars SET year = ? WHERE id = ?""", 
-                            (year, id))
+                            (year, id,))
                 
                 db.execute("""UPDATE cars SET bodyWorkSerial = ? WHERE id = ?""", 
-                            (bodywork, id))
+                            (bodywork, id,))
                 
                 db.execute("""UPDATE cars SET motorSerial = ? WHERE id = ?""", 
-                            (motor, id))
+                            (motor, id,))
                 
                 db.execute("""UPDATE cars SET color = ? WHERE id = ?""", 
-                            (color, id))
+                            (color, id,))
                 
                 db.execute("""UPDATE cars SET problem = ? WHERE id = ?""", 
-                            (problem, id))
+                            (problem, id,))
                 
                 utilities.loggerQuery(db, g.user['username'], 'modifyCar', [car['brand'], car['model']])
                 db.commit()
