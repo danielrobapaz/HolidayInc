@@ -139,3 +139,46 @@ class unitProjectTests(UnitTestClass):
             assert u1[0] == 2
         assert res.status_code == 200
         assert res.request.path == '/user/root'
+
+    def test_rootCreateProjectBadDate(self,name='proyect1'):
+            print("rootCreateProject\n\n")
+            unitLoginTests.test_loginRoot(self)
+            if name != 'proyect2':
+                with self.app.app_context():
+                    db = get_db()
+                    assert db.execute("select * from proyect where description = 'proyect1' ").fetchone() is None
+            res = self.client.post('/root/proyect/createProyect', data={
+                'description':name,
+                'starting-date':'2023-02-27',
+                'end-date':'2023-02-26'
+            }, follow_redirects=True)
+            assert res.status_code == 200
+            html = res.get_data(as_text=True)
+            assert f'The proyect must end after it begins' in html
+            with self.app.app_context():
+                db = get_db()
+                data = db.execute("select * from proyect where description = 'proyect1'").fetchone()
+                assert data == None
+            assert res.status_code == 200
+            assert res.request.path == '/root/proyect/createProyect'
+
+    def test_rootCreateProjectEmptyDescription(self,name='proyect1'):
+            print("rootCreateProject\n\n")
+            unitLoginTests.test_loginRoot(self)
+            if name != 'proyect2':
+                with self.app.app_context():
+                    db = get_db()
+                    assert db.execute("select * from proyect where description = 'proyect1' ").fetchone() is None
+            res = self.client.post('/root/proyect/createProyect', data={
+                'description':None,
+                'starting-date':'2023-02-27',
+                'end-date':'2023-02-26'
+            }, follow_redirects=True)
+            assert res.status_code == 400
+            with self.app.app_context():
+                db = get_db()
+                data = db.execute("select * from proyect where description = 'proyect1'").fetchone()
+                assert data == None
+            assert res.request.path == '/root/proyect/createProyect'
+
+    
