@@ -143,13 +143,13 @@ def detail():
             return redirect(url_for('proyectView.addClient'))
 
         elif 'delete' in request.form:
-            id = request.form['delete']
+            idDel = request.form['delete']
 
-            utilities.loggerQuery(db, g.user['username'], 'deleteClientProy', id)
+            utilities.loggerQuery(db, g.user['username'], 'deleteClientProy', idDel)
 
             db.execute("""
                         DELETE FROM proyectClients
-                        WHERE id = ?""", (id,))
+                        WHERE id = ?""", (idDel,))
             
             db.commit()
 
@@ -210,7 +210,7 @@ def addClient():
         depId = depId['depId']
 
         # Buscamos el cliente al cual le pertenece el carro
-        clientId = db.execute("SELECT ownerId FROM cars WHERE id =?", (carId)).fetchone()['ownerId']
+        clientId = db.execute("SELECT ownerId FROM cars WHERE id =?", (carId,)).fetchone()['ownerId']
         
         if error is None:
 
