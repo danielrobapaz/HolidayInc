@@ -56,5 +56,8 @@ def create_app(test_config=None):
 
     from . import department
     app.register_blueprint(department.bp)
+
+    from . import metricsView
+    app.register_blueprint(metricsView.bp)
     
     return app

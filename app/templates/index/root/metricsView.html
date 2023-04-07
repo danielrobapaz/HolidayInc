@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Welcome, {{ g.user['username'] }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <form method="POST">
+    <!--return button-->
+    <div class="col s1 offset-s10">
+      <button class="btn amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
+    </div>
+  </form>
+</div>
+<div class="row">
+    <form method="POST">
+        <div class="col s2">
+            <input placeholder="Enter dimension" name="dim" required>
+        </div>
+        <div class="col s3">
+            <input placeholder="Add a new metric unit" name="metric" required>
+        </div>
+        <div class="col s2">
+            <button class="btn amber accent-3 black-text" type="submit" name="create">
+                <i class="material-icons">add</i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- unit table -->
+<div class="left-align">
+  <h5 class="card-panel amber accent-1">Metric Units.</h5>
+</div>
+
+<table class="centered">
+  <thead class="card-panel amber accent-1">
+    <tr>
+      <th>Id</th>
+      <th>Dimension</th>
+      <th>Unit</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>  
+    {% for unit in units %}
+      <tr>
+        <td>{{ unit['id'] }}</td>
+        <td>{{ unit['dimension']}}</td>
+        <td>{{ unit['unit'] }}</td>
+        <td>
+          <form method="POST">
+            <button class="btn amber accent-3 black-text" type="submit" name="edit" value="{{ unit['id'] }}">
+                <i class="material-icons">edit</i>
+            </button>
+            <button class="btn amber accent-3 black-text" type="submit" name="delete" value="{{ unit['id'] }}">
+                <i class="material-icons">delete</i>
+            </button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS carModels;
 DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS problems;
 DROP TABLE IF EXISTS proyectClients;
+DROP TABLE IF EXISTS metricsUnit;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -109,4 +110,10 @@ CREATE TABLE proyectClients (
     FOREIGN KEY (managerId) REFERENCES user(id),
     FOREIGN KEY (departmentId) REFERENCES departments(id),
     FOREIGN KEY (problemId) REFERENCES problems(id)
+);
+
+CREATE TABLE metricsUnit (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  dimension INTEGER NOT NULL,
+  unit TEXT NOT NULL  
 );

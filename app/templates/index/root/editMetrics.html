@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Edit Unit{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <label class="left-align">Dimension.</label>
+            <input value="{{ unit['dimension']}}" name="dim">
+
+            <label class="left-align">Dimension.</label>
+            <input value="{{ unit['unit']}}" name="unit">
+            
+            <input class="btn amber accent-3 black-text " type="submit" value="Edit">
+        </form>
+    </div>
+{% endblock %}

@@ -29,6 +29,9 @@ def root():
         
         elif 'dep' in request.form:
             return redirect(url_for('department.departmentView'))
+
+        elif 'metrics' in request.form:
+            return redirect(url_for('metricsView.metricsView'))
         
     return render_template('index/root/rootUser.html')
 
