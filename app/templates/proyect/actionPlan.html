@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h2>{% block title %} Actions {% endblock %}</h2>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <form method="POST">
+    <!--return button-->
+    <div class="col s1 offset-s10">
+      <button class="btn amber accent-3 black-text" type="submit" value="return" name="return">Return</button>
+    </div>
+  </form>
+</div>
+<div class="row">
+    <form method="POST">
+        <div class="col s2">
+            <button class="btn amber accent-3 black-text" type="submit" name="create">
+                Add action
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- unit table -->
+<div class="left-align">
+  <h5 class="card-panel amber accent-1">Action plan</h5>
+</div>
+
+<table class="centered">
+  <thead class="card-panel amber accent-1">
+    <tr>
+      <th>Id</th>
+      <th>Action</th>
+      <th>Activity</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Total hours</th>
+      <th>Responsible</th>
+      <th>Total</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>  
+    {% for plan in plans %}
+      <tr>
+        <td>{{ plan['id'] }}</td>
+        <td>{{ plan['action']}}</td>
+        <td>{{ plan['activity'] }}</td>
+        <td>{{ plan['start'] }}</td>
+        <td>{{ plan['end'] }}</td>
+        <td>{{ plan['hours'] }}</td>
+        <td>{{ plan['firstname'] }} {{ plan['secondname'] }}</td>
+        <td>{{ plan['total']}} </td>
+        <td>
+            <form method="POST">
+                <button class="btn amber accent-3 black-text" type="submit" name="edit" value="{{ plan['id'] }}">
+                    <i class="material-icons">edit</i>
+                </button>
+                <button class="btn amber accent-3 black-text" type="submit" name="delete" value="{{ plan['id'] }}">
+                    <i class="material-icons">delete</i>
+                </button>
+            </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

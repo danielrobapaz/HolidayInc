@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Create action{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <label class="left-align" for="proyectname">Action</label>
+            <input placeholder="Enter action" name="action" required>
+            
+            <label class="left-align" for="proyectname">Activity</label>
+            <input placeholder="Enter activity" name="activity" required>
+            
+            <label class="left-align" for="star-date">Begins in</label>
+            <input type="date" value="Starting date" name="starting-date" required>
+            
+            <label class="left-align" for="end-date">Ends in</label>
+            <input type="date" value="Ending date" name="end-date" required>
+            
+            <label class="left-align" for="vechicule">Responsible</label>
+            <select class="browser-default" name="resp" required>
+                <option value="" disabled selected>Choose responsible</option>
+                {% for resp in responsibles %}
+                <option value="{{resp['id']}}">{{resp['firstname']}} {{resp['secondname']}}</option>
+                {% endfor %}
+            </select>
+
+            <input class="btn   amber accent-3 black-text" type="submit" value="Create action">
+        </form>
+    </div>
+{% endblock %}

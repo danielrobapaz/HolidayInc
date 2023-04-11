@@ -156,6 +156,10 @@ def detail():
         elif 'edit' in request.form:
             session['editProy'] = request.form['edit']
             return redirect(url_for('proyectView.modifyDetail'))
+        
+        elif 'action' in request.form:
+            session['actionProy'] = request.form['action']
+            return redirect(url_for('actionPlan.actionPlanView'))
 
     currProy = db.execute("SELECT * from proyect WHERE id = ?", (id,)).fetchone()
 
@@ -197,13 +201,9 @@ def addClient():
         managerId = request.form['manager']
         problemId = request.form['problem']
         solution = request.form['solution']
-        total = request.form['total']
         observation = request.form['obser']
 
         error = None
-        
-        if not total.isnumeric():
-            error = "Total must be a number greater than zero."
 
         # Buscamos el departamento correspondiente al problema
         depId = db.execute("SELECT depId FROM problems WHERE id = ?", (problemId,)).fetchone()
@@ -218,12 +218,12 @@ def addClient():
             db.execute("""
                     INSERT INTO proyectClients
                     (proyId, clientId, carId, managerId, 
-                     departmentId, problemId, solution, subtotal,
+                     departmentId, problemId, solution,
                      observation)
                     VALUES
-                        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        (?, ?, ?, ?, ?, ?, ?, ?)
                     """, (proyId, clientId, carId, managerId, depId, problemId, solution,
-                         total, observation,))
+                         observation,))
             db.commit()
 
             utilities.loggerQuery(db, g.user['username'], 'addClientProy', [proyId, carId])
@@ -292,13 +292,11 @@ def modifyDetail():
             db.execute("UPDATE proyectClients SET deparmentId = ? WHERE id = ?", (depId, id))
             
         solution = request.form['solution']
-        total = request.form['total']
         observation = request.form['obser']
 
         utilities.loggerQuery(db, g.user['username'], 'editDetail', id)
 
         db.execute("UPDATE proyectClients SET solution = ? WHERE id = ?", (solution, id))
-        db.execute("UPDATE proyectClients SET subtotal = ? WHERE id = ?", (total, id))
         db.execute("UPDATE proyectClients SET observation = ? WHERE id = ?", (observation, id))
 
         db.commit()

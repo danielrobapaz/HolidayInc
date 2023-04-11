@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS problems;
 DROP TABLE IF EXISTS proyectClients;
 DROP TABLE IF EXISTS metricsUnit;
+DROp TABLE IF EXISTS actionPlan;
 
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -101,7 +102,7 @@ CREATE TABLE proyectClients (
     departmentId INTEGER NOT NULL,
     problemId INTEGER NOT NULL,
     solution TEXT NOT NULL,
-    subtotal INTEGER NOT NULL,
+    subtotal INTEGER DEFAULT 0,
     observation TEXT,
 
     FOREIGN KEY (proyId) REFERENCES proyect(id),
@@ -116,4 +117,19 @@ CREATE TABLE metricsUnit (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   dimension INTEGER NOT NULL,
   unit TEXT NOT NULL  
+);
+
+CREATE TABLE actionPlan (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    proyectClientId INTEGER NOT NULL,
+    action TEXT NOT NULL,
+    activity TEXT NOT NULL,
+    start DATE NOT NULL,
+    end DATE NOT NULL,
+    hours INTEGER NOT NULL,
+    responsibleId INTEGER NOT NULL,
+    total INTEGER DEFAULT 0,
+
+    FOREIGN KEY (proyectClientId) REFERENCES proyectClients(id),
+    FOREIGN KEY (responsibleId) REFERENCES user(id) 
 );

@@ -52,12 +52,15 @@
           <td>{{proyect['observation']}}</td>
           <td>
             <form method="POST">
-                <button class="btn amber accent-3 black-text" type="submit" name="delete" value="{{proyect['id']}}">
-                  <i class="material-icons">delete</i>
-                </button>
-                <button class="btn amber accent-3 black-text" type="submit" name="edit" value="{{proyect['id']}}">
-                  <i class="material-icons">edit</i>
-                </button>
+              <button class="btn amber accent-3 black-text" type="submit" name="edit" value="{{proyect['id']}}">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="btn amber accent-1 black-text" type="submit" name="action" value="{{proyect['id']}}">
+                <i class="material-icons">assignment</i>  
+              </button>
+              <button class="btn amber accent-3 black-text" type="submit" name="delete" value="{{proyect['id']}}">
+                <i class="material-icons">delete</i>
+              </button>
             </form>
           </td>
         </tr>
