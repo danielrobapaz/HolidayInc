@@ -29,6 +29,13 @@ def actionPlanView():
             id = request.form['delete']
             db.execute("DELETE FROM actionPlan WHERE id = ?", (id,))
             db.commit()
+
+        elif 'human' in request.form:
+            return redirect(url_for('actionPlan.humanTalent'))
+        
+        elif 'supplie' in request.form:
+            return redirect(url_for('actionPlan.supplie'))
+        
     
     plans = db.execute("""
                         SELECT 
@@ -156,3 +163,88 @@ def createAction():
     metrics = db.execute("SELECT * FROM metricsUnit").fetchall()
 
     return render_template('proyect/createAction.html', responsibles=responsibles, metrics=metrics)
+
+@bp.route('humanTalent', methods=("POST", "GET"))
+@modifyProyect_required
+def humanTalent():
+    db = get_db()
+    proyId = session['actionProy']
+
+    if request.method == "POST":
+        if 'return' in request.form:
+            session['proyId'] = proyId
+            return redirect(url_for('proyectView.detail'))
+        
+        elif 'create' in request.form:
+            return redirect(url_for('actionPlan.createAction'))
+        
+        elif 'delete' in request.form:
+            id = request.form['delete']
+            db.execute("DELETE FROM actionPlan WHERE id = ?", (id,))
+            db.commit()
+
+        elif 'action' in request.form:
+            return redirect(url_for('actionPlan.actionPlanView'))
+        
+        elif 'supplie' in request.form:
+            return redirect(url_for('actionPlan.supplie'))
+        
+    plans = db.execute("""
+                        SELECT 
+                            plan.id as id,
+                            plan.action as action,
+                            plan.activity as activity,
+                            plan.hours as hours,
+                            plan.nWorkers as nWorkers,
+                            user.firstname as firstname,
+                            user.secondname as secondname,
+                            plan.totalHumanTalent as total
+                        FROM actionPlan plan
+                        INNER JOIN user ON plan.responsibleId = user.id
+                        WHERE proyectClientId = ?""", (proyId,)).fetchall()
+    
+    return render_template('proyect/humanTalent.html', plans=plans)
+
+@bp.route('supplie', methods=("POST", "GET"))
+@modifyProyect_required
+def supplie():
+    db = get_db()
+    proyId = session['actionProy']
+    
+    if request.method == "POST":
+        if 'return' in request.form:
+            session['proyId'] = proyId
+            return redirect(url_for('proyectView.detail'))
+        
+        elif 'create' in request.form:
+            return redirect(url_for('actionPlan.createAction'))
+        
+        elif 'delete' in request.form:
+            id = request.form['delete']
+            db.execute("DELETE FROM actionPlan WHERE id = ?", (id,))
+            db.commit()
+
+        elif 'action' in request.form:
+            return redirect(url_for('actionPlan.actionPlanView'))
+        
+        elif 'human' in request.form:
+            return redirect(url_for('actionPlan.humanTalent'))
+        
+    plans = db.execute("""
+                        SELECT 
+                            plan.id as id,
+                            plan.action as action,
+                            plan.activity as activity,
+                            plan.category as category,
+                            plan.supplieName as supplieName,
+                            metrics.dimension as dimension,
+                            metrics.unit as unit,
+                            user.firstname as firstname,
+                            user.secondname as secondname,
+                            plan.totalSupplie as total
+                        FROM actionPlan plan
+                        INNER JOIN user ON plan.responsibleId = user.id
+                        INNER JOIN metricsUnit metrics ON plan.metricId = metrics.id
+                        WHERE proyectClientId = ?""", (proyId,)).fetchall()
+    
+    return render_template('proyect/supplie.html', plans=plans)

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h2>{% block title %} Actions {% endblock %}</h2>
+  <h2>{% block title %} Supplies {% endblock %}</h2>
 {% endblock %}
 
 {% block content %}
@@ -20,11 +20,11 @@
                 Add action
             </button>
         </div>
-        <div class="col s3 offset-s5">
-          <button class="btn amber accent-3 black-text" type="submit" name="human">Human talent</button>
+        <div class="col s2 offset-s5">
+            <button class="btn amber accent-3 black-text" type="submit" name="action">Action plan</button>
         </div>
-        <div class="col s2">
-          <button class="btn amber accent-3 black-text" type="submit" name="supplie">Supplies</button>
+        <div class="col s3">
+            <button class="btn amber accent-3 black-text" type="submit" name="human">Human talent</button>
         </div>
     </form>
 </div>
@@ -40,9 +40,9 @@
       <th>Id</th>
       <th>Action</th>
       <th>Activity</th>
-      <th>Start</th>
-      <th>End</th>
-      <th>Total hours</th>
+      <th>Category</th>
+      <th>Supplie name</th>
+      <th>Metric</th>
       <th>Responsible</th>
       <th>Total</th>
       <th>Action</th>
@@ -54,9 +54,9 @@
         <td>{{ plan['id'] }}</td>
         <td>{{ plan['action']}}</td>
         <td>{{ plan['activity'] }}</td>
-        <td>{{ plan['start'] }}</td>
-        <td>{{ plan['end'] }}</td>
-        <td>{{ plan['hours'] }}</td>
+        <td>{{ plan['category'] }}</td>
+        <td>{{ plan['supplieName'] }}</td>
+        <td>{{ plan['dimension'] }} {{ plan['unit'] }}</td>
         <td>{{ plan['firstname'] }} {{ plan['secondname'] }}</td>
         <td>{{ plan['total']}} </td>
         <td>
