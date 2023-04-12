@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Edit action{% endblock %}</h1>
+{% endblock %} 
+
+{% block content %} 
+    <div class="container left-align thin-container">
+        <form method="POST">
+            <h5>Description</h5>
+            <label class="left-align">Action</label>
+            <input name="action" value="{{ action['action'] }}">
+            
+            <label class="left-align">Activity</label>
+            <input name="activity" value="{{ action['activity'] }}">
+            
+            <label class="left-align">Begins in</label>
+            <input type="date" value="{{ action['start'] }}" name="starting-date">
+            
+            <label class="left-align">Ends in</label>
+            <input type="date" value="{{ action['end'] }}" name="end-date">
+            
+            <label class="left-align">Responsible</label>
+            <select class="browser-default" name="resp">
+                <option value="" disabled selected>Choose responsible</option>
+                {% for resp in responsibles %}
+                <option value="{{resp['id']}}">{{resp['firstname']}} {{resp['secondname']}}</option>
+                {% endfor %}
+            </select>
+
+            <h5>Human Talent</h5>
+            
+            <label class="left-align">Number of workers</label>
+            <input name="workers" value="{{ action['nWorkers'] }}">
+
+            <label class="left-align">Cost</label>
+            <input name="costHour" value="{{ action['costPerHour']}}">
+            
+            <h5>Supplies</h5>
+
+            <label class="left-align">Category</label>
+            <select class="browser-default" name="category">
+                <option value="" disabled selected>Choose category</option>
+                <option value="Material">Material</option>
+                <option value="Insumo">Insumo</option>
+            </select>
+
+            <label class="left-align">Name</label>
+            <input name="supplie" value="{{ action['supplieName'] }}">
+
+            <label>Metric</label>
+            <select class="browser-default" name="metric">
+                <option value="" disabled selected>Choose metric</option>
+                {% for metric in metrics %}
+                <option value="{{ metric['id'] }}">{{metric['dimension']}} {{metric['unit']}}</option>
+                {% endfor %}
+            </select>
+            
+            <label class="left-align">Quantity</label>
+            <input placeholder="Enter quantity" name="quantity">
+
+            <label>Cost of supplie</label>
+            <input name="costSupplie" value="{{ action['costSupplie'] }}">
+
+            <input class="btn   amber accent-3 black-text" type="submit" value="Edit action">
+        </form>
+    </div>
+{% endblock %}
