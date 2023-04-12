@@ -7,25 +7,60 @@
 {% block content %} 
     <div class="container left-align thin-container">
         <form method="POST">
-            <label class="left-align" for="proyectname">Action</label>
+            <h5>Description</h5>
+            <label class="left-align">Action</label>
             <input placeholder="Enter action" name="action" required>
             
-            <label class="left-align" for="proyectname">Activity</label>
+            <label class="left-align">Activity</label>
             <input placeholder="Enter activity" name="activity" required>
             
-            <label class="left-align" for="star-date">Begins in</label>
+            <label class="left-align">Begins in</label>
             <input type="date" value="Starting date" name="starting-date" required>
             
-            <label class="left-align" for="end-date">Ends in</label>
+            <label class="left-align">Ends in</label>
             <input type="date" value="Ending date" name="end-date" required>
             
-            <label class="left-align" for="vechicule">Responsible</label>
+            <label class="left-align">Responsible</label>
             <select class="browser-default" name="resp" required>
                 <option value="" disabled selected>Choose responsible</option>
                 {% for resp in responsibles %}
                 <option value="{{resp['id']}}">{{resp['firstname']}} {{resp['secondname']}}</option>
                 {% endfor %}
             </select>
+
+            <h5>Human Talent</h5>
+            
+            <label class="left-align">Number of workers</label>
+            <input placeholder="Enter number of workers" name="workers" required>
+
+            <label class="left-align">Cost</label>
+            <input placeholder="Enter cost of hour" name="costHour" required>
+            
+            <h5>Supplies</h5>
+
+            <label class="left-align">Category</label>
+            <select class="browser-default" name="category">
+                <option value="" disabled selected>Choose category</option>
+                <option value="Material">Material</option>
+                <option value="Insumo">Insumo</option>
+            </select>
+
+            <label class="left-align">Name</label>
+            <input placeholder="Enter supplie name" name="supplie">
+
+            <label>Metric</label>
+            <select class="browser-default" name="metric">
+                <option value="" disabled selected>Choose metric</option>
+                {% for metric in metrics %}
+                <option value="{{ metric['id'] }}">{{metric['dimension']}} {{metric['unit']}}</option>
+                {% endfor %}
+            </select>
+            
+            <label class="left-align">Quantity</label>
+            <input placeholder="Enter quantity" name="quantity">
+
+            <label>Cost of supplie</label>
+            <input placeholder="Enter cost of supplie" name="costSupplie">
 
             <input class="btn   amber accent-3 black-text" type="submit" value="Create action">
         </form>

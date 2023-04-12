@@ -59,9 +59,25 @@ def createAction():
         start = request.form['starting-date']
         end = request.form['end-date']
         resp = request.form['resp']
+        
+        # human talent
+        nWorkers = request.form['workers']
+        costHour = request.form['costHour']
+
+        # supplies
+        category = ''
+        if 'category' in request.form:
+            category = request.form['category']
+        supplie = request.form['supplie']
+        metric = ''
+        if 'metric' in request.form:
+            metric = request.form['metric']
+        quantity = request.form['quantity']
+        costSupplie = request.form['costSupplie']
 
         error = None
 
+        # verificamos la entrada
         startDate = datetime.strptime(start, "%Y-%m-%d")
         endDate = datetime.strptime(end, "%Y-%m-%d")
 
@@ -71,23 +87,72 @@ def createAction():
         if days < 0:
             error='Invalid dates'
 
-        try:
-            db.execute("""
-                        INSERT INTO actionPlan
-                        (proyectClientId, action, activity,
-                         start, end, hours, responsibleId)
-                        VALUES
-                            (?, ?, ?, ?, ?, ?, ?)""", 
-                        (proyId, action, activity, start, end, hours, resp,))
+        # verificamos human talent
+        if error is None:
+            if not nWorkers.isnumeric():
+                error = "Invalid number of workers"
 
-            db.commit()
+            elif not costHour.isnumeric():
+                error = "Invalid cost per hour"
 
-            return redirect(url_for('actionPlan.actionPlanView'))
-        
-        except db.IntegrityError:
-            error = "db error"
+        if error is None:
+            nWorkers = int(nWorkers)
+            costHour = int(costHour)
+
+            if nWorkers == 0:
+                error = "Invalid number of workers"
+
+            elif costHour == 0:
+                error = "Invalid cost per hour"
+
+        # verificamos suppli
+        if error is None:
+            if costSupplie != '' and not costSupplie.isnumeric():
+                error = "Invalid cost of supplie"
+
+            if quantity != '' and not quantity.isnumeric():
+                error = "Invalid quantity of supplie"
+
+        if error is None:
+            # calculo del total de talento humano
+            totalHumanTalent = hours*costHour
+
+            # calculo del total de supplie
+            totalSupplie = 0
+            if not '' in [category, supplie, metric, costSupplie, quantity]:
+               # find dimension of the supplie
+               totalSupplie = int(quantity)*int(costHour)
+            
+            total = totalHumanTalent+totalSupplie
+
+            try:
+                db.execute("""
+                            INSERT INTO actionPlan
+                                (proyectClientId, action, activity,
+                                 start, end, hours, 
+                                 responsibleId, nWorkers, costPerHour,
+                                 totalHumanTalent, category, supplieName,
+                                 metricId, costSupplie, totalSupplie,
+                                 total)
+                            VALUES
+                                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                            (proyId, action, activity, 
+                             start, end, hours, 
+                             resp, nWorkers, costHour,
+                             totalHumanTalent, category, supplie, 
+                             metric, costSupplie, totalSupplie,
+                             total,))
+
+                db.commit()
+
+                return redirect(url_for('actionPlan.actionPlanView'))
+
+            except db.IntegrityError:
+                error = "db error"
 
         flash(error)
 
     responsibles = db.execute("SELECT * FROM user WHERE roleId != 1 AND roleId != 2").fetchall()
-    return render_template('proyect/createAction.html', responsibles=responsibles)
+    metrics = db.execute("SELECT * FROM metricsUnit").fetchall()
+
+    return render_template('proyect/createAction.html', responsibles=responsibles, metrics=metrics)

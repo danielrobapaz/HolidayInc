@@ -128,8 +128,17 @@ CREATE TABLE actionPlan (
     end DATE NOT NULL,
     hours INTEGER NOT NULL,
     responsibleId INTEGER NOT NULL,
-    total INTEGER DEFAULT 0,
+    nWorkers INTEGER NOT NULL,
+    costPerHour INTEGER NOT NULL,
+    totalHumanTalent INTEGER NOT NULL,
+    category INTEGER,
+    supplieName TEXT,
+    metricId INTEGER,
+    costSupplie INTEGER,
+    totalSupplie INTEGET NOT NULL,
+    total INTEGER NOT NULL,
 
     FOREIGN KEY (proyectClientId) REFERENCES proyectClients(id),
-    FOREIGN KEY (responsibleId) REFERENCES user(id) 
+    FOREIGN KEY (responsibleId) REFERENCES user(id),
+    FOREIGN KEY (metricId) REFERENCES metricsUnit(id)
 );
