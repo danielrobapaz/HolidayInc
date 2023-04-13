@@ -215,7 +215,7 @@ def detail():
 @modifyProyect_required
 def addClient():
     db = get_db()
-    proyId = session['proyId']
+    proyId = session['currProy']
 
     if request.method == "POST":
         carId = request.form['plaque']

@@ -66,8 +66,15 @@ def actionPlanView():
 @bp.route('create', methods=("POST", "GET"))
 @modifyProyect_required
 def createAction():
+    currProy = session['currProy']
     proyId = session['actionProy']
     db = get_db()
+
+    dates = db.execute("""
+                        SELECT
+                            start, end
+                        FROM proyect
+                        WHERE id = ?""", (currProy,)).fetchone()
 
     if request.method == "POST":
         action = request.form['action']
@@ -97,12 +104,17 @@ def createAction():
         startDate = datetime.strptime(start, "%Y-%m-%d")
         endDate = datetime.strptime(end, "%Y-%m-%d")
 
+        startDateProy = datetime.strptime(dates['start'], "%Y-%m-%d")
+        endDateProy = datetime.strptime(dates['end'], "%Y-%m-%d")
+
         days = (endDate-startDate).days + 1
         hours = days*8
 
         if days < 0:
             error='Invalid dates'
 
+        if error is None:
+            pass
         # verificamos human talent
         if error is None:
             if not nWorkers.isnumeric():
