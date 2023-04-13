@@ -142,15 +142,15 @@ def createAction():
                                  start, end, hours, 
                                  responsibleId, nWorkers, costPerHour,
                                  totalHumanTalent, category, supplieName,
-                                 metricId, costSupplie, totalSupplie,
-                                 total)
+                                 metricId, quantity, costSupplie, 
+                                 totalSupplie, total)
                             VALUES
-                                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
                             (proyId, action, activity, 
                              start, end, hours, 
                              resp, nWorkers, costHour,
                              totalHumanTalent, category, supplie, 
-                             metric, costSupplie, totalSupplie,
+                             metric, quantity, costSupplie, totalSupplie,
                              total,))
 
                 db.commit()
@@ -252,6 +252,7 @@ def editAction():
                 error = "Invalid quantity of supplie"
 
         if error is None:
+            totalHumanTalent = costHour * hours
 
             # update rest of the db
             db.execute("""
@@ -298,24 +299,46 @@ def editAction():
                         UPDATE actionPlan
                         SET hours = ?
                         WHERE id = ?""", (hours, actionId,))
-            
-            db.commit()
-
-            # actualizacion de precios
-            human = db.execute("""SELECT 
-                                    hours, costPerHour
-                                  FROM actionPlan
-                                  WHERE id = ?""", (actionId,)).fetchone()
-            
-            totalHumanTalent = human['hours']*human['costPerHour']
 
             db.execute("""
                         UPDATE actionPlan
+                        SET quantity = ?
+                        WHERE id = ?""", (quantity, actionId,))
+            
+            db.execute("""
+                        UPDATE actionPlan
                         SET totalHumanTalent = ?
-                        WHERE id = ?""", (totalHumanTalent, actionId))
+                        WHERE id = ?""", (totalHumanTalent, actionId,))
+            db.commit()
+
+            # actualizacion de precios
+            action = db.execute("SELECT * FROM actionPlan WHERE id = ?", (actionId,)).fetchone()
+
+            totalSupplie = 0
+            supplieValues = [action['quantity'], action['category'], action['supplieName'], action['metricId'], action['costSupplie']]
+            if not '' in supplieValues:
+                # no hay valor nulo en el registro
+                quantity = action['quantity']
+                costSupplie = action['costSupplie']
+                
+                totalSupplie = quantity*costSupplie
+
+            total = totalSupplie + totalHumanTalent
+
+            db.execute("""
+                        UPDATE actionPlan
+                        SET totalSupplie = ?
+                        WHERE id = ?""", (totalSupplie, actionId,))
+            
+            db.execute("""
+                        UPDATE actionPlan
+                        SET total = ?
+                        WHERE id = ?""", (total, actionId))
+            
             db.commit()
 
             return redirect(url_for('actionPlan.actionPlanView'))
+
         flash(error)
 
     responsibles = db.execute("SELECT * FROM user WHERE roleId != 1 AND roleId != 2").fetchall()
@@ -347,6 +370,10 @@ def humanTalent():
         
         elif 'supplie' in request.form:
             return redirect(url_for('actionPlan.supplie'))
+
+        elif 'edit' in request.form:
+            session['editAction'] = request.form['edit']
+            return redirect(url_for('actionPlan.editAction'))
         
     plans = db.execute("""
                         SELECT 
@@ -389,6 +416,10 @@ def supplie():
         elif 'human' in request.form:
             return redirect(url_for('actionPlan.humanTalent'))
         
+        elif 'edit' in request.form:
+            session['editAction'] = request.form['edit']
+            return redirect(url_for('actionPlan.editAction'))
+        
     plans = db.execute("""
                         SELECT 
                             plan.id as id,
@@ -396,6 +427,7 @@ def supplie():
                             plan.activity as activity,
                             plan.category as category,
                             plan.supplieName as supplieName,
+                            plan.quantity as quantity,
                             metrics.dimension as dimension,
                             metrics.unit as unit,
                             user.firstname as firstname,
@@ -404,6 +436,6 @@ def supplie():
                         FROM actionPlan plan
                         INNER JOIN user ON plan.responsibleId = user.id
                         INNER JOIN metricsUnit metrics ON plan.metricId = metrics.id
-                        WHERE proyectClientId = ?""", (proyId,)).fetchall()
+                        WHERE proyectClientId = ? AND plan.totalSupplie != 0""", (proyId,)).fetchall()
     
     return render_template('proyect/supplie.html', plans=plans)

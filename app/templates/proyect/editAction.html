@@ -9,16 +9,16 @@
         <form method="POST">
             <h5>Description</h5>
             <label class="left-align">Action</label>
-            <input name="action" value="{{ action['action'] }}">
+            <input name="action" value="{{ action['action'] }}" required>
             
             <label class="left-align">Activity</label>
             <input name="activity" value="{{ action['activity'] }}">
             
             <label class="left-align">Begins in</label>
-            <input type="date" value="{{ action['start'] }}" name="starting-date">
+            <input type="date" value="{{ action['start'] }}" name="starting-date" required>
             
             <label class="left-align">Ends in</label>
-            <input type="date" value="{{ action['end'] }}" name="end-date">
+            <input type="date" value="{{ action['end'] }}" name="end-date" required>
             
             <label class="left-align">Responsible</label>
             <select class="browser-default" name="resp">
@@ -31,10 +31,10 @@
             <h5>Human Talent</h5>
             
             <label class="left-align">Number of workers</label>
-            <input name="workers" value="{{ action['nWorkers'] }}">
+            <input name="workers" value="{{ action['nWorkers'] }}" required>
 
             <label class="left-align">Cost</label>
-            <input name="costHour" value="{{ action['costPerHour']}}">
+            <input name="costHour" value="{{ action['costPerHour']}}" required>
             
             <h5>Supplies</h5>
 
@@ -57,7 +57,7 @@
             </select>
             
             <label class="left-align">Quantity</label>
-            <input placeholder="Enter quantity" name="quantity">
+            <input value="{{ action['quantity'] }}" name="quantity">
 
             <label>Cost of supplie</label>
             <input name="costSupplie" value="{{ action['costSupplie'] }}">

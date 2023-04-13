@@ -134,6 +134,7 @@ CREATE TABLE actionPlan (
     category INTEGER,
     supplieName TEXT,
     metricId INTEGER,
+    quantity INTEGER,
     costSupplie INTEGER,
     totalSupplie INTEGET DEFAULT 0,
     total INTEGER NOT NULL,
