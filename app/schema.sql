@@ -136,7 +136,7 @@ CREATE TABLE actionPlan (
     metricId INTEGER,
     quantity INTEGER,
     costSupplie INTEGER,
-    totalSupplie INTEGET DEFAULT 0,
+    totalSupplie INTEGER DEFAULT 0,
     total INTEGER NOT NULL,
 
     FOREIGN KEY (proyectClientId) REFERENCES proyectClients(id),

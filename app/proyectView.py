@@ -76,7 +76,7 @@ def proyectView():
             return redirect(url_for('logger.logger_index'))
         
         elif 'detail' in request.form:
-            session['proyId'] = request.form['detail']
+            session['currProy'] = request.form['detail']
             return redirect(url_for('proyectView.detail'))
     
     if not flag:
@@ -133,7 +133,7 @@ def createProyect():
 @modifyProyect_required
 def detail():
     db = get_db()
-    id = session['proyId']
+    id = session['currProy'] #identificador del proyecto grande
 
     if request.method == "POST":
         if 'return' in request.form:
@@ -165,6 +165,35 @@ def detail():
 
     proyectClients = db.execute("""
                                  SELECT
+                                    id 
+                                 FROM proyectClients
+                                 WHERE proyId = ?""", (id,)).fetchall()
+
+    clients = db.execute("SELECT * FROM clients").fetchall()
+    users = db.execute("SELECT * FROM user WHERE roleId != 1 AND roleId != 2").fetchall()
+    cars = db.execute("SELECT * FROM cars").fetchall()
+    departments = db.execute("SELECT * FROM departments").fetchall()
+    problems = db.execute("SELECT * FROM problems").fetchall()
+
+    canAddClient = clients != [] and users != [] and cars != [] and departments != [] and problems != []
+
+
+    for proyect in proyectClients:
+        total = db.execute("""
+                            SELECT
+                                SUM(total) as total
+                            FROM actionPlan
+                            WHERE proyectClientId = ?""", (proyect['id'],)).fetchone()
+        
+        db.execute("""
+                    UPDATE proyectClients
+                    SET subtotal = ?
+                    WHERE id = ?""", (total['total'], proyect['id'],))
+        
+        db.commit()
+
+    proyectClients = db.execute("""
+                                 SELECT
                                     pClients.id as id,
                                     cars.plaque as plaque,
                                     user.firstname as managerFirstName,
@@ -179,14 +208,6 @@ def detail():
                                  INNER JOIN departments ON departments.id = pClients.departmentId
                                  INNER JOIN problems ON problems.id = pClients.problemId
                                  WHERE pClients.proyId = ?""", (id,)).fetchall()
-
-    clients = db.execute("SELECT * FROM clients").fetchall()
-    users = db.execute("SELECT * FROM user WHERE roleId != 1 AND roleId != 2").fetchall()
-    cars = db.execute("SELECT * FROM cars").fetchall()
-    departments = db.execute("SELECT * FROM departments").fetchall()
-    problems = db.execute("SELECT * FROM problems").fetchall()
-
-    canAddClient = clients != [] and users != [] and cars != [] and departments != [] and problems != []
 
     return render_template('proyect/detail.html', proyectClients=proyectClients, currProy=currProy, canAddClient=canAddClient)
 

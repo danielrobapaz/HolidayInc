@@ -55,7 +55,13 @@ def actionPlanView():
                         INNER JOIN user ON plan.responsibleId = user.id
                         WHERE proyectClientId = ?""", (proyId,)).fetchall()
     
-    return render_template('proyect/actionPlan.html', plans=plans)
+    total = 0
+    for plan in plans:
+        total = total + plan['total']
+
+    
+
+    return render_template('proyect/actionPlan.html', plans=plans, total=total)
 
 @bp.route('create', methods=("POST", "GET"))
 @modifyProyect_required
@@ -389,7 +395,11 @@ def humanTalent():
                         INNER JOIN user ON plan.responsibleId = user.id
                         WHERE proyectClientId = ?""", (proyId,)).fetchall()
     
-    return render_template('proyect/humanTalent.html', plans=plans)
+    total = 0
+    for plan in plans:
+        total = total + plan['total']
+
+    return render_template('proyect/humanTalent.html', plans=plans, total=total)
 
 @bp.route('supplie', methods=("POST", "GET"))
 @modifyProyect_required
@@ -438,4 +448,7 @@ def supplie():
                         INNER JOIN metricsUnit metrics ON plan.metricId = metrics.id
                         WHERE proyectClientId = ? AND plan.totalSupplie != 0""", (proyId,)).fetchall()
     
-    return render_template('proyect/supplie.html', plans=plans)
+    total = 0
+    for plan in plans:
+        total = total + plan['total']
+    return render_template('proyect/supplie.html', plans=plans, total=total)
