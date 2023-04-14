@@ -39,6 +39,8 @@ def metricsView():
             delId = request.form['delete']
 
             db.execute("DELETE FROM metricsUnit WHERE id = ?", (delId,))
+            db.execute("UPDATE actionPlan SET total = totalHumanTalent WHERE metricId = ?", (delId,))
+            db.execute("UPDATE actionPlan SET totalSupplie = 0 WHERE metricId = ?", (delId,))
             db.commit()
 
         if 'edit' in request.form:
