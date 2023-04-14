@@ -101,11 +101,8 @@ def createAction():
         error = None
 
         # verificamos la entrada
-        startDate = datetime.strptime(start, "%Y-%m-%d")
-        endDate = datetime.strptime(end, "%Y-%m-%d")
-
-        startDateProy = datetime.strptime(dates['start'], "%Y-%m-%d")
-        endDateProy = datetime.strptime(dates['end'], "%Y-%m-%d")
+        startDate = datetime.strptime(start, "%Y-%m-%d").date()
+        endDate = datetime.strptime(end, "%Y-%m-%d").date()
 
         days = (endDate-startDate).days + 1
         hours = days*8
@@ -114,7 +111,14 @@ def createAction():
             error='Invalid dates'
 
         if error is None:
-            pass
+            # verificamos que las fechas de inicio y fin ingresadas 
+            if startDate < dates['start'] or startDate > dates['end']:
+                error = "Invalid dates, out of proyect range"
+
+            elif endDate < dates['start'] or endDate > dates['end']:
+                error = "Invalid dates, out of proyect range"
+
+            
         # verificamos human talent
         if error is None:
             if not nWorkers.isnumeric():
@@ -188,8 +192,15 @@ def createAction():
 @bp.route('edit', methods=("POST", "GET"))
 @modifyProyect_required
 def editAction():
+    currProy = session['currProy']
     actionId = session['editAction']
     db = get_db()
+
+    dates = db.execute("""
+                        SELECT
+                            start, end
+                        FROM proyect
+                        WHERE id = ?""", (currProy,)).fetchone()
 
     if request.method == "POST":
         action = request.form['action']
@@ -234,8 +245,8 @@ def editAction():
         error = None
 
         # verificamos la entrada
-        startDate = datetime.strptime(start, "%Y-%m-%d")
-        endDate = datetime.strptime(end, "%Y-%m-%d")
+        startDate = datetime.strptime(start, "%Y-%m-%d").date()
+        endDate = datetime.strptime(end, "%Y-%m-%d").date()
 
         days = (endDate-startDate).days + 1
         hours = days*8
@@ -243,6 +254,15 @@ def editAction():
         if days < 0:
             error='Invalid dates'
 
+        if error is None:
+            # verificamos que las fechas de inicio y fin ingresadas 
+            if startDate < dates['start'] or startDate > dates['end']:
+                error = "Invalid dates, out of proyect range"
+
+            elif endDate < dates['start'] or endDate > dates['end']:
+                error = "Invalid dates, out of proyect range"
+
+            
         # verificamos human talent
         if error is None:
             if not nWorkers.isnumeric():
