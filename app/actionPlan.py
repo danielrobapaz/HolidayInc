@@ -16,6 +16,7 @@ bp = Blueprint('actionPlan', __name__, url_prefix='/plan')
 def actionPlanView():
     proyId = session['actionProy']
     db = get_db()
+    flag = False
 
     if request.method == "POST":
         if 'return' in request.form:
@@ -39,27 +40,45 @@ def actionPlanView():
         elif 'edit' in request.form:
             session['editAction'] = request.form['edit']
             return redirect(url_for('actionPlan.editAction'))
-    
-    plans = db.execute("""
-                        SELECT 
-                            plan.id as id,
-                            plan.action as action,
-                            plan.activity as activity,
-                            plan.start as start,
-                            plan.end as end,
-                            plan.hours as hours,
-                            user.firstname as firstname,
-                            user.secondname as secondname,
-                            plan.total as total
-                        FROM actionPlan plan
-                        INNER JOIN user ON plan.responsibleId = user.id
-                        WHERE proyectClientId = ?""", (proyId,)).fetchall()
+
+        elif 'search' in request.form:
+            search = request.form['search']
+
+            if search != '':
+                plans = db.execute("""
+                                    SELECT 
+                                        plan.id as id,
+                                        plan.action as action,
+                                        plan.activity as activity,
+                                        plan.start as start,
+                                        plan.end as end,
+                                        plan.hours as hours,
+                                        user.firstname as firstname,
+                                        user.secondname as secondname,
+                                        plan.total as total
+                                    FROM actionPlan plan
+                                    INNER JOIN user ON plan.responsibleId = user.id
+                                    WHERE proyectClientId = ? AND action = ?""", (proyId, search,)).fetchall()
+                flag = True
+    if not flag:
+        plans = db.execute("""
+                            SELECT 
+                                plan.id as id,
+                                plan.action as action,
+                                plan.activity as activity,
+                                plan.start as start,
+                                plan.end as end,
+                                plan.hours as hours,
+                                user.firstname as firstname,
+                                user.secondname as secondname,
+                                plan.total as total
+                            FROM actionPlan plan
+                            INNER JOIN user ON plan.responsibleId = user.id
+                            WHERE proyectClientId = ?""", (proyId,)).fetchall()
     
     total = 0
     for plan in plans:
         total = total + plan['total']
-
-    
 
     return render_template('proyect/actionPlan.html', plans=plans, total=total)
 
@@ -389,6 +408,7 @@ def editAction():
 def humanTalent():
     db = get_db()
     proyId = session['actionProy']
+    flag = False
 
     if request.method == "POST":
         if 'return' in request.form:
@@ -413,7 +433,11 @@ def humanTalent():
             session['editAction'] = request.form['edit']
             return redirect(url_for('actionPlan.editAction'))
         
-    plans = db.execute("""
+        elif 'search' in request.form:
+            search = request.form['search']
+
+            if search != '':
+                plans = db.execute("""
                         SELECT 
                             plan.id as id,
                             plan.action as action,
@@ -425,6 +449,23 @@ def humanTalent():
                             plan.totalHumanTalent as total
                         FROM actionPlan plan
                         INNER JOIN user ON plan.responsibleId = user.id
+                        WHERE proyectClientId = ? AND action = ?""", (proyId,search)).fetchall()
+
+                flag = True
+    
+    if not flag:
+        plans = db.execute("""
+                            SELECT 
+                                plan.id as id,
+                                plan.action as action,
+                                plan.activity as activity,
+                                plan.hours as hours,
+                                plan.nWorkers as nWorkers,
+                                user.firstname as firstname,
+                                user.secondname as secondname,
+                                plan.totalHumanTalent as total
+                            FROM actionPlan plan
+                            INNER JOIN user ON plan.responsibleId = user.id
                         WHERE proyectClientId = ?""", (proyId,)).fetchall()
     
     total = 0
@@ -438,7 +479,8 @@ def humanTalent():
 def supplie():
     db = get_db()
     proyId = session['actionProy']
-    
+    flag = False
+
     if request.method == "POST":
         if 'return' in request.form:
             session['proyId'] = proyId
@@ -462,7 +504,11 @@ def supplie():
             session['editAction'] = request.form['edit']
             return redirect(url_for('actionPlan.editAction'))
         
-    plans = db.execute("""
+        elif 'search' in request.form:
+            search = request.form['search']
+
+            if search != '':
+                plans = db.execute("""
                         SELECT 
                             plan.id as id,
                             plan.action as action,
@@ -478,7 +524,28 @@ def supplie():
                         FROM actionPlan plan
                         INNER JOIN user ON plan.responsibleId = user.id
                         INNER JOIN metricsUnit metrics ON plan.metricId = metrics.id
-                        WHERE proyectClientId = ? AND plan.totalSupplie != 0""", (proyId,)).fetchall()
+                        WHERE proyectClientId = ? AND plan.totalSupplie != 0 and action == ?""", (proyId, search,)).fetchall()
+                
+                flag = True
+
+    if not flag:            
+        plans = db.execute("""
+                            SELECT 
+                                plan.id as id,
+                                plan.action as action,
+                                plan.activity as activity,
+                                plan.category as category,
+                                plan.supplieName as supplieName,
+                                plan.quantity as quantity,
+                                metrics.dimension as dimension,
+                                metrics.unit as unit,
+                                user.firstname as firstname,
+                                user.secondname as secondname,
+                                plan.totalSupplie as total
+                            FROM actionPlan plan
+                            INNER JOIN user ON plan.responsibleId = user.id
+                            INNER JOIN metricsUnit metrics ON plan.metricId = metrics.id
+                            WHERE proyectClientId = ? AND plan.totalSupplie != 0""", (proyId,)).fetchall()
     
     total = 0
     for plan in plans:
