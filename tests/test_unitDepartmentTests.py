@@ -9,7 +9,7 @@ from .test_unitLoginTests import *
 class unitDepartmentTests(UnitTestClass): 
 
     def test_rootCreateDepartment(self):
-        print("rootCreateDepartment\n\n")
+        #print("rootCreateDepartment\n\n")
         unitLoginTests.test_loginRoot(self)
         with self.app.app_context():
             assert get_db().execute("select * from departments",).fetchone() is None
@@ -24,7 +24,7 @@ class unitDepartmentTests(UnitTestClass):
     
 
     def test_rootCreateDepartmentUnique(self):
-        print("rootCreateDepartmentUnique\n\n")
+        #print("rootCreateDepartmentUnique\n\n")
         self.test_rootCreateDepartment()
         with self.app.app_context():
             assert get_db().execute("select * from departments",).fetchone() is not None
@@ -39,7 +39,7 @@ class unitDepartmentTests(UnitTestClass):
 
     
     def test_rootAddProblemToDepartment(self):
-        print("rootAddProblemToDepartment\n\n")
+        #print("rootAddProblemToDepartment\n\n")
         self.test_rootCreateDepartment()
         with self.app.app_context():
             assert get_db().execute("select * from departments",).fetchone() is not None
@@ -56,7 +56,7 @@ class unitDepartmentTests(UnitTestClass):
     
 
     def test_rootDeleteDepartment(self):
-        print("rootAddProblemToDepartment\n\n")
+        #print("rootAddProblemToDepartment\n\n")
         self.test_rootCreateDepartment()
         with self.app.app_context():
             assert get_db().execute("select * from departments where id = 1",).fetchone() is not None

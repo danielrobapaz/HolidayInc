@@ -10,7 +10,7 @@ from .test_unitLoginTests import *
 class unitProjectTests(UnitTestClass): 
 
     def test_rootCreateProject(self,name='proyect1'):
-            print("rootCreateProject\n\n")
+            #print("rootCreateProject\n\n")
             unitLoginTests.test_loginRoot(self)
             if name != 'proyect2':
                 with self.app.app_context():
@@ -30,7 +30,7 @@ class unitProjectTests(UnitTestClass):
             assert res.request.path == '/root/proyects'
 
     def test_rootEnableProject(self):
-            print("rootEnableProject\n\n")
+            #print("rootEnableProject\n\n")
             self.test_rootCreateProject()
             with self.app.app_context():
                 db = get_db()
@@ -47,7 +47,7 @@ class unitProjectTests(UnitTestClass):
             assert res.request.path == '/root/proyects'
 
     def test_rootDisableProject(self):
-        print("rootDisableProject\n\n")
+        #print("rootDisableProject\n\n")
         self.test_rootEnableProject()
         with self.app.app_context():
             db = get_db()
@@ -65,7 +65,7 @@ class unitProjectTests(UnitTestClass):
 
     def test_rootModifyProject(self):
         self.test_rootCreateProject()
-        print("rootCreateProject\n\n")
+        #print("rootCreateProject\n\n")
         with self.app.app_context():
             db = get_db()
             assert db.execute("select * from proyect where id = 1").fetchone() is not None
@@ -85,7 +85,7 @@ class unitProjectTests(UnitTestClass):
 
     def test_rootDeleteProject(self):
         self.test_rootCreateProject()
-        print("rootDeleteProject\n\n")
+        #print("rootDeleteProject\n\n")
         with self.app.app_context():
             db = get_db()
             assert db.execute("select * from proyect where id = 1").fetchone() is not None
@@ -103,8 +103,8 @@ class unitProjectTests(UnitTestClass):
 
 
     def test_userChangeProyect(self):
-        print("rootUserChangeProyect\n\n")
-        print("rootCreateUser\n\n")
+        #print("rootUserChangeProyect\n\n")
+        #print("rootCreateUser\n\n")
         self.test_rootCreateProject('proyect1')
         res = self.client.post('/root/createUser', data={
             'username':'joje',
@@ -141,7 +141,7 @@ class unitProjectTests(UnitTestClass):
         assert res.request.path == '/user/root'
 
     def test_rootCreateProjectBadDate(self,name='proyect1'):
-            print("rootCreateProject\n\n")
+            #print("rootCreateProject\n\n")
             unitLoginTests.test_loginRoot(self)
             if name != 'proyect2':
                 with self.app.app_context():
@@ -163,7 +163,7 @@ class unitProjectTests(UnitTestClass):
             assert res.request.path == '/root/proyect/createProyect'
 
     def test_rootCreateProjectEmptyDescription(self,name='proyect1'):
-            print("rootCreateProject\n\n")
+            #print("rootCreateProject\n\n")
             unitLoginTests.test_loginRoot(self)
             if name != 'proyect2':
                 with self.app.app_context():

@@ -12,7 +12,7 @@ from .test_unitProjectTests import *
 class unitMultiTests(UnitTestClass): 
 
     def test_rootAddCarToProyect(self):
-        print("rootAddCarToProyect\n\n")
+        #print("rootAddCarToProyect\n\n")
         # Create Client
         unitClientTests.test_rootCreateClient(self)
         # Add Car
@@ -41,7 +41,7 @@ class unitMultiTests(UnitTestClass):
 
         # Add Department
         unitDepartmentTests.test_rootCreateDepartment(self)
-        print("rootAddProblemToDepartment\n\n")
+        #print("rootAddProblemToDepartment\n\n")
         with self.app.app_context():
             assert get_db().execute("select * from departments",).fetchone() is not None
             assert get_db().execute("select * from problems",).fetchone() is None
@@ -56,7 +56,7 @@ class unitMultiTests(UnitTestClass):
 
         # Create Proyect
         # 
-        print("rootEnableProject\n\n")
+        #print("rootEnableProject\n\n")
         unitProjectTests.test_rootCreateProject(self)
         with self.app.app_context():
             db = get_db()
@@ -104,7 +104,7 @@ class unitMultiTests(UnitTestClass):
             assert get_db().execute("select * from proyectClients",).fetchone() is not None
     
     def test_rootModifyProyectDetailProblem(self):
-        print("rootModifyProyectDetail\n\n")
+        #print("rootModifyProyectDetail\n\n")
         self.test_rootAddCarToProyect()
         with self.app.app_context():
             p1 = get_db().execute("select * from proyectClients where id = 1",).fetchone()
@@ -126,8 +126,8 @@ class unitMultiTests(UnitTestClass):
 
 
     def test_rootDeleteProyectDetailProblem(self):
-        print("rootDeelteProyectDetail\n\n")
-        print("rootAddCarToProyect\n\n")
+        #print("rootDeelteProyectDetail\n\n")
+        #print("rootAddCarToProyect\n\n")
         # Create Client
         unitClientTests.test_rootCreateClient(self)
         # Add Car
@@ -156,7 +156,7 @@ class unitMultiTests(UnitTestClass):
 
         # Add Department
         unitDepartmentTests.test_rootCreateDepartment(self)
-        print("rootAddProblemToDepartment\n\n")
+        #print("rootAddProblemToDepartment\n\n")
         with self.app.app_context():
             assert get_db().execute("select * from departments",).fetchone() is not None
             assert get_db().execute("select * from problems",).fetchone() is None
@@ -171,7 +171,7 @@ class unitMultiTests(UnitTestClass):
 
         # Create Proyect
         # 
-        print("rootEnableProject\n\n")
+        #print("rootEnableProject\n\n")
         unitProjectTests.test_rootCreateProject(self)
         with self.app.app_context():
             db = get_db()

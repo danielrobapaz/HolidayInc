@@ -7,7 +7,7 @@ from flask import session
 
 class unitRegisterTests(UnitTestClass):
     def test_registerUser(self):
-        print("registerUser\n\n")
+        #print("registerUser\n\n")
         res = self.client.post('/auth/register', data={
             'username':'joje',
             'password':'123',
@@ -25,7 +25,7 @@ class unitRegisterTests(UnitTestClass):
             assert get_db().execute("select * from user where username = 'joje'",).fetchone() is not None
       
     def test_registerAlreadyRegisteredUser(self):
-        print("registerAlreadyRegisteredUser\n\n")
+        #print("registerAlreadyRegisteredUser\n\n")
         res = self.client.post('/auth/register', data={
             'username':'joje',
             'password':'123',
@@ -58,7 +58,7 @@ class unitRegisterTests(UnitTestClass):
             assert get_db().execute("select * from user where username = 'joje'",).fetchone() is not None
 
     def test_registerUserAuthorize(self):
-        print("registerUserAuthorize\n\n")
+        #print("registerUserAuthorize\n\n")
         res = self.client.post('/auth/register', data={
             'username':'joje',
             'password':'123',
@@ -81,7 +81,7 @@ class unitRegisterTests(UnitTestClass):
 
 
     def test_registerRoot(self):
-        print("registerRoot")
+        #print("registerRoot")
         username = 'root'
         res = self.client.post('/auth/register', data={
             'username':username,
@@ -100,7 +100,7 @@ class unitRegisterTests(UnitTestClass):
             assert get_db().execute("select * from user where username = 'root'",).fetchone() is not None
 
     def test_registerEmptyAll(self):
-        print("registerEmptyAll\n\n")
+        #print("registerEmptyAll\n\n")
         res = self.client.post('/auth/register', data={
             'username':None,
             'password':None,
@@ -109,7 +109,7 @@ class unitRegisterTests(UnitTestClass):
         assert res.status_code == 400
 
     def test_registerEmptyUser(self):
-        print("registerEmptyUser\n\n")
+        #print("registerEmptyUser\n\n")
         res = self.client.post('/auth/register', data={
             'username':None,
             'password':'123',
@@ -118,7 +118,7 @@ class unitRegisterTests(UnitTestClass):
         assert res.status_code == 400
 
     def test_registerEmptyPassword(self):
-        print("registerEmptyPassword\n\n")
+        #print("registerEmptyPassword\n\n")
         res = self.client.post('/auth/register', data={
             'username':'joje',
             'password':None,

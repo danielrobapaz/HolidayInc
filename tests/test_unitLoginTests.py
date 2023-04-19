@@ -11,7 +11,7 @@ from .test_unitRegisterTests import *
 class unitLoginTests(UnitTestClass):
 
     def test_loginNonExistentUser(self):
-        print("loginNonExistentUser\n\n")
+        #print("loginNonExistentUser\n\n")
         res = self.client.post('/auth/login', data={
             'username':'joje',
             'password':'123',
@@ -28,7 +28,7 @@ class unitLoginTests(UnitTestClass):
                 pass
     
     def test_loginAuthorizedWrongPassword(self):
-        print("loginAuthorizedWrongPassword\n\n")
+        #print("loginAuthorizedWrongPassword\n\n")
         unitRegisterTests.test_registerUserAuthorize(self)
         res = self.client.post('/auth/login', data={
             'username':'joje',
@@ -41,7 +41,7 @@ class unitLoginTests(UnitTestClass):
         assert "Incorrect password." in html
 
     def test_loginNonAuthorizedWrongPassword(self):
-        print("loginNonAuthorizedWrongPassword\n\n")
+        #print("loginNonAuthorizedWrongPassword\n\n")
         unitRegisterTests.test_registerUser(self)
         res = self.client.post('/auth/login', data={
             'username':'joje',
@@ -54,7 +54,7 @@ class unitLoginTests(UnitTestClass):
         assert "User &#39;joje&#39; needs autentication from admin" in html
     
     def test_loginAuthorized(self):
-        print("loginAuthorized\n\n")
+        #print("loginAuthorized\n\n")
         unitRegisterTests.test_registerUserAuthorize(self)
         with self.app.app_context():
             assert get_db().execute("select auth from user where username = 'joje'").fetchone()[0] == 1
@@ -69,7 +69,7 @@ class unitLoginTests(UnitTestClass):
         assert "Welcome, joje" in html
     
     def test_loginNonAuthorized(self):
-        print("loginNonAuthorized\n\n")
+        #print("loginNonAuthorized\n\n")
         unitRegisterTests.test_registerUser(self)
         res = self.client.post('/auth/login', data={
             'username':'joje',
@@ -83,7 +83,7 @@ class unitLoginTests(UnitTestClass):
         assert "User &#39;joje&#39; needs autentication from admin." in html
     
     def test_logout(self):
-        print("logout\n\n")
+        #print("logout\n\n")
         self.test_loginAuthorized()
         res = self.client.get('/auth/logout',follow_redirects=True)
         html = res.get_data(as_text=True)
@@ -93,7 +93,7 @@ class unitLoginTests(UnitTestClass):
         assert 'Log In' in html
 
     def test_loginRoot(self):
-        print("loginRoot\n\n")
+        #print("loginRoot\n\n")
         res = self.client.post('/auth/login', data={
             'username':'root',
             'password':'root',
@@ -105,7 +105,7 @@ class unitLoginTests(UnitTestClass):
         assert "Welcome, root" in html
 
     def test_loginEmptyAll(self):
-        print("loginEmptyAll\n\n")
+        #print("loginEmptyAll\n\n")
         res = self.client.post('/auth/login', data={
             'username':None,
             'password':None,
@@ -113,7 +113,7 @@ class unitLoginTests(UnitTestClass):
         assert res.status_code == 400
 
     def test_loginEmptyUser(self):
-        print("loginEmptyUser\n\n")
+        #print("loginEmptyUser\n\n")
         res = self.client.post('/auth/login', data={
             'username':None,
             'password':'123',
@@ -121,7 +121,7 @@ class unitLoginTests(UnitTestClass):
         assert res.status_code == 400
 
     def test_loginEmptyPassword(self):
-        print("loginEmptyPassword\n\n")
+        #print("loginEmptyPassword\n\n")
         res = self.client.post('/auth/login', data={
             'username':'joje',
             'password':None,

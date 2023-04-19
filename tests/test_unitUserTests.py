@@ -11,7 +11,7 @@ from .test_unitRegisterTests import *
 class unitUserTests(UnitTestClass): 
 
     def test_rootCreateUser(self):
-        print("rootCreateUser\n\n")
+        ##print("rootCreateUser\n\n")
         unitProjectTests.test_rootCreateProject(self)
         res = self.client.post('/root/createUser', data={
             'username':'joje',
@@ -25,7 +25,7 @@ class unitUserTests(UnitTestClass):
         assert res.request.path == '/root/users'
 
     def test_rootCreateUserAlreadyRegistered(self):
-        print("rootCreateUserAlreadyRegistered\n\n")
+        ##print("rootCreateUserAlreadyRegistered\n\n")
         unitRegisterTests.test_registerUserAuthorize(self)
         unitLoginTests.test_loginRoot(self)
         res = self.client.post('/root/createUser', data={
@@ -41,7 +41,7 @@ class unitUserTests(UnitTestClass):
         assert f'User &#39;joje&#39; is already registered.' in html
 
     def test_rootApproveUser(self):
-        print("rootApproveUser\n\n")
+        ##print("rootApproveUser\n\n")
         unitRegisterTests.test_registerUser(self)
         unitProjectTests.test_rootCreateProject(self)
         
@@ -61,7 +61,7 @@ class unitUserTests(UnitTestClass):
         assert res.request.path == '/user/root'
 
     def test_rootRejectUser(self):
-        print("rootRejectUser\n\n")
+        ##print("rootRejectUser\n\n")
         unitRegisterTests.test_registerUser(self)
         unitLoginTests.test_loginRoot(self)
         with self.app.app_context():
@@ -84,7 +84,7 @@ class unitUserTests(UnitTestClass):
         assert res.request.path == '/user/root'
 
     def test_userDeleteUser(self):
-            print("rootUserDeleteUser\n")
+            ##print("rootUserDeleteUser\n")
             self.test_rootCreateUser()
             with self.app.app_context():    
                 db = get_db()
@@ -103,7 +103,7 @@ class unitUserTests(UnitTestClass):
             assert res.request.path == '/root/users'
 
     def test_userChangeRole(self):
-            print("rootUserChangeRole\n")
+            ##print("rootUserChangeRole\n")
             self.test_rootCreateUser()
             with self.app.app_context():    
                 db = get_db()
@@ -124,7 +124,7 @@ class unitUserTests(UnitTestClass):
                 u1 = db.execute("select * from user where id = 2").fetchone()
                 # r1 = db.execute("select * from roles where id = 1").fetchone()
                 # r2 = db.execute("select * from roles where id = 2").fetchone()
-                #print(u1['role'])
+                ###print(u1['role'])
                 # assert u1 is not None and r1 is not None and r2 is not None
                 assert u1 is not None
                 assert u1['roleId'] == 5

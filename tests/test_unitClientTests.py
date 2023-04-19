@@ -9,7 +9,7 @@ from .test_unitLoginTests import *
 class unitClientTests(UnitTestClass): 
 
     def test_rootCreateClient(self):
-        print("rootCreateClient\n\n")
+        #print("rootCreateClient\n\n")
         unitLoginTests.test_loginRoot(self)
         with self.app.app_context():
             assert get_db().execute("select * from clients",).fetchone() is None
@@ -28,7 +28,7 @@ class unitClientTests(UnitTestClass):
             assert get_db().execute("select * from clients where dni = 'V-1111111'",).fetchone() is not None
 
     def test_rootCreateClientMissingField(self):
-        print("rootCreateClientMissingField\n\n")
+        #print("rootCreateClientMissingField\n\n")
         unitLoginTests.test_loginRoot(self)
         with self.app.app_context():
             assert get_db().execute("select * from clients",).fetchone() is None
@@ -47,7 +47,7 @@ class unitClientTests(UnitTestClass):
             assert get_db().execute("select * from clients where dni = 'V-1111111'",).fetchone() is None
 
     def test_rootCreateClientSameDni(self):
-        print("rootCreateClientSameDni\n\n")
+        #print("rootCreateClientSameDni\n\n")
         self.test_rootCreateClient()
         with self.app.app_context():
             assert get_db().execute("select * from clients",).fetchone() is not None
@@ -67,7 +67,7 @@ class unitClientTests(UnitTestClass):
         
 
     def test_rootModifyClient(self):
-        print("rootModifyClient\n\n")
+        #print("rootModifyClient\n\n")
         self.test_rootCreateClient()
         with self.app.app_context():
             db = get_db()
@@ -95,7 +95,7 @@ class unitClientTests(UnitTestClass):
             assert u2['dni'] == 'V-1111113'
 
     def test_rootDeleteClient(self):
-        print("rootDeleteClient\n\n")
+        #print("rootDeleteClient\n\n")
         self.test_rootCreateClient()
         with self.app.app_context():
             db = get_db()
@@ -112,7 +112,7 @@ class unitClientTests(UnitTestClass):
             assert u2 is None
 
     def test_rootAddCarToClient(self):
-        print("rootAddCarToClient\n\n")
+        #print("rootAddCarToClient\n\n")
         self.test_rootCreateClient()
         with self.app.app_context():
             db = get_db()
@@ -138,7 +138,7 @@ class unitClientTests(UnitTestClass):
             assert u2 is not None
 
     def test_rootModifyCarOfClient(self):
-        print("rootModifyCarOfClient\n\n")
+        #print("rootModifyCarOfClient\n\n")
         self.test_rootAddCarToClient()
         with self.app.app_context():
             db = get_db()
@@ -166,7 +166,7 @@ class unitClientTests(UnitTestClass):
             assert u2 is not None and u2['problem'] != old_problem
 
     def test_rootDeleteCarFromClient(self):
-        print("rootDeleteCarFromClient\n\n")
+        #print("rootDeleteCarFromClient\n\n")
         self.test_rootAddCarToClient()
         with self.app.app_context():    
             db = get_db()
