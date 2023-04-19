@@ -9,13 +9,16 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.options import Options
 
 class SeleniumClass(unittest.TestCase):
 
     def setUp(self) -> None:
+        options = Options()
+        options.add_argument("-headless")
         self.app = create_app()
         self.client = self.app.test_client()
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Firefox(options=options)
         with self.app.app_context():
             try: 
                 init_db_command('')
