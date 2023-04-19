@@ -25,6 +25,7 @@ def modifyUser():
             # delete the user from db
             db.execute("DELETE FROM user WHERE id = ?",(idModify,))
             db.execute("DELETE FROM proyectClients WHERE managerId = ?", (idModify,))
+            db.execute("DELETE FROM actionPlan WHERE responsibleId = ?", (idModify,))
             db.commit()
             return redirect(url_for('userView.userView'))
 
