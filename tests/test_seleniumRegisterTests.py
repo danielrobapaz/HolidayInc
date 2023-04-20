@@ -13,6 +13,7 @@ class seleniumRegisterTests(SeleniumClass):
     
     def test_registerNonRegisteredUser(self):
         driver = self.driver
+        wait = WebDriverWait(driver,5)
         driver.get("http://localhost:5000/auth/register")
         assert "Register" in driver.title
         passwd = driver.find_element(By.NAME, "password")
@@ -25,8 +26,9 @@ class seleniumRegisterTests(SeleniumClass):
         firstname.send_keys("joje")
         secondname = driver.find_element(By.NAME, "secondname")
         secondname.send_keys("joje")
-        user.send_keys(Keys.RETURN)
-        wait = WebDriverWait(driver, 10)
+        send = driver.find_element(By.XPATH, "//input[@type='submit']")
+        send.click()
+        wait = WebDriverWait(driver,5)
         wait.until(EC.url_to_be("http://localhost:5000/auth/login"))
         actualUrl = "http://localhost:5000/auth/login"
         expectedUrl= driver.current_url
