@@ -165,6 +165,7 @@ class seleniumClientsTests(SeleniumClass):
         actualUrl = "http://localhost:5000/clients/addClient"
         expectedUrl= driver.current_url
         self.assertEqual(expectedUrl,actualUrl)
+        driver.implicitly_wait(2)
         element = driver.find_element(By.TAG_NAME, 'section')
         elements = element.find_elements(By.TAG_NAME, 'div')
         for e in elements:

@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from .test_seleniumMetricTests import *
 
 class seleniumMultiTests(SeleniumClass):
     
@@ -43,7 +44,7 @@ class seleniumMultiTests(SeleniumClass):
         proyect_starting_date.send_keys("2023-03-10")
         proyect_end_date = driver.find_element(By.ID, "end-date")
         proyect_end_date.click()
-        proyect_end_date.send_keys("2023-03-15")
+        proyect_end_date.send_keys("2023-03-30")
         proyect_description.send_keys(Keys.RETURN)
         wait.until(EC.url_to_be("http://localhost:5000/root/proyects"))
         actualUrl = "http://localhost:5000/root/proyects"
@@ -277,9 +278,7 @@ class seleniumMultiTests(SeleniumClass):
         problemSelect.select_by_index(1)
         solution_prompt = driver.find_element(By.NAME, "solution")
         solution_prompt.send_keys("fix things")
-        total_prompt = driver.find_element(By.NAME, "total")
-        total_prompt.send_keys("32132")
-        total_prompt.send_keys(Keys.RETURN)
+        solution_prompt.send_keys(Keys.RETURN)
         wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
         actualUrl = "http://localhost:5000/root/proyect/detail"
         expectedUrl= driver.current_url
@@ -391,3 +390,495 @@ class seleniumMultiTests(SeleniumClass):
             if (e.text == None):
                 self.assertEqual(e.text,None)
         driver.implicitly_wait(10)
+
+
+
+    def test_RootAddActions(self):
+        
+        # Go To Actions
+        seleniumMetricTests.test_RootMetricCreate(self)
+        self.test_RootAddCarToProyect()
+
+        driver = self.driver
+        driver.get("http://localhost:5000/root/proyect/detail")
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
+        actualUrl = "http://localhost:5000/root/proyect/detail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        action_button = driver.find_element(By.NAME, "action")
+        action_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan"))
+        actualUrl = "http://localhost:5000/plan"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # Add Action
+        create_action_button = driver.find_element(By.NAME, "create")
+        create_action_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan/create"))
+        actualUrl = "http://localhost:5000/plan/create"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        action_description = driver.find_element(By.NAME, "action")
+        action_description.send_keys("testAction")
+        activity_description = driver.find_element(By.NAME, "activity")
+        activity_description.click()
+        activity_description.send_keys("testActivity")
+        action_starting_date = driver.find_element(By.NAME, "starting-date")
+        action_starting_date.click()
+        action_starting_date.send_keys("2023-03-11")
+        action_end_date = driver.find_element(By.NAME, "end-date")
+        action_end_date.click()
+        action_end_date.send_keys("2023-03-12")
+        respSelect = Select(driver.find_element(By.NAME, "resp"))
+        respSelect.select_by_value("2")
+        workers = driver.find_element(By.NAME, "workers")
+        workers.click()
+        workers.send_keys("3")
+        costHour = driver.find_element(By.NAME, "costHour")
+        costHour.click()
+        costHour.send_keys("5")
+        categorySelect = Select(driver.find_element(By.NAME, "category"))
+        categorySelect.select_by_value("Material")
+        supplie = driver.find_element(By.NAME, "supplie")
+        supplie.click()
+        supplie.send_keys("cuerda")
+        metricSelect = Select(driver.find_element(By.NAME, "metric"))
+        metricSelect.select_by_value("1")
+        quantity = driver.find_element(By.NAME, "quantity")
+        quantity.click()
+        quantity.send_keys("2")
+        costSupplie = driver.find_element(By.NAME, "costSupplie")
+        costSupplie.click()
+        costSupplie.send_keys("5")
+        costSupplie.send_keys(Keys.RETURN)
+        wait.until(EC.url_to_be("http://localhost:5000/plan"))
+        actualUrl = "http://localhost:5000/plan"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "16"):
+                hours = True
+            if (e.text == "90"):
+                total = True
+        self.assertTrue(hours and total)
+        human = driver.find_element(By.NAME, "human")
+        human.click()        
+        wait.until(EC.url_to_be("http://localhost:5000/plan/humanTalent"))
+        actualUrl = "http://localhost:5000/plan/humanTalent"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "3"):
+                hours = True
+            if (e.text == "80"):
+                total = True
+        self.assertTrue(hours and total)
+        supplie = driver.find_element(By.NAME, "supplie")
+        supplie.click()        
+        wait.until(EC.url_to_be("http://localhost:5000/plan/supplie"))
+        actualUrl = "http://localhost:5000/plan/supplie"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "2"):
+                hours = True
+            if (e.text == "10"):
+                total = True
+        self.assertTrue(hours and total)
+        
+    
+    def test_RootEditActions(self):
+        
+        # Go To Actions
+        self.test_RootAddActions()
+         
+        # go to edit
+        driver = self.driver
+        driver.get("http://localhost:5000/plan")
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/plan"))
+        actualUrl = "http://localhost:5000/plan"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        edit_button = driver.find_element(By.NAME, "edit")
+        edit_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan/edit"))
+        actualUrl = "http://localhost:5000/plan/edit"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # Edit Action
+        action_description = driver.find_element(By.NAME, "action")
+        action_description.clear()
+        action_description.send_keys("testActionNew")
+        # activity_description = driver.find_element(By.NAME, "activity")
+        # activity_description.click()
+        # activity_description.send_keys("testActivity")
+        # action_starting_date = driver.find_element(By.NAME, "starting-date")
+        # action_starting_date.click()
+        # action_starting_date.send_keys("2023-03-11")
+        # action_end_date = driver.find_element(By.NAME, "end-date")
+        # action_end_date.click()
+        # action_end_date.send_keys("2023-03-12")
+        # respSelect = Select(driver.find_element(By.NAME, "resp"))
+        # respSelect.select_by_value("2")
+        # workers = driver.find_element(By.NAME, "workers")
+        # workers.click()
+        # workers.send_keys("3")
+        # costHour = driver.find_element(By.NAME, "costHour")
+        # costHour.click()
+        # costHour.send_keys("5")
+        # categorySelect = Select(driver.find_element(By.NAME, "category"))
+        # categorySelect.select_by_value("Material")
+        # supplie = driver.find_element(By.NAME, "supplie")
+        # supplie.click()
+        # supplie.send_keys("cuerda")
+        # metricSelect = Select(driver.find_element(By.NAME, "metric"))
+        # metricSelect.select_by_value("1")
+        # quantity = driver.find_element(By.NAME, "quantity")
+        # quantity.click()
+        # quantity.send_keys("2")
+        costSupplie = driver.find_element(By.NAME, "costSupplie")
+        costSupplie.clear()
+        costSupplie.send_keys("10")
+        costSupplie.send_keys(Keys.RETURN)
+        wait.until(EC.url_to_be("http://localhost:5000/plan"))
+        actualUrl = "http://localhost:5000/plan"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "16"):
+                hours = True
+            if (e.text == "100"):
+                total = True
+        self.assertTrue(hours and total)
+        human = driver.find_element(By.NAME, "human")
+        human.click()        
+        wait.until(EC.url_to_be("http://localhost:5000/plan/humanTalent"))
+        actualUrl = "http://localhost:5000/plan/humanTalent"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "3"):
+                hours = True
+            if (e.text == "80"):
+                total = True
+        self.assertTrue(hours and total)
+        supplie = driver.find_element(By.NAME, "supplie")
+        supplie.click()        
+        wait.until(EC.url_to_be("http://localhost:5000/plan/supplie"))
+        actualUrl = "http://localhost:5000/plan/supplie"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "2"):
+                hours = True
+            if (e.text == "20"):
+                total = True
+        self.assertTrue(hours and total)
+
+
+    def test_RootAddActionsOnlyHuman(self):
+        
+        # Go     To Actions
+        seleniumMetricTests.test_RootMetricCreate(self)
+        self.test_RootAddCarToProyect()
+
+        driver = self.driver
+        driver.get("http://localhost:5000/root/proyect/detail")
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
+        actualUrl = "http://localhost:5000/root/proyect/detail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        action_button = driver.find_element(By.NAME, "action")
+        action_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan"))
+        actualUrl = "http://localhost:5000/plan"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # go to create
+        create_button = driver.find_element(By.NAME, "create")
+        create_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan/create"))
+        actualUrl = "http://localhost:5000/plan/create"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # Create Only Human Action
+        action_description = driver.find_element(By.NAME, "action")
+        action_description.clear()
+        action_description.send_keys("testActionOnlyHuman")
+        activity_description = driver.find_element(By.NAME, "activity")
+        activity_description.click()
+        activity_description.send_keys("testActivity")
+        action_starting_date = driver.find_element(By.NAME, "starting-date")
+        action_starting_date.click()
+        action_starting_date.send_keys("2023-03-11")
+        action_end_date = driver.find_element(By.NAME, "end-date")
+        action_end_date.click()
+        action_end_date.send_keys("2023-03-12")
+        respSelect = Select(driver.find_element(By.NAME, "resp"))
+        respSelect.select_by_value("2")
+        workers = driver.find_element(By.NAME, "workers")
+        workers.click()
+        workers.send_keys("3")
+        costHour = driver.find_element(By.NAME, "costHour")
+        costHour.click()
+        costHour.send_keys("5")
+        # categorySelect = Select(driver.find_element(By.NAME, "category"))
+        # categorySelect.select_by_value("Material")
+        # supplie = driver.find_element(By.NAME, "supplie")
+        # supplie.click()
+        # supplie.send_keys("cuerda")
+        # metricSelect = Select(driver.find_element(By.NAME, "metric"))
+        # metricSelect.select_by_value("1")
+        # quantity = driver.find_element(By.NAME, "quantity")
+        # quantity.click()
+        # quantity.send_keys("2")
+        # costSupplie = driver.find_element(By.NAME, "costSupplie")
+        # costSupplie.clear()
+        # costSupplie.send_keys("10")
+        costHour.send_keys(Keys.RETURN)
+        wait.until(EC.url_to_be("http://localhost:5000/plan"))
+        actualUrl = "http://localhost:5000/plan"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "16"):
+                hours = True
+            if (e.text == "80"):
+                total = True
+        self.assertTrue(hours and total)
+        human = driver.find_element(By.NAME, "human")
+        human.click()        
+        wait.until(EC.url_to_be("http://localhost:5000/plan/humanTalent"))
+        actualUrl = "http://localhost:5000/plan/humanTalent"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "3"):
+                hours = True
+            if (e.text == "80"):
+                total = True
+        self.assertTrue(hours and total)
+        supplie = driver.find_element(By.NAME, "supplie")
+        supplie.click()        
+        wait.until(EC.url_to_be("http://localhost:5000/plan/supplie"))
+        actualUrl = "http://localhost:5000/plan/supplie"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        hours = False
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "0"):
+                hours = True
+            if (e.text == "0"):
+                total = True
+        self.assertTrue(hours and total)
+
+
+    def test_RootAddActionsIncomplete(self):
+        
+        # Go To Actions
+        seleniumMetricTests.test_RootMetricCreate(self)
+        self.test_RootAddCarToProyect()
+
+        driver = self.driver
+        driver.get("http://localhost:5000/root/proyect/detail")
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
+        actualUrl = "http://localhost:5000/root/proyect/detail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        action_button = driver.find_element(By.NAME, "action")
+        action_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan"))
+        actualUrl = "http://localhost:5000/plan"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # go to create
+        create_button = driver.find_element(By.NAME, "create")
+        create_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan/create"))
+        actualUrl = "http://localhost:5000/plan/create"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # Create Only Human Action
+        action_description = driver.find_element(By.NAME, "action")
+        action_description.clear()
+        # action_description.send_keys("testActionOnlyHuman")
+        activity_description = driver.find_element(By.NAME, "activity")
+        activity_description.click()
+        activity_description.send_keys("testActivity")
+        action_starting_date = driver.find_element(By.NAME, "starting-date")
+        action_starting_date.click()
+        action_starting_date.send_keys("2023-03-11")
+        action_end_date = driver.find_element(By.NAME, "end-date")
+        action_end_date.click()
+        action_end_date.send_keys("2023-03-12")
+        respSelect = Select(driver.find_element(By.NAME, "resp"))
+        respSelect.select_by_value("2")
+        workers = driver.find_element(By.NAME, "workers")
+        workers.click()
+        workers.send_keys("3")
+        costHour = driver.find_element(By.NAME, "costHour")
+        costHour.click()
+        costHour.send_keys("5")
+        # categorySelect = Select(driver.find_element(By.NAME, "category"))
+        # categorySelect.select_by_value("Material")
+        # supplie = driver.find_element(By.NAME, "supplie")
+        # supplie.click()
+        # supplie.send_keys("cuerda")
+        # metricSelect = Select(driver.find_element(By.NAME, "metric"))
+        # metricSelect.select_by_value("1")
+        # quantity = driver.find_element(By.NAME, "quantity")
+        # quantity.click()
+        # quantity.send_keys("2")
+        # costSupplie = driver.find_element(By.NAME, "costSupplie")
+        # costSupplie.clear()
+        # costSupplie.send_keys("10")
+        costHour.send_keys(Keys.RETURN)
+        wait.until(EC.url_to_be("http://localhost:5000/plan/create"))
+        actualUrl = "http://localhost:5000/plan/create"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        
+
+    def test_RootAddActionsOutdated(self):
+        
+        # Go To Actions
+        seleniumMetricTests.test_RootMetricCreate(self)
+        self.test_RootAddCarToProyect()
+
+        driver = self.driver
+        driver.get("http://localhost:5000/root/proyect/detail")
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/root/proyect/detail"))
+        actualUrl = "http://localhost:5000/root/proyect/detail"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        action_button = driver.find_element(By.NAME, "action")
+        action_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan"))
+        actualUrl = "http://localhost:5000/plan"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+
+        # Add Action
+        create_action_button = driver.find_element(By.NAME, "create")
+        create_action_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/plan/create"))
+        actualUrl = "http://localhost:5000/plan/create"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        action_description = driver.find_element(By.NAME, "action")
+        action_description.send_keys("testAction")
+        activity_description = driver.find_element(By.NAME, "activity")
+        activity_description.click()
+        activity_description.send_keys("testActivity")
+        action_starting_date = driver.find_element(By.NAME, "starting-date")
+        action_starting_date.click()
+        action_starting_date.send_keys("2023-04-11")
+        action_end_date = driver.find_element(By.NAME, "end-date")
+        action_end_date.click()
+        action_end_date.send_keys("2023-05-12")
+        respSelect = Select(driver.find_element(By.NAME, "resp"))
+        respSelect.select_by_value("2")
+        workers = driver.find_element(By.NAME, "workers")
+        workers.click()
+        workers.send_keys("3")
+        costHour = driver.find_element(By.NAME, "costHour")
+        costHour.click()
+        costHour.send_keys("5")
+        categorySelect = Select(driver.find_element(By.NAME, "category"))
+        categorySelect.select_by_value("Material")
+        supplie = driver.find_element(By.NAME, "supplie")
+        supplie.click()
+        supplie.send_keys("cuerda")
+        metricSelect = Select(driver.find_element(By.NAME, "metric"))
+        metricSelect.select_by_value("1")
+        quantity = driver.find_element(By.NAME, "quantity")
+        quantity.click()
+        quantity.send_keys("2")
+        costSupplie = driver.find_element(By.NAME, "costSupplie")
+        costSupplie.click()
+        costSupplie.send_keys("5")
+        costSupplie.send_keys(Keys.RETURN)
+        wait.until(EC.url_to_be("http://localhost:5000/plan/create"))
+        actualUrl = "http://localhost:5000/plan/create"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        driver.implicitly_wait(2)
+        element = driver.find_element(By.TAG_NAME, 'section')
+        elements = element.find_elements(By.TAG_NAME, 'div')
+        for e in elements:
+            if (e.text == "Invalid dates, out of proyect range"):
+                self.assertEqual(e.text,"Invalid dates, out of proyect range")
+
+
+    def test_RootDeleteMetricCheck(self):
+        self.test_RootAddActions()
+        driver = self.driver
+        driver.get("http://localhost:5000/metrics/metrics")
+        wait = WebDriverWait(driver, 10)
+        wait.until(EC.url_to_be("http://localhost:5000/metrics/metrics"))
+        actualUrl = "http://localhost:5000/metrics/metrics"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "10"):
+                self.assertEqual(e.text,"10")
+        edit_button = driver.find_element(By.NAME, "delete")
+        edit_button.click()
+        wait.until(EC.url_to_be("http://localhost:5000/metrics/metrics"))
+        actualUrl = "http://localhost:5000/metrics/metrics"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "20"):
+                self.assertNotEqual(e.text,"20")
+        driver.implicitly_wait(2)
+        driver.get("http://localhost:5000/plan/supplie")
+        wait.until(EC.url_to_be("http://localhost:5000/plan/supplie"))
+        actualUrl = "http://localhost:5000/plan/supplie"
+        expectedUrl= driver.current_url
+        self.assertEqual(expectedUrl,actualUrl)
+        total = False
+        element = driver.find_elements(By.TAG_NAME, 'td')
+        for e in element:
+            if (e.text == "0"):
+                total = True
+        self.assertTrue(total)
