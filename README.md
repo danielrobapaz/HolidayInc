@@ -3,9 +3,9 @@ Proyecto - Ingenieria del software 1 (CI3715)
 
 ### Integrantes.
 
-- Daniel Robayo, 18-11086@usb.ve
+- Daniel Robayo, danielrobayo8@gmail.com
 
-- Jorge Correia, 14-10254@usb.ve
+- Jorge Correia, jjcorreia@outlook.com
 
 ### Agile Coach.
 
